@@ -4,7 +4,6 @@
 
 using DbTablesLib;
 using ServerLib;
-using SharedLib.Services;
 
 namespace SharedLib
 {
@@ -20,6 +19,7 @@ namespace SharedLib
             services.AddScoped<IDesignerDocumensPropertiesMainBodyTable, DesignerDocumentsPropertiesMainBodyTable>();
             services.AddScoped<IDesignerDocumensPropertiesMainGridTable, DesignerDocumentsPropertiesMainGridTable>();
             services.AddScoped<IDesignerUniversalTable, DesignerUniversalTable>();
+            services.AddScoped<ILogChangeTable, LogChangeTable>(); 
 
             services.AddScoped<IProjectsService, ProjectsService>();
             services.AddScoped<ILinksUsersProjectsService, LinksUsersPrjectsService>();
@@ -29,6 +29,7 @@ namespace SharedLib
             services.AddScoped<IDesignerDocumentsPropertiesMainGridService, DesignerDocumentsPropertiesMainGridService>();
             services.AddScoped<IDesignerSharedService, DesignerSharedService>();
             services.AddScoped<IDesignerStructureService, DesignerStructureService>();
+            services.AddScoped<ILogsChangesService, LogsChangesService>();
         }
     }
 }

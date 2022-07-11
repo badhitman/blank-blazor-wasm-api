@@ -14,6 +14,15 @@ namespace SharedLib.Models
     public class ChangeLogModelDB : IdNameDescriptionSimpleModel
     {
         /// <summary>
+        /// FK: Автор изменений
+        /// </summary>
+        public int AuthorId { get; set; }
+        /// <summary>
+        /// Автор изменений
+        /// </summary>
+        public UserModelDB Author { get; set; }
+
+        /// <summary>
         /// Тип владельца изменений
         /// </summary>
         public ContextesChangeLogEnum OwnerType { get; set; }
