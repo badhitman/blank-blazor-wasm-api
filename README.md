@@ -28,6 +28,10 @@
 
 ![назначение прав ROOT](./img/conf-root-users.png)
 
+Проверьте состояние клиентских библиотек и восстановите их в случае необходимости:
+
+![restore client lib of libman](./img/restore-libman.png)
+
 ## Запуск
 ![два решения работают в паре](./img/conf-sln.png)
 
