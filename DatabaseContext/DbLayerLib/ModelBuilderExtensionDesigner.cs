@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @fakegov 
+////////////////////////////////////////////////
+
+using Microsoft.EntityFrameworkCore;
 using SharedLib;
 using SharedLib.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DbLayerLib
 {

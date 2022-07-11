@@ -10,3 +10,9 @@
 ![ДЕМО режим](./img/demo-preprocessor-directive.png)
 активирует загрузку данных демо данными в
 ![has demo data](./img/has-demo-data.png)
+
+> ВАЖНО! данный препроцессор так же вызывает `EnsureDeleted()`
+
+Для удобства отладки в UI **BlazorWasmApp** поддерживается тот же символ, но для отображения упрощённого входа в аккаунт:
+![demo login](./img/demo-login.png)
+Этот акаунт (login:222222222 passw:222222222) создаётся в **DbLayerLib**, если ему назначить этот препроцессор **DEMO**
