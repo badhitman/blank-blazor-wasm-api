@@ -1,7 +1,7 @@
 # .NET6 BlazorWasm custom authorization +WebApi of Refit
 Кастомная авторизация Blazor WebAssembly в связке с WebApi (через Refit) в т.ч. вертикальная иерархия прав (сквозная между UI и API).
 
-На базе этого решения ведутся работы над [конструктором](https://github.com/badhitman/blank-blazor-wasm-api/tree/constructor).
+На базе этого решения ведутся работы над [конструктором](https://github.com/badhitman/blank-blazor-wasm-api/tree/constructor) (ветка: **constructor**).
 Конструктор позволяет сформировать структуру бизнес-моделей, используя web интерфейс. Готовую структуру можно выгрузить в набор файлов,
 готовых к интеграции в main решение. Генератор создаёт файлы типов данных, связи между ними, контекст данных бд и стартовый набор служб доступа к этим данным (crud)
 
