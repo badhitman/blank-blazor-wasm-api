@@ -17,17 +17,11 @@ namespace ApiRestApp.Controllers
     [TypeFilter(typeof(AuthFilterAttributeAsync), Arguments = new object[] { AccessLevelsUsersEnum.Confirmed })]
     public class UsersProjectsController : ControllerBase
     {
-        ISessionService _session_service;
-        ILogger<UsersProjectsController> _logger;
         IProjectsService _users_projects_service;
-        IDesignerStructureService _designer_structure_service;
 
-        public UsersProjectsController(ISessionService set_session_service, ILogger<UsersProjectsController> set_logger, IProjectsService set_users_projects_service, IDesignerStructureService designer_structure_service)
+        public UsersProjectsController(IProjectsService set_users_projects_service)
         {
-            _logger = set_logger;
-            _session_service = set_session_service;
             _users_projects_service = set_users_projects_service;
-            
         }
 
         /// <summary>
