@@ -24,12 +24,6 @@ namespace SharedLib.Services
         }
 
         /// <inheritdoc/>
-        public async Task<ApiResponse<LogsPaginationResponseModel>> GetLogsAsync(LogPaginationByOwnersTypesRequestModel request)
-        {
-            return await _api.GetLogsAsync(request);
-        }
-
-        /// <inheritdoc/>
         public async Task<ApiResponse<LogsPaginationResponseModel>> GetLogsAsync(LogPaginationByAuthorAndOwnersTypesRequestModel request)
         {
             return await _api.GetLogsAsync(request);

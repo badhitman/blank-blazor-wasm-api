@@ -4,6 +4,7 @@
 
 @inject SessionMarkerLiteModel sessionMarker
 @inject ILogger<ReportLogsProjectComponent> logger
+@inject ILogsChangesRestService _logs_refit_service
 
 @inherits BlazorBusyComponentBaseModel
 
@@ -43,6 +44,8 @@
         }
 
         IsBusyProgress = true;
+
+        var rest = _logs_refit_service.GetLogsAsync(new LogPaginationByProjectAndOwnersTypesRequestModel() { ProjectId = project_id, PageNum = 1, PageSize = 10 });
 
         IsBusyProgress = false;
         StateHasChanged();

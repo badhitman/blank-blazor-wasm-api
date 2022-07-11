@@ -25,17 +25,6 @@ namespace ApiRestApp.Controllers
         }
 
         /// <summary>
-        /// Получить логи по типам владельцев изменений
-        /// </summary>
-        /// <param name="request">Запрос логов</param>
-        /// <returns>Порция логов</returns>
-        [HttpGet($"{nameof(GettLogsModesEnum.ByOwnersTypes)}")]
-        public async Task<LogsPaginationResponseModel> Get([FromQuery] LogPaginationByOwnersTypesRequestModel request)
-        {
-            return await _logs_service.GetLogsAsync(request);
-        }
-
-        /// <summary>
         /// Получить логи по автору и типам владельцов изменений
         /// </summary>
         /// <param name="request">Запрос логов</param>

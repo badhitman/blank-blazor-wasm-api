@@ -10,11 +10,6 @@ namespace SharedLib.Models
     public enum GettLogsModesEnum
     {
         /// <summary>
-        /// По типам владельцев изменений
-        /// </summary>
-        ByOwnersTypes,
-
-        /// <summary>
         /// По автору и типам владельцов изменений
         /// </summary>
         ByAuthorAndOwnersTypes,

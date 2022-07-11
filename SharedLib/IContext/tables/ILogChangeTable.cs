@@ -19,13 +19,6 @@ namespace SharedLib
         public Task AddLogAsync(ChangeLogModelDB log, bool auto_save = true);
 
         /// <summary>
-        /// Получить логи по типу владельца изменений
-        /// </summary>
-        /// <param name="request">Запрос логов</param>
-        /// <returns>Порция логов</returns>
-        public Task<LogsPaginationResponseModel> GetLogsAsync(LogPaginationByOwnersTypesRequestModel request);
-
-        /// <summary>
         /// Получить логи по автору и типам владельцов изменений
         /// </summary>
         /// <param name="request">Запрос логов</param>
