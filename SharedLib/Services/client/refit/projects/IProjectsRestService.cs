@@ -7,7 +7,7 @@ using SharedLib.Models;
 namespace SharedLib.Services
 {
     /// <summary>
-    /// REST служба раоты с API пользовательских проектов
+    /// REST служба работы с API пользовательских проектов
     /// </summary>
     public interface IProjectsRestService
     {

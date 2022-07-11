@@ -378,6 +378,7 @@ namespace DbLayerLib
                 return log_obj;
             }));
 
+            change_logs.ForEach(x => { x.AuthorId = 1; });
             modelBuilder.Entity<ChangeLogModelDB>().HasData(change_logs);
         }
     }

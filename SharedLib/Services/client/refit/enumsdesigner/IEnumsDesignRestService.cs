@@ -7,7 +7,7 @@ using SharedLib.Models;
 namespace SharedLib.Services
 {
     /// <summary>
-    /// REST служба раоты с API перечислениями
+    /// REST служба работы с API перечислениями
     /// </summary>
     public interface IEnumsDesignRestService
     {

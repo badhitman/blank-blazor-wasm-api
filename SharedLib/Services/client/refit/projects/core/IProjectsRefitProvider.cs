@@ -8,7 +8,7 @@ using Refit;
 namespace SharedLib.Services
 {
     /// <summary>
-    /// REST служба раоты с API проектов
+    /// REST служба работы с API проектов
     /// </summary>
     public interface IProjectsRefitProvider
     {
