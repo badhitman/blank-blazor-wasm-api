@@ -30,11 +30,15 @@
 
 Проверьте состояние клиентских библиотек и восстановите их в случае необходимости:
 
-![restore client lib of libman](./img/restore-libman.png)
+![восстановление клиентских бибилиотек libman](./img/restore-libman.png)
 
 Web настройки для хоста Kestrel (в т.ч. Listen Port):
 
-![restore client lib of libman](./img/conf-kestrel.png)
+![конфигурация хоста Kestrel](./img/conf-kestrel.png)
+
+Публичные Web настройки точек доступа:
+
+![внешний доступ к хостам фронта и бэка](./img/conf-point-access.png)
 
 ## Запуск
 ![два решения работают в паре](./img/conf-sln.png)
