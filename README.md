@@ -19,6 +19,7 @@
 Для локального теста достаточно перевести её в нужный режим (Mode: 1 или 2). Настройки предусматриваю сразу двух версий:
  - [reCAPTCHA v2 ("I'm not a robot" Checkbox)](https://developers.google.com/recaptcha/docs/versions#recaptcha_v2_im_not_a_robot_checkbox)
  - [reCAPTCHA v2 (Invisible reCAPTCHA badge)](https://developers.google.com/recaptcha/docs/versions#recaptcha_v2_invisible_recaptcha_badge)
+
 но какой из них используется в конкретном случае - указывает параметр Mode (1 или 2)
 
 
