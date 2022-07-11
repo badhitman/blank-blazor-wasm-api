@@ -61,6 +61,13 @@ namespace SharedLib
                 .SetHandlerLifetime(handler_lifetime);
             services.AddScoped<IDocumentsPropertiesMainGridDesignRefitProvider, DocumentsPropertiesMainGridDesignRefitProvider>();
             services.AddScoped<IDocumentsPropertiesMainGridDesignRestService, DocumentsPropertiesMainGridDesignRefitService>();
+
+            services.AddRefitClient<ILogsChangesRefitService>()
+                .ConfigureHttpClient(c => c.BaseAddress = conf.ApiConfig.Url)
+                .AddHttpMessageHandler<RefitHeadersDelegatingHandler>()
+                .SetHandlerLifetime(handler_lifetime);
+            services.AddScoped<ILogsChangesRefitProvider, LogsChangesRefitProvider>();
+            services.AddScoped<ILogsChangesRestService, LogsChangesRefitService>();
         }
     }
 }
