@@ -51,5 +51,10 @@ namespace DbLayerLib
         /// Поля документов (табличная часть документа)
         /// </summary>
         public DbSet<DocumentPropertyMainGridModelDB> DesignDocumentsMainGridProperties { get; set; }
+
+        /// <summary>
+        /// Лог изменений
+        /// </summary>
+        public DbSet<ChangeLogModelDB> ChangeLogs { get; set; }
     }
 }

@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SharedLib;
 using SharedLib.Models;
 
@@ -101,18 +102,34 @@ namespace DbLayerLib
             List<(ProjectModelDB project, int user_id)> rand_links = demo_projects.SelectMany(x => Enumerable.Range(1, 6).Select(y => (x, y))).ToList();
             rand_links.Shuffle(); rand_links.Shuffle(); rand_links.Shuffle();
             rand_links = rand_links.Take(projects_num * 3).ToList();
-            int index_id = 0;
+            int log_change_index_id = 0;
 
-            modelBuilder.Entity<UserToProjectLinkModelDb>().HasData(
-                    rand_links.Select(x => new UserToProjectLinkModelDb()
-                    {
-                        Id = ++index_id,
-                        ProjectId = x.project.Id,
-                        UserId = x.user_id,
-                        IsDeleted = rand.Next(100) <= 20,
-                        AccessLevelUser = (AccessLevelsUsersToProjectsEnum)values.GetValue(rand.Next(values.Length))
-                    })
-            );
+            List<ChangeLogModelDB> change_logs = new(demo_projects.Select(x => new ChangeLogModelDB() { Id = ++log_change_index_id, OwnerType = ContextesChangeLogEnum.Project, OwnerId = x.Id, Name = $"Создан проект (demo HasData)", Description = $"[name:{x.Name}] [ns:{x.NameSpace}] [descr:{x.Description}]" }));
+
+            int index_id = 0;
+            IEnumerable<UserToProjectLinkModelDb> users_to_project_link = rand_links.Select(x => new UserToProjectLinkModelDb()
+            {
+                Id = ++index_id,
+                ProjectId = x.project.Id,
+                UserId = x.user_id,
+                IsDeleted = rand.Next(100) <= 20,
+                AccessLevelUser = (AccessLevelsUsersToProjectsEnum)values.GetValue(rand.Next(values.Length))
+            });
+            modelBuilder.Entity<UserToProjectLinkModelDb>().HasData(users_to_project_link);
+
+            UserModelDB curr_user;
+            change_logs.AddRange(users_to_project_link.Select(x =>
+            {
+                curr_user = users_demo.First(u => u.Id == x.UserId);
+                return new ChangeLogModelDB()
+                {
+                    Id = ++log_change_index_id,
+                    OwnerType = ContextesChangeLogEnum.Project,
+                    OwnerId = x.ProjectId,
+                    Name = $"Добавлен пользователь к проекту (demo HasData)",
+                    Description = $"[is_del:{x.IsDeleted}] [level:{x.AccessLevelUser}] [user: #{x.UserId} {curr_user.Name}]"
+                };
+            }));
 
             index_id = 0;
             EnumDesignModelDB[] enums_demo_data = demo_projects.SelectMany(project => Enumerable.Range(1, rand.Next(34, 40)).Select(enum_num => new EnumDesignModelDB()
@@ -125,6 +142,18 @@ namespace DbLayerLib
                 IsDeleted = rand.Next(1, 100) > 70
             })).ToArray();
             modelBuilder.Entity<EnumDesignModelDB>().HasData(enums_demo_data);
+
+            change_logs.AddRange(enums_demo_data.Select(x =>
+            {
+                return new ChangeLogModelDB()
+                {
+                    Id = ++log_change_index_id,
+                    OwnerType = ContextesChangeLogEnum.Enum,
+                    OwnerId = x.Id,
+                    Name = $"Добавлено перечисление (demo HasData)",
+                    Description = $"[is_del:{x.IsDeleted}] [code:{x.SystemCodeName}]"
+                };
+            }));
 
             index_id = 0;
             List<EnumDesignItemModelDB> enums_items_demo_data = enums_demo_data.SelectMany(x =>
@@ -142,6 +171,18 @@ namespace DbLayerLib
             }).ToList();
             modelBuilder.Entity<EnumDesignItemModelDB>().HasData(enums_items_demo_data);
 
+            change_logs.AddRange(enums_items_demo_data.Select(x =>
+            {
+                return new ChangeLogModelDB()
+                {
+                    Id = ++log_change_index_id,
+                    OwnerType = ContextesChangeLogEnum.Enum,
+                    OwnerId = x.Id,
+                    Name = $"Добавлен элемент перечисления (demo HasData)",
+                    Description = $"[name:{x.Name}] [descr:{x.Description}] [is_del:{x.IsDeleted}] [index:{x.SortIndex}]"
+                };
+            }));
+
             index_id = 0;
             DocumentDesignModelDB[] documents_demo_data = demo_projects.SelectMany(project => Enumerable.Range(1, rand.Next(34, 40)).Select(enum_num => new DocumentDesignModelDB()
             {
@@ -153,6 +194,18 @@ namespace DbLayerLib
                 IsDeleted = rand.Next(1, 100) > 70
             })).ToArray();
             modelBuilder.Entity<DocumentDesignModelDB>().HasData(documents_demo_data);
+
+            change_logs.AddRange(documents_demo_data.Select(x =>
+            {
+                return new ChangeLogModelDB()
+                {
+                    Id = ++log_change_index_id,
+                    OwnerType = ContextesChangeLogEnum.Document,
+                    OwnerId = x.Id,
+                    Name = $"Создан документ (demo HasData)",
+                    Description = $"[name:{x.Name}] [descr:{x.Description}] [is_del:{x.IsDeleted}] [code:{x.SystemCodeName}]"
+                };
+            }));
 
             int links_index_id = 0;
             PropertyTypesEnum[] enums_types = Enum.GetValues<PropertyTypesEnum>();
@@ -217,9 +270,34 @@ namespace DbLayerLib
             }
             modelBuilder.Entity<DocumentPropertyMainBodyModelDB>().HasData(doc_props_demo_data_body);
 
+            DocumentPropertyLinkModelDB prop_link;
+            change_logs.AddRange(doc_props_demo_data_body.Select(x =>
+            {
+                ChangeLogModelDB log_obj = new ChangeLogModelDB()
+                {
+                    Id = ++log_change_index_id,
+                    OwnerType = ContextesChangeLogEnum.Document,
+                    OwnerId = x.DocumentOwnerId,
+                    Name = $"Создано поле тела документа (demo HasData)",
+                    Description = $"[name:{x.Name}] [type:{x.PropertyType}] [descr:{x.Description}] [is_del:{x.IsDeleted}] [code:{x.SystemCodeName}]"
+                };
+
+                prop_link = x.PropertyType == PropertyTypesEnum.Document || x.PropertyType == PropertyTypesEnum.SimpleEnum
+                ? props_links.First(z => z.Id == x.PropertyLinkId)
+                : null;
+
+                log_obj.Description += x.PropertyType switch
+                {
+                    PropertyTypesEnum.SimpleEnum => $"[enum:#{prop_link.TypedEnumId} {enums_demo_data.First(y => y.Id == prop_link.TypedEnumId).Name}]",
+                    PropertyTypesEnum.Document => $"[doc:#{prop_link.TypedDocumentId} {documents_demo_data.First(y => y.Id == prop_link.TypedDocumentId).Name}]",
+                    _ => string.Empty
+                };
+
+                return log_obj;
+            }));
 
             index_id = 0;
-            DocumentPropertyMainGridModelDB[] doc_props_grid_demo_data_body = documents_demo_data.SelectMany(x =>
+            DocumentPropertyMainGridModelDB[] doc_props_demo_data_grid = documents_demo_data.SelectMany(x =>
             {
                 uint sort_index2 = 0;
                 return Enumerable.Range(3, rand.Next(3, 11)).Select(y => new DocumentPropertyMainGridModelDB()
@@ -234,7 +312,7 @@ namespace DbLayerLib
                     SortIndex = ++sort_index2
                 });
             }).ToArray();
-            foreach (DocumentPropertyMainGridModelDB el in doc_props_grid_demo_data_body)
+            foreach (DocumentPropertyMainGridModelDB el in doc_props_demo_data_grid)
             {
                 project_id = documents_demo_data.First(x => x.Id == el.DocumentOwnerId).ProjectId;
                 switch (el.PropertyType)
@@ -273,7 +351,34 @@ namespace DbLayerLib
                 }
             }
             modelBuilder.Entity<DocumentPropertyLinkModelDB>().HasData(props_links);
-            modelBuilder.Entity<DocumentPropertyMainGridModelDB>().HasData(doc_props_grid_demo_data_body);
+            modelBuilder.Entity<DocumentPropertyMainGridModelDB>().HasData(doc_props_demo_data_grid);
+
+            change_logs.AddRange(doc_props_demo_data_grid.Select(x =>
+            {
+                ChangeLogModelDB log_obj = new ChangeLogModelDB()
+                {
+                    Id = ++log_change_index_id,
+                    OwnerType = ContextesChangeLogEnum.Document,
+                    OwnerId = x.DocumentOwnerId,
+                    Name = $"Создано поле табличной части документа (demo HasData)",
+                    Description = $"[name:{x.Name}] [type:{x.PropertyType}] [descr:{x.Description}] [is_del:{x.IsDeleted}] [code:{x.SystemCodeName}]"
+                };
+
+                prop_link = x.PropertyType == PropertyTypesEnum.Document || x.PropertyType == PropertyTypesEnum.SimpleEnum
+                ? props_links.First(z => z.Id == x.PropertyLinkId)
+                : null;
+
+                log_obj.Description += x.PropertyType switch
+                {
+                    PropertyTypesEnum.SimpleEnum => $"[enum:#{prop_link.TypedEnumId} {enums_demo_data.First(y => y.Id == prop_link.TypedEnumId).Name}]",
+                    PropertyTypesEnum.Document => $"[doc:#{prop_link.TypedDocumentId} {documents_demo_data.First(y => y.Id == prop_link.TypedDocumentId).Name}]",
+                    _ => string.Empty
+                };
+
+                return log_obj;
+            }));
+
+            modelBuilder.Entity<ChangeLogModelDB>().HasData(change_logs);
         }
     }
 }
