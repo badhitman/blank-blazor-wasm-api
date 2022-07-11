@@ -51,12 +51,19 @@ namespace ServerLib
                 || link_db.Id != _session_service.SessionMarker.Id;
             if (!res.IsSuccess)
             {
-                res.Message = "Операции над сосбвенной ссылкой запрещены";
+                res.Message = "Операции над собственной ссылкой запрещены";
                 return res;
             }
 
             res = await _links_users_to_projects_dt.DeleteToggleLinkProjectAsync(link_id);
-
+            await _logs_dt.AddLogAsync(new LogChangeModelDB()
+            {
+                AuthorId = _session_service.SessionMarker.Id,
+                OwnerType = ContextesChangeLogEnum.Project,
+                OwnerId = link_db.ProjectId,
+                Name = $"Ссылка {(link_db.IsDeleted ? "выключена" : "включена")}",
+                Description = $"[user:{link_db.User.Email}] [access:{link_db.AccessLevelUser}]"
+            });
             return res;
         }
 
@@ -136,6 +143,16 @@ namespace ServerLib
                 res.Message = new_link.Message;
                 return res;
             }
+
+            await _logs_dt.AddLogAsync(new LogChangeModelDB()
+            {
+                AuthorId = _session_service.SessionMarker.Id,
+                OwnerType = ContextesChangeLogEnum.Project,
+                OwnerId = new_link_project.ProjectId,
+                Name = $"Пользователь добавлен",
+                Description = $"[user:{user_db.Metadata.Email}] [access:{new_link_project.SetLevel}]"
+            });
+
             res.LinkProject = new_link.LinkProject;
             return res;
         }
@@ -170,6 +187,15 @@ namespace ServerLib
             }
 
             res = await _links_users_to_projects_dt.UtdateLevelLinkProjectAsync(set_level_for_link);
+
+            await _logs_dt.AddLogAsync(new LogChangeModelDB()
+            {
+                AuthorId = _session_service.SessionMarker.Id,
+                OwnerType = ContextesChangeLogEnum.Project,
+                OwnerId = link_db.ProjectId,
+                Name = $"Права пользователя обновлены",
+                Description = $"[user:{link_db.User.Email}] [access:{link_db.AccessLevelUser}]"
+            });
 
             return res;
         }
