@@ -32,6 +32,10 @@
 
 ![restore client lib of libman](./img/restore-libman.png)
 
+Web настройки для хоста Kestrel (в т.ч. Listen Port):
+
+![restore client lib of libman](./img/conf-kestrel.png)
+
 ## Запуск
 ![два решения работают в паре](./img/conf-sln.png)
 
