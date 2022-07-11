@@ -1,0 +1,51 @@
+﻿@page "/authentication/{action?}"
+
+@using BlazorWasmApp.Shared.auth
+@using Microsoft.Extensions.Logging
+@using SharedLib.Models
+
+@inject NavigationManager _navigation_manager
+@inject ILogger<AuthenticationPage> _logger
+
+<AuthorizeView>
+    <Authorized>
+        Hello, @context.User.Identity?.Name!
+        <hr />
+        @{
+            string? action_name = Action?.ToLower();
+            if (action_name == GlobalStaticConstants.LOGOUT_ACTION_NAME)
+            {
+                <UserLogoutFormComponent />
+            }
+            else
+            {
+                <button class="nav-link btn btn-link" @onclick="BeginLogout">Выйти</button>
+            }
+        }
+    </Authorized>
+    <NotAuthorized>
+        @{
+            string? action_name = Action?.ToLower();
+            if (action_name == GlobalStaticConstants.LOGIN_ACTION_NAME)
+            {
+                <UserLoginFormComponent />
+            }
+            else if (action_name == GlobalStaticConstants.RESTORE_ACTION_NAME)
+            {
+                <UserRestoreFormComponent />
+            }
+            else
+            {
+                <UserRegistrationFormComponent />
+            }
+        }
+    </NotAuthorized>
+</AuthorizeView>
+@code {
+    [Parameter] public string? Action { get; set; }
+
+    private void BeginLogout(MouseEventArgs args)
+    {
+        _navigation_manager.NavigateTo($"{GlobalStaticConstants.AUTHENTICATION_CONTROLLER_NAME}/{GlobalStaticConstants.LOGOUT_ACTION_NAME}");
+    }
+}

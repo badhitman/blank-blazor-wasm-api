@@ -1,0 +1,82 @@
+﻿@using SharedLib.Models
+@using Refit
+@using Microsoft.Extensions.Logging
+@using SharedLib
+@using SharedLib.Services
+@inherits BlazorReCaptchaComponentBaseModel
+
+@inject ILogger<UserLoginFormComponent> Logger
+@inject IUsersAuthRestService usersAuthRefitService
+@inject CustomAuthStateProvider authState
+
+<h3>Вход</h3>
+
+<EditForm Model="@user_auth_obj" OnValidSubmit="@HandleValidSubmitAsync">
+    <fieldset disabled="@IsBusyProgress">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="mb-3">
+            <label class="form-label" for="login">Login</label>
+            <InputText class="form-control" id="login" aria-describedby="loginHelp" @bind-Value="user_auth_obj.Login" />
+            <div class="form-text" id="loginHelp">Enter your login</div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="password">Password</label>
+            <InputText class="form-control" type="password" placeholder="Password" id="name" @bind-Value="user_auth_obj.Password" />
+        </div>
+        <div class="mb-3 form-check">
+            <InputCheckbox @bind-Value="user_auth_obj.RememberMe" class="form-check-input" id="RememberMe" />
+            <label class="form-check-label" for="RememberMe">Запомнить меня</label>
+        </div>
+        <ReCAPTCHAComponent ReCaptchaExpiredCallback="@OnReCaptchaExpired" ReCaptchaSuccessCallback="@OnReCaptchaSuccess" />
+        <div class="alert alert-secondary" role="alert">Нет учётной записи? <a class="@ButtonClass(BootstrapColorsStylesEnum.Primary)" style="@ButtonStyle" href=@($"/{GlobalStaticConstants.AUTHENTICATION_CONTROLLER_NAME}/{GlobalStaticConstants.REGISTRATION_ACTION_NAME}")>Регистрация!</a>. Забыли логин/пароль? <a class="@ButtonClass(BootstrapColorsStylesEnum.Success)" style="@ButtonStyle" href=@($"/{GlobalStaticConstants.AUTHENTICATION_CONTROLLER_NAME}/{GlobalStaticConstants.RESTORE_ACTION_NAME}")>Восстановить доступ!</a></div>
+        <button class="btn btn-primary" type="submit" disabled="@IsBusyProgress">
+            @{
+                if (IsBusyProgress == true)
+                {
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <text> Загрузка...</text>
+                }
+                else
+                {
+                    <text>Войти</text>
+                }
+            }
+        </button>
+        @{
+            if (!string.IsNullOrWhiteSpace(user_auth_result?.Message))
+            {
+                <p></p>
+                <div class="alert alert-danger" role="alert">
+                    @user_auth_result.Message
+                </div>
+            }
+        }
+    </fieldset>
+</EditForm>
+
+@code {
+    private UserAuthorizationModel user_auth_obj = new();
+    private AuthUserResponseModel? user_auth_result = null;
+
+    public override void OnReCaptchaExpired() { user_auth_obj.ResponseReCAPTCHA = string.Empty; Logger.LogDebug(nameof(OnReCaptchaExpired)); }
+    public override void OnReCaptchaSuccess(string response_code) { user_auth_obj.ResponseReCAPTCHA = response_code; Logger.LogDebug(nameof(OnReCaptchaSuccess)); }
+    public override void OnReCaptchaFailure(string response_code) { user_auth_obj.ResponseReCAPTCHA = string.Empty; Logger.LogError($"{nameof(OnReCaptchaFailure)}! response code: {response_code}"); }
+
+    private async Task HandleValidSubmitAsync()
+    {
+        IsBusyProgress = true;
+        user_auth_result = await usersAuthRefitService.LoginUserAsync(user_auth_obj);
+
+        if (!user_auth_result.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(user_auth_result.Message))
+                Logger.LogError(user_auth_result.Message);
+            else
+                Logger.LogError($"Ошибка API: {nameof(usersAuthRefitService.LoginUserAsync)}");
+        }
+
+        authState.AuthenticationStateChanged();
+        IsBusyProgress = false;
+    }
+}

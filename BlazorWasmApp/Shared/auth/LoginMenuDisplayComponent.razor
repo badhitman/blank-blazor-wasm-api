@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using SharedLib.Models
+@inject NavigationManager Navigation
+
+<AuthorizeView>
+    <Authorized>
+       <a href=@($"/{GlobalStaticConstants.USERS_CONTROLLER_NAME}/{GlobalStaticConstants.PROFILE_ACTION_NAME}/")> Hello, @context.User.Identity?.Name!</a>
+        <button class="nav-link btn btn-link" @onclick="BeginLogout">Log out</button>
+    </Authorized>
+    <NotAuthorized>
+        <a href=@($"{GlobalStaticConstants.AUTHENTICATION_CONTROLLER_NAME}/{GlobalStaticConstants.LOGIN_ACTION_NAME}")>Войти</a>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private void BeginLogout(MouseEventArgs args)
+    {
+        Navigation.NavigateTo($"{GlobalStaticConstants.AUTHENTICATION_CONTROLLER_NAME}/{GlobalStaticConstants.LOGOUT_ACTION_NAME}");
+    }
+}

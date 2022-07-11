@@ -1,0 +1,47 @@
+﻿@using SharedLib.Models
+@using Refit
+@using Microsoft.Extensions.Logging
+@using SharedLib
+
+@inherits SharedLib.BlazorBusyComponentBaseModel
+
+@inject CustomAuthStateProvider authState
+@inject IClientSession SessionLocalStorage
+@inject SessionMarkerLiteModel SessionMarker
+@inject SharedLib.Services.IUsersAuthRefitService UsersAuthService
+@inject ILogger<UserLogoutFormComponent> Logger
+
+<h3>Выход</h3>
+<button class="btn btn-primary" onclick="@LogoutAsync" disabled="@IsBusyProgress">
+    @{
+        if (IsBusyProgress == true)
+        {
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <text> Загрузка...</text>
+        }
+        else
+        {
+            <text>Подтверить выход из сессии</text>
+        }
+    }
+</button>
+@code {
+    ResponseBaseModel? res = null;
+
+    private async Task LogoutAsync()
+    {
+        IsBusyProgress = true;
+        res = await SessionLocalStorage.LogoutAsync();
+
+        if (!string.IsNullOrEmpty(res?.Message))
+        {
+            if (res.IsSuccess)
+                Logger.LogInformation(res?.Message);
+            else
+                Logger.LogError(res?.Message);
+        }
+
+        authState.AuthenticationStateChanged();
+        IsBusyProgress = false;
+    }
+}

@@ -1,0 +1,95 @@
+﻿@using SharedLib
+@using SharedLib.Models
+@using SharedLib.Services
+
+@inherits PaginationBaseComponentModel
+
+<nav aria-label="Page navigation example">
+    <ul class="@ul_css">
+        <li class="page-item@(PageNum == 1 ? " disabled" : "")">
+            @*@($"{ButtonAction}?{nameof(PaginationsPagesBaseModel.PageNum)}={PageNum - 1}&{nameof(PaginationsPagesBaseModel.PageSize)}={PageSize}&{nameof(PaginationsPagesBaseModel.SortBy)}={SortBy}&{nameof(PaginationsPagesBaseModel.SortingDirection)}={SortingDirection}")*@
+            <a @onclick="() => {if(PageNum > 1){ButtonAction(PageNum - 1);}}" class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        @for (uint i = 1; TotalPagesCount >= i; i++)
+        {
+            if (TotalPagesCount > 7)
+            {
+                if (PageNum < 5)
+                {
+                    if (i == TotalPagesCount - 1)
+                    {
+                        <li class="page-item disabled"><span class="page-link">⁞</span></li>
+                    }
+                    else if (i <= 5 || i == TotalPagesCount)
+                    {
+                        <li class="page-item@(PageNum == i ? " active" : "")">
+                            @*@($"{ButtonAction}?{nameof(PaginationsPagesBaseModel.PageNum)}={i}&{nameof(PaginationsPagesBaseModel.PageSize)}={PageSize}&{nameof(PaginationsPagesBaseModel.SortBy)}={SortBy}&{nameof(PaginationsPagesBaseModel.SortingDirection)}={SortingDirection}")*@
+                            <a @onclick="() => {ButtonAction((int)i);}" class="page-link" href="#">@i</a>
+                        </li>
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                else if (PageNum > (TotalPagesCount - 4))
+                {
+                    if (i == 2)
+                    {
+                        <li class="page-item disabled"><span class="page-link">⁞</span></li>
+                    }
+                    else if (i == 1 || i >= (TotalPagesCount - 4))
+                    {
+                        <li class="page-item@(PageNum == i ? " active" : "")">
+                            @*@($"{ButtonAction}?{nameof(PaginationsPagesBaseModel.PageNum)}={i}&{nameof(PaginationsPagesBaseModel.PageSize)}={PageSize}&{nameof(PaginationsPagesBaseModel.SortBy)}={SortBy}&{nameof(PaginationsPagesBaseModel.SortingDirection)}={SortingDirection}")*@
+                            <a @onclick="() => {ButtonAction((int)i);}" class="page-link" href="#">@i</a>
+                        </li>
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    if (i == 2 || i == TotalPagesCount - 1)
+                    {
+                        <li class="page-item disabled"><span class="page-link">⁞</span></li>
+                    }
+                    else if ((i == 1 || i == TotalPagesCount) || (i == PageNum - 1 || i == PageNum || i == PageNum + 1))
+                    {
+                        <li class="page-item@(PageNum == i ? " active" : "")">
+                            @*@($"{ButtonAction}?{nameof(PaginationsPagesBaseModel.PageNum)}={i}&{nameof(PaginationsPagesBaseModel.PageSize)}={PageSize}&{nameof(PaginationsPagesBaseModel.SortBy)}={SortBy}&{nameof(PaginationsPagesBaseModel.SortingDirection)}={SortingDirection}")*@
+                            <a @onclick="() => {ButtonAction((int)i);}" class="page-link" href="#">@i</a>
+                        </li>
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+            }
+            else
+            {
+                <li class="page-item@(PageNum == i ? " active" : "")">
+                    @*@($"{ButtonAction}?{nameof(PaginationsPagesBaseModel.PageNum)}={i}&{nameof(PaginationsPagesBaseModel.PageSize)}={PageSize}&{nameof(PaginationsPagesBaseModel.SortBy)}={SortBy}&{nameof(PaginationsPagesBaseModel.SortingDirection)}={SortingDirection}")*@
+                    <a @onclick="() => {ButtonAction((int)i);}" class="page-link" href="#">@i</a>
+                </li>
+            }
+        }
+
+        <li class="page-item@(PageNum == TotalPagesCount ? " disabled" : "")">
+            @*@($"{ButtonAction}?{nameof(PaginationsPagesBaseModel.PageNum)}={PageNum + 1}&{nameof(PaginationsPagesBaseModel.PageSize)}={PageSize}&{nameof(PaginationsPagesBaseModel.SortBy)}={SortBy}&{nameof(PaginationsPagesBaseModel.SortingDirection)}={SortingDirection}")*@
+            <a @onclick="() => {if(PageNum < TotalPagesCount){ButtonAction(PageNum + 1);}}" class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+@code {
+    [Parameter, EditorRequired]
+    public Action<int> ButtonAction { get; set; }
+}

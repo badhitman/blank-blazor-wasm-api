@@ -1,0 +1,12 @@
+{
+	"ApiConfig": {
+		"Host": "localhost",
+		"Port": 5501,
+		"HttpSheme": "http"
+	},
+	"ClientConfig": {
+		"Host": "localhost",
+		"Port": 7222,
+		"HttpSheme": "http"
+	}
+}

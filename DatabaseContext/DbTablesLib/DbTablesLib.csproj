@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\SharedLib\SharedLib.csproj" />
+		<ProjectReference Include="..\DbSqliteLib\DbSqliteLib.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="gen\" />
+	</ItemGroup>
+
+</Project>

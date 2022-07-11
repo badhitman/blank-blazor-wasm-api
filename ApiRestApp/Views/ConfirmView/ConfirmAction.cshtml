@@ -1,0 +1,25 @@
+﻿@*© https://github.com/badhitman - @fakegov*@
+
+@using ApiRestApp.Controllers
+@using SharedLib.Models
+
+@model ResponseBaseModel
+
+@{
+    if (!Model.IsSuccess)
+    {
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Ошибка!</h4>
+            <hr>
+            @Model.Message
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Операция выполнена</h4>
+            <hr>
+            @Model.Message
+        </div>
+    }
+}

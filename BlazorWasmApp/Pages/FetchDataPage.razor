@@ -1,0 +1,76 @@
+﻿@page "/fetchdata"
+@using Microsoft.AspNetCore.Authorization
+@using SharedLib.Models
+@using SharedLib
+
+@inject HttpClient Http
+@inject SharedLib.Services.IUsersAuthRefitService UsersAuthService
+@inject ILogger<FetchDataPage> Logger
+
+@inherits SharedLib.BlazorBusyComponentBaseModel
+
+@attribute [MinimumLevelAuthorize(AccessLevelsUsersEnum.Trusted)]
+
+<PageTitle>Weather forecast</PageTitle>
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    if (IsBusyProgress == true)
+    {
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        <text> Загрузка...</text>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Temp. (C)</th>
+                    <th>Temp. (F)</th>
+                    <th>Summary</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var forecast in forecasts)
+                {
+                    <tr>
+                        <td>@forecast.Date.ToShortDateString()</td>
+                        <td>@forecast.TemperatureC</td>
+                        <td>@forecast.TemperatureF</td>
+                        <td>@forecast.Summary</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+@code {
+    private WeatherForecastModel[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+#if DEBUG
+    Refit.ApiResponse< WeatherForecastModel[]> rest = await UsersAuthService.DebugAccessCheck();
+
+    if (rest.StatusCode != System.Net.HttpStatusCode.OK)
+    {
+    Logger.LogError($"HTTP error: [code={rest.StatusCode}] {rest?.Error?.Content}");
+    IsBusyProgress = false;
+    return;
+    }
+    forecasts = rest?.Content;
+#else
+        forecasts = await Http.GetFromJsonAsync<WeatherForecastModel[]>("sample-data/weather.json");
+#endif
+    }
+}

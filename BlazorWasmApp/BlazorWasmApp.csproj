@@ -1,0 +1,1973 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>41b7a570-7afa-4e50-897f-d479f7281706</UserSecretsId>
+		<ApplicationIcon>wwwroot\favicon.ico</ApplicationIcon>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+		<AssemblyVersion>1.0.0.1</AssemblyVersion>
+		<FileVersion>1.0.0.1</FileVersion>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<BlazorCacheBootResources>false</BlazorCacheBootResources>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <RunAOTCompilation>True</RunAOTCompilation>
+	  <DefineConstants>$(DefineConstants)TRACE;DEMO</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <RunAOTCompilation>True</RunAOTCompilation>
+	  <DefineConstants>$(DefineConstants)TRACE;DEMO</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="Shared\UserProfilePage.razor.css" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="wwwroot\js\ckeditor5\translations\af.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\ar.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\ast.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\az.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\bg.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\bs.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\ca.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\cs.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\da.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\de-ch.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\de.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\el.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\en-au.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\en-gb.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\en.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\eo.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\es.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\et.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\eu.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\fa.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\fi.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\fr.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\gl.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\gu.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\he.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\hi.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\hr.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\hu.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\id.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\it.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\ja.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\kk.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\km.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\kn.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\ko.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\ku.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\lt.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\lv.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\ms.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\nb.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\ne.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\nl.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\no.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\oc.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\pl.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\pt-br.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\pt.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\ro.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\si.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\sk.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\sl.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\sq.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\sr-latn.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\sr.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\sv.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\th.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\tk.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\tr.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\tt.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\ug.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\uk.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\uz.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\vi.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\zh-cn.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="wwwroot\js\ckeditor5\translations\zh.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.6" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Core" Version="2.2.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\SharedLib\SharedLib.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Update="wwwroot\clientconfig.Development.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\clientconfig.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\js\ckeditor5\ckeditor.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\js\ckeditor5\ckeditor.js.map">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\js\CKEditorInterop.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\js\googlere_captcha.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\js\JsOfReCAPTCHA.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\js\scriptLoader.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\js\site.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-grid.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-grid.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-grid.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-grid.min.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-grid.rtl.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-grid.rtl.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-grid.rtl.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-grid.rtl.min.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-reboot.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-reboot.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-reboot.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-reboot.min.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-reboot.rtl.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-reboot.rtl.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-reboot.rtl.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-reboot.rtl.min.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-utilities.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-utilities.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-utilities.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-utilities.min.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-utilities.rtl.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-utilities.rtl.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-utilities.rtl.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap-utilities.rtl.min.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap.min.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap.rtl.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap.rtl.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap.rtl.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\css\bootstrap.rtl.min.css.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\js\bootstrap.bundle.js">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\js\bootstrap.bundle.js.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\js\bootstrap.bundle.min.js">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\js\bootstrap.bundle.min.js.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\js\bootstrap.esm.js">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\js\bootstrap.esm.js.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\js\bootstrap.esm.min.js">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\js\bootstrap.esm.min.js.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\js\bootstrap.js">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\js\bootstrap.js.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\js\bootstrap.min.js">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\js\bootstrap.min.js.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\bootstrap-grid.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\bootstrap-reboot.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\bootstrap-utilities.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\bootstrap.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\forms\_floating-labels.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\forms\_form-check.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\forms\_form-control.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\forms\_form-range.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\forms\_form-select.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\forms\_form-text.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\forms\_input-group.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\forms\_labels.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\forms\_validation.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\helpers\_clearfix.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\helpers\_colored-links.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\helpers\_position.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\helpers\_ratio.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\helpers\_stacks.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\helpers\_stretched-link.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\helpers\_text-truncation.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\helpers\_visually-hidden.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\helpers\_vr.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_alert.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_backdrop.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_border-radius.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_box-shadow.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_breakpoints.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_buttons.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_caret.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_clearfix.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_color-scheme.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_container.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_deprecate.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_forms.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_gradients.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_grid.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_image.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_list-group.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_lists.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_pagination.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_reset-text.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_resize.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_table-variants.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_text-truncate.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_transition.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_utilities.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\mixins\_visually-hidden.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\utilities\_api.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\vendor\_rfs.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_accordion.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_alert.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_badge.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_breadcrumb.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_button-group.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_buttons.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_card.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_carousel.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_close.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_containers.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_dropdown.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_forms.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_functions.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_grid.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_helpers.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_images.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_list-group.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_mixins.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_modal.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_nav.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_navbar.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_offcanvas.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_pagination.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_placeholders.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_popover.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_progress.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_reboot.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_root.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_spinners.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_tables.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_toasts.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_tooltip.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_transitions.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_type.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_utilities.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\bootstrap\scss\_variables.scss">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\images\ui-icons_444444_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\images\ui-icons_555555_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\images\ui-icons_777620_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\images\ui-icons_777777_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\images\ui-icons_cc0000_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\jquery-ui.js">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\jquery-ui.min.js">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\jquery-ui.structure.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\jquery-ui.structure.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\jquery-ui.theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\jquery-ui.theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\base\images\ui-icons_444444_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\base\images\ui-icons_555555_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\base\images\ui-icons_777620_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\base\images\ui-icons_777777_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\base\images\ui-icons_cc0000_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\base\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\base\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\base\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\base\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\base\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\images\ui-bg_diagonals-thick_8_333333_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\images\ui-bg_glass_40_111111_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\images\ui-bg_glass_55_1c1c1c_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\images\ui-bg_highlight-hard_100_f9f9f9_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\images\ui-bg_highlight-hard_40_aaaaaa_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\images\ui-bg_highlight-soft_50_aaaaaa_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\images\ui-bg_inset-hard_45_cd0a0a_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\images\ui-bg_inset-hard_55_ffeb80_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\images\ui-icons_222222_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\images\ui-icons_4ca300_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\images\ui-icons_bbbbbb_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\images\ui-icons_ededed_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\images\ui-icons_ffcf29_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\black-tie\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\blitzer\images\ui-bg_diagonals-thick_75_f3d8d8_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\blitzer\images\ui-bg_dots-small_65_a6a6a6_2x2.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\blitzer\images\ui-bg_glass_55_fbf8ee_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\blitzer\images\ui-bg_highlight-hard_100_eeeeee_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\blitzer\images\ui-bg_highlight-hard_100_f6f6f6_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\blitzer\images\ui-bg_highlight-soft_15_cc0000_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\blitzer\images\ui-icons_004276_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\blitzer\images\ui-icons_cc0000_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\blitzer\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\blitzer\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\blitzer\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\blitzer\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\blitzer\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\images\ui-bg_diagonals-thick_90_eeeeee_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\images\ui-bg_glass_100_e4f1fb_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\images\ui-bg_glass_50_3baae3_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\images\ui-bg_glass_80_d7ebf9_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\images\ui-bg_highlight-hard_100_f2f5f7_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\images\ui-bg_highlight-hard_70_000000_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\images\ui-bg_highlight-soft_100_deedf7_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\images\ui-bg_highlight-soft_25_ffef8f_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\images\ui-icons_2694e8_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\images\ui-icons_2e83ff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\images\ui-icons_3d80b3_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\images\ui-icons_72a7cf_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\cupertino\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\images\ui-bg_glass_40_ffc73d_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\images\ui-bg_highlight-hard_20_0972a5_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\images\ui-bg_highlight-soft_33_003147_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\images\ui-bg_highlight-soft_35_222222_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\images\ui-bg_highlight-soft_44_444444_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\images\ui-bg_highlight-soft_80_eeeeee_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\images\ui-bg_loop_25_000000_21x21.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\images\ui-icons_222222_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\images\ui-icons_4b8e0b_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\images\ui-icons_a83300_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\images\ui-icons_cccccc_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dark-hive\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dot-luv\images\ui-bg_diagonals-thick_15_0b3e6f_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dot-luv\images\ui-bg_dots-medium_30_0b58a2_4x4.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dot-luv\images\ui-bg_dots-small_20_333333_2x2.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dot-luv\images\ui-bg_dots-small_30_a32d00_2x2.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dot-luv\images\ui-bg_dots-small_40_00498f_2x2.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dot-luv\images\ui-bg_gloss-wave_20_111111_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dot-luv\images\ui-icons_00498f_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dot-luv\images\ui-icons_98d2fb_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dot-luv\images\ui-icons_9ccdfc_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dot-luv\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dot-luv\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dot-luv\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dot-luv\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\dot-luv\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\eggplant\images\ui-bg_gloss-wave_30_3d3644_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\eggplant\images\ui-bg_highlight-soft_100_dcd9de_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\eggplant\images\ui-bg_highlight-soft_100_eae6ea_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\eggplant\images\ui-bg_highlight-soft_25_30273a_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\eggplant\images\ui-bg_highlight-soft_45_5f5964_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\eggplant\images\ui-icons_454545_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\eggplant\images\ui-icons_734d99_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\eggplant\images\ui-icons_8d78a5_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\eggplant\images\ui-icons_a8a3ae_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\eggplant\images\ui-icons_ebccce_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\eggplant\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\eggplant\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\eggplant\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\eggplant\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\eggplant\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\excite-bike\images\ui-bg_diagonals-small_25_c5ddfc_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\excite-bike\images\ui-bg_diagonals-thick_20_e69700_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\excite-bike\images\ui-bg_diagonals-thick_22_1484e6_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\excite-bike\images\ui-bg_diagonals-thick_26_2293f7_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\excite-bike\images\ui-bg_highlight-soft_100_f9f9f9_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\excite-bike\images\ui-bg_inset-hard_100_eeeeee_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\excite-bike\images\ui-icons_0a82eb_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\excite-bike\images\ui-icons_0b54d5_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\excite-bike\images\ui-icons_5fa5e3_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\excite-bike\images\ui-icons_fcdd4a_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\excite-bike\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\excite-bike\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\excite-bike\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\excite-bike\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\excite-bike\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\flick\images\ui-bg_glass_65_ffffff_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\flick\images\ui-bg_highlight-soft_100_f6f6f6_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\flick\images\ui-bg_highlight-soft_25_0073ea_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\flick\images\ui-bg_highlight-soft_50_dddddd_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\flick\images\ui-icons_0073ea_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\flick\images\ui-icons_454545_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\flick\images\ui-icons_666666_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\flick\images\ui-icons_ff0084_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\flick\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\flick\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\flick\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\flick\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\flick\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\images\ui-bg_diagonals-small_40_db4865_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\images\ui-bg_diagonals-small_50_93c3cd_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\images\ui-bg_diagonals-small_50_ff3853_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\images\ui-bg_diagonals-small_75_ccd232_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\images\ui-bg_dots-medium_80_ffff38_4x4.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\images\ui-bg_dots-small_35_35414f_2x2.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\images\ui-bg_white-lines_85_f7f7ba_40x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\images\ui-icons_454545_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\images\ui-icons_88a206_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\images\ui-icons_c02669_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\images\ui-icons_e1e463_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\images\ui-icons_ffeb33_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\hot-sneaks\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\images\ui-bg_glass_100_f5f0e5_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\images\ui-bg_glass_25_cb842e_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\images\ui-bg_glass_70_ede4d4_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\images\ui-bg_highlight-hard_100_f4f0ec_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\images\ui-bg_highlight-hard_65_fee4bd_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\images\ui-bg_highlight-hard_75_f5f5b5_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\images\ui-bg_inset-soft_100_f4f0ec_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\images\ui-icons_c47a23_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\images\ui-icons_cb672b_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\images\ui-icons_f08000_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\images\ui-icons_f35f07_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\images\ui-icons_ff7519_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\humanity\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\images\ui-bg_diagonals-small_0_aaaaaa_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\images\ui-bg_diagonals-thick_15_444444_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\images\ui-bg_diagonals-thick_95_ffdc2e_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\images\ui-bg_glass_55_fbf5d0_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\images\ui-bg_highlight-hard_30_285c00_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\images\ui-bg_highlight-soft_33_3a8104_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\images\ui-bg_highlight-soft_50_4eb305_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\images\ui-bg_highlight-soft_60_4ca20b_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\images\ui-bg_inset-soft_10_285c00_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\images\ui-icons_4eb305_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\images\ui-icons_72b42d_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\images\ui-icons_cd0a0a_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\le-frog\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\images\ui-bg_glass_15_5f391b_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\images\ui-bg_gloss-wave_20_1c160d_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\images\ui-bg_gloss-wave_25_453326_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\images\ui-bg_gloss-wave_30_44372c_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\images\ui-bg_highlight-soft_20_201913_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\images\ui-bg_highlight-soft_20_619226_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\images\ui-bg_inset-soft_10_201913_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\images\ui-icons_222222_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\images\ui-icons_9bcc60_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\images\ui-icons_add978_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\images\ui-icons_e3ddc9_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\images\ui-icons_f1fd86_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\mint-choc\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\overcast\images\ui-bg_glass_100_f8f8f8_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\overcast\images\ui-bg_glass_35_dddddd_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\overcast\images\ui-bg_glass_60_eeeeee_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\overcast\images\ui-bg_inset-hard_75_999999_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\overcast\images\ui-bg_inset-soft_50_c9c9c9_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\overcast\images\ui-icons_3383bb_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\overcast\images\ui-icons_454545_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\overcast\images\ui-icons_70b2e1_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\overcast\images\ui-icons_999999_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\overcast\images\ui-icons_fbc856_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\overcast\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\overcast\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\overcast\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\overcast\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\images\ui-bg_diagonal-maze_20_6e4f1c_10x10.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\images\ui-bg_diagonal-maze_40_000000_10x10.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\images\ui-bg_fine-grain_10_eceadf_60x60.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\images\ui-bg_fine-grain_10_f8f7f6_60x60.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\images\ui-bg_fine-grain_15_eceadf_60x60.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\images\ui-bg_fine-grain_15_f7f3de_60x60.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\images\ui-bg_fine-grain_15_ffffff_60x60.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\images\ui-bg_fine-grain_65_654b24_60x60.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\images\ui-bg_fine-grain_68_b83400_60x60.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\images\ui-icons_222222_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\images\ui-icons_3572ac_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\images\ui-icons_8c291d_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\images\ui-icons_b83400_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\images\ui-icons_fbdb93_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\pepper-grinder\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\images\ui-bg_glass_75_d0e5f5_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\images\ui-bg_glass_85_dfeffc_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\images\ui-bg_glass_95_fef1ec_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\images\ui-bg_gloss-wave_55_5c9ccc_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\images\ui-bg_inset-hard_100_f5f8f9_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\images\ui-bg_inset-hard_100_fcfdfd_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\images\ui-icons_217bc0_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\images\ui-icons_2e83ff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\images\ui-icons_469bdd_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\images\ui-icons_6da8d5_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\images\ui-icons_cd0a0a_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\images\ui-icons_d8e7f3_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\images\ui-icons_f9bd01_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\redmond\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\smoothness\images\ui-bg_glass_55_fbf9ee_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\smoothness\images\ui-bg_glass_65_ffffff_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\smoothness\images\ui-bg_glass_75_dadada_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\smoothness\images\ui-bg_glass_75_e6e6e6_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\smoothness\images\ui-bg_glass_95_fef1ec_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\smoothness\images\ui-bg_highlight-soft_75_cccccc_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\smoothness\images\ui-icons_222222_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\smoothness\images\ui-icons_2e83ff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\smoothness\images\ui-icons_454545_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\smoothness\images\ui-icons_888888_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\smoothness\images\ui-icons_cd0a0a_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\smoothness\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\smoothness\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\smoothness\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\smoothness\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\images\ui-bg_glass_55_fcf0ba_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\images\ui-bg_gloss-wave_100_ece8da_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\images\ui-bg_highlight-hard_100_f5f3e5_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\images\ui-bg_highlight-hard_100_fafaf4_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\images\ui-bg_highlight-hard_15_459e00_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\images\ui-bg_highlight-hard_95_cccccc_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\images\ui-bg_highlight-soft_25_67b021_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\images\ui-bg_highlight-soft_95_ffedad_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\images\ui-bg_inset-soft_15_2b2922_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\images\ui-icons_808080_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\images\ui-icons_847e71_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\images\ui-icons_8DC262_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\images\ui-icons_cd0a0a_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\images\ui-icons_eeeeee_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\south-street\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\images\ui-bg_glass_45_0078ae_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\images\ui-bg_glass_55_f8da4e_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\images\ui-bg_glass_75_79c9ec_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\images\ui-bg_gloss-wave_45_e14f1c_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\images\ui-bg_gloss-wave_50_6eac2c_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\images\ui-bg_gloss-wave_75_2191c0_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\images\ui-bg_inset-hard_100_fcfdfd_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\images\ui-icons_0078ae_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\images\ui-icons_056b93_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\images\ui-icons_d8e7f3_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\images\ui-icons_e0fdff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\images\ui-icons_f5e175_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\images\ui-icons_f7a50d_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\images\ui-icons_fcd113_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\start\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\images\ui-bg_diagonals-medium_20_d34d17_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\images\ui-bg_gloss-wave_45_817865_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\images\ui-bg_gloss-wave_60_fece2f_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\images\ui-bg_gloss-wave_70_ffdd57_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\images\ui-bg_gloss-wave_90_fff9e5_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\images\ui-bg_highlight-soft_100_feeebd_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\images\ui-bg_inset-soft_30_ffffff_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\images\ui-icons_3d3d3d_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\images\ui-icons_bd7b00_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\images\ui-icons_d19405_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\images\ui-icons_eb990f_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\images\ui-icons_ed9f26_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\images\ui-icons_fadc7a_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\images\ui-icons_ffe180_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\sunny\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\images\ui-bg_diamond_10_4f4221_10x8.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\images\ui-bg_diamond_20_372806_10x8.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\images\ui-bg_diamond_25_675423_10x8.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\images\ui-bg_diamond_25_d5ac5d_10x8.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\images\ui-bg_diamond_8_261803_10x8.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\images\ui-bg_diamond_8_443113_10x8.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\images\ui-bg_highlight-hard_65_fee4bd_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\images\ui-icons_070603_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\images\ui-icons_e8e2b5_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\images\ui-icons_e9cd86_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\images\ui-icons_efec9f_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\images\ui-icons_f2ec64_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\images\ui-icons_f9f2bd_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\images\ui-icons_ff7519_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\swanky-purse\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\images\ui-bg_diagonals-small_50_262626_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\images\ui-bg_glass_40_0a0a0a_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\images\ui-bg_glass_55_f1fbe5_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\images\ui-bg_glass_60_000000_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\images\ui-bg_gloss-wave_55_000000_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\images\ui-bg_gloss-wave_85_9fda58_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\images\ui-bg_gloss-wave_95_f6ecd5_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\images\ui-icons_000000_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\images\ui-icons_1f1f1f_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\images\ui-icons_9fda58_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\images\ui-icons_b8ec79_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\images\ui-icons_cd0a0a_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\trontastic\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\images\ui-bg_glass_20_555555_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\images\ui-bg_glass_40_0078a3_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\images\ui-bg_glass_40_ffc73d_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\images\ui-bg_gloss-wave_25_333333_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\images\ui-bg_highlight-soft_80_eeeeee_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\images\ui-bg_inset-soft_25_000000_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\images\ui-bg_inset-soft_30_f58400_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\images\ui-icons_222222_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\images\ui-icons_4b8e0b_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\images\ui-icons_a83300_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\images\ui-icons_cccccc_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-darkness\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\images\ui-bg_diagonals-thick_18_b81900_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\images\ui-bg_diagonals-thick_20_666666_40x40.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\images\ui-bg_glass_100_f6f6f6_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\images\ui-bg_glass_100_fdf5ce_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\images\ui-bg_glass_65_ffffff_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\images\ui-bg_gloss-wave_35_f6a828_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\images\ui-bg_highlight-soft_100_eeeeee_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\images\ui-bg_highlight-soft_75_ffe45c_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\images\ui-icons_222222_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\images\ui-icons_228ef1_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\images\ui-icons_ef8c08_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\images\ui-icons_ffd27a_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\images\ui-icons_ffffff_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\ui-lightness\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\images\ui-bg_glass_95_fef1ec_1x400.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\images\ui-bg_gloss-wave_16_121212_500x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\images\ui-bg_highlight-hard_15_888888_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\images\ui-bg_highlight-hard_55_555555_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\images\ui-bg_highlight-soft_35_adadad_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\images\ui-bg_highlight-soft_60_dddddd_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\images\ui-bg_inset-soft_15_121212_1x100.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\images\ui-icons_666666_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\images\ui-icons_aaaaaa_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\images\ui-icons_bbbbbb_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\images\ui-icons_c98000_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\images\ui-icons_cccccc_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\images\ui-icons_cd0a0a_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\images\ui-icons_f29a00_256x240.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\jquery-ui.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\jquery-ui.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\theme.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jqueryui\themes\vader\theme.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jquery\jquery.js">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jquery\jquery.min.js">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jquery\jquery.min.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jquery\jquery.slim.js">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jquery\jquery.slim.min.js">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\jquery\jquery.slim.min.map">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\open-iconic\font\css\open-iconic-bootstrap.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\open-iconic\font\css\open-iconic-bootstrap.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\open-iconic\font\css\open-iconic-foundation.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\open-iconic\font\css\open-iconic-foundation.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\open-iconic\font\css\open-iconic.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\open-iconic\font\css\open-iconic.min.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\open-iconic\font\fonts\open-iconic.eot">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\open-iconic\font\fonts\open-iconic.otf">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\open-iconic\font\fonts\open-iconic.svg">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\open-iconic\font\fonts\open-iconic.ttf">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\lib\open-iconic\font\fonts\open-iconic.woff">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\lib\" />
+	</ItemGroup>
+</Project>

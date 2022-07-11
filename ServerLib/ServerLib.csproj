@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="Redis\**" />
+		<Compile Remove="Repositories\**" />
+		<EmbeddedResource Remove="Redis\**" />
+		<EmbeddedResource Remove="Repositories\**" />
+		<None Remove="Redis\**" />
+		<None Remove="Repositories\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MailKit" Version="3.3.0" />
+		<PackageReference Include="MimeKit" Version="3.3.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="NLog" Version="5.0.1" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="5.0.0" />
+		<PackageReference Include="StackExchange.Redis" Version="2.6.48" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DatabaseContext\DbSqliteLib\DbSqliteLib.csproj" />
+		<ProjectReference Include="..\reCaptchaLib\reCaptchaLib.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="gen\" />
+	</ItemGroup>
+
+</Project>

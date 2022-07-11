@@ -1,0 +1,103 @@
+{
+  "RootFolderName": "./storage-files",
+  "ReCaptchaConfig": {
+    "Mode": 0,
+    "ReCaptchaV2Config": {
+      "PublicKey": "6LdIhEcUAAAAAMO-wXB9GLQCK1UJyj6OV47yjRXo",
+      "PrivateKey": "6LdIhEcUAAAAAJWS2SfCIrmYPDkeP-u7rvONbC-9"
+    },
+    "ReCaptchaV2InvisibleConfig": {
+      "PublicKey": "6Ld5eLgUAAAAAImQ1H3X1GkBgfZI-g_ojri1Gk3z",
+      "PrivateKey": "6Ld5eLgUAAAAAGIqamBF-6Otg2dlU6Fc4L--OW6U"
+    } /*,
+    "ReCaptchaV3Config": {
+      "PublicKey": "",
+      "PrivateKey": ""
+    }*/
+  },
+  "DatabaseConfig": {
+    "Connect": {
+      "SqLiteFileName": "designer_meta_app.db",
+      //"ConnectionString": "Host=localhost;Port=5432;Database=edb;Username=postgres;Password=555555555"
+      "ConnectionString": "Data Source=./bin/mydb.db;"
+    },
+    "SqlLogDebug": true,
+    "EnableSensitiveDataLoggingDebug": true
+  },
+  "CookiesConfig": {
+    "SessionCookieExpiresSeconds": 86400,
+    "LongSessionCookieExpiresSeconds": 172800,
+    "SessionCookieSslSecureOnly": false,
+    "SessionTokenName": "token-session-id"
+  },
+  "WebConfig": {
+    "ClientOrignsCORS": [ "https://localhost:7222" ],
+    "AllowedHosts": "*",
+    "MaxConcurrentConnections": 100,
+    "MaxRequestBodySize": 30000000,
+    "KeepAliveTimeout": 120,
+    "MaxRequestHeadersTotalSize": 32768,
+    "MaxRequestLineSize": 8192
+  },
+  "SmtpConfig": {
+    "EmailNotificationRecipients": [
+      "ru.usa@mail.ru"
+    ],
+    "PublicName": "iq-s.pro",
+    "Email": "badhitman@yandex.ru",
+    "Host": "smtp.yandex.ru",
+    "Port": 465,
+    "Login": "badhitman",
+    "Password": "xxxxxxxxx",
+    "UseSsl": true
+  },
+  "RedisConfig": {
+    "ResolveDns": false,
+    "Password": "",
+    "User": "",
+    "KeepAlive": 5,
+    "EndPoint": "localhost:6379",
+    "AbortOnConnectFail": false,
+    "ConnectTimeout": 10000,
+    "ConfigurationChannel": "",
+    "ConnectRetry": 5,
+    "ClientName": "",
+    "AsyncTimeout": 10000,
+    "AllowAdmin": true,
+    "Ssl": false,
+    "SslHost": "",
+    "SyncTimeout": 10000
+  },
+  "ApiConfig": {
+    "Host": "localhost",
+    "Port": 5501,
+    "HttpSheme": "http"
+  },
+  "KestrelHostConfig": {
+    "Host": "localhost",
+    "Port": 5501,
+    "HttpSheme": "http"
+  },
+  "ClientConfig": {
+    "Host": "localhost",
+    "Port": 7222,
+    "HttpSheme": "http"
+  },
+  "UserManageConfig": {
+    "RegistrationUserConfirmDeadlineMinutes": 180,
+    "RestoreUserConfirmDeadlineMinutes": 30,
+    "DenyRegistration": {
+      "IsDeny": false,
+      "Message": ""
+    },
+    "DenyAuthorisation": {
+      "IsDeny": false,
+      "Message": ""
+    },
+    "ConfirmHistoryDays": 60,
+    "RootUsersEmails": [ "badhitman@yandex.ru", "ru.usa@mail.ru" ]
+  },
+  "RefitHandlerLifetimeMinutes": 0,
+  "PaginationPageSizeMin": 20,
+  "PaginationDefaultSorting": "Down"
+}

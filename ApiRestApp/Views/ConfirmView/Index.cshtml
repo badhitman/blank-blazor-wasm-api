@@ -1,0 +1,45 @@
+﻿@*© https://github.com/badhitman - @fakegov*@
+
+@using ApiRestApp.Controllers
+@using SharedLib.Models
+
+@model ConfirmationResponseModel
+
+@{
+    if (!Model.IsSuccess)
+    {
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Ошибка!</h4>
+            <hr>
+            @Model.Message
+        </div>
+    }
+    else
+    {
+        string asp_controller_name = nameof(ConfirmViewController);
+        asp_controller_name = asp_controller_name.Substring(0, asp_controller_name.Length - 10);
+
+        string head = string.Empty;
+
+        switch (Model.Confirmation.ConfirmationType)
+        {
+            case ConfirmationsTypesEnum.RegistrationUser:
+                head = "Подтверждение регистрации";
+                break;
+            case ConfirmationsTypesEnum.RestoreUser:
+                head = "Сброс пароля пользователя";
+                break;
+        }
+        <h3>@head</h3>
+        <form method="post" asp-controller="@asp_controller_name" asp-action="@(nameof(ConfirmViewController.ConfirmAction))">
+            <div class="mb-3 row">
+                <label for="confirm_id" class="col-sm-2 col-form-label">Токен:</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="confirm_id" name="confirm_id" value="@Model.Confirmation.GuidConfirmation">
+                </div>
+            </div>
+            <p></p>
+            <button type="submit" class="btn btn-primary mb-3">Подтвердить/Выполнить</button>
+        </form>
+    }
+}

@@ -1,0 +1,398 @@
+﻿@using SharedLib.Services
+@using Newtonsoft.Json
+@using Refit
+@using SharedLib.Models
+@using SharedLib
+@using BlazorWasmApp.Shared.datatable
+@using BlazorWasmApp.Shared.tabs
+
+@inject NavigationManager MyNavigationManager
+@inject IClientSession SessionLocalStorage
+@inject SessionMarkerLiteModel SessionMarker
+@inject CustomAuthStateProvider authState
+@inject IUsersProfilesRestService usersProfilesRefitService
+@inject IUsersAuthRestService usersAuthRefitService
+@inject ILogger<UserProfileComponent> _logger
+@inject ClientConfigModel conf
+
+@inherits BlazorBusyComponentBaseModel
+<style>
+    .buton-kill-session {
+        cursor: pointer;
+    }
+</style>
+@{
+    if (IsBusyProgress == true)
+    {
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Загрузка...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <AuthorizeView Policy="MinimumLevelConfirmed" Context="av_context">
+            <Authorized>
+                <fieldset disabled="@IsBusyProgress">
+                    <TabSetComponent>
+                        <TabComponent Title="Основные">
+                            <h4>Профиль <sup># @user_profile_result?.Id</sup></h4>
+                            <EditForm Model="@user_profile_result" OnValidSubmit="@HandleValidSubmitAsync">
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label">Email</label>
+                                    <InputText type="email" class="form-control" id="exampleInputEmail1" @bind-Value="user_profile_result.Email" aria-describedby="emailHelp" readonly />
+                                    <div id="emailHelp" class="form-text">Контактный Email. Не отображается публично.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputLogin" class="form-label">Login</label>
+                                    <InputText class="form-control" id="exampleInputLogin" @bind-Value="user_profile_result.Login" aria-describedby="loginHelp" readonly />
+                                    <div id="loginHelp" class="form-text">Login для входа. Не отображается публично.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputName" class="form-label">Имя</label>
+                                    <InputText class="form-control" id="exampleInputName" @bind-Value="user_profile_result.Name" @oninput="OnNameChanged" aria-describedby="nameHelp" readonly="@(!CanEditPublicName)" />
+                                    <div id="nameHelp" class="form-text">Публичное имя. Как видят вас другие пользователи.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputAbout" class="form-label">Информация</label>
+                                    <InputRichTextComponent Id="exampleInputAbout" @bind-Value="user_profile_result.About" readonly="@(!CanEditAbout)" />
+                                    <div id="nameAbout" class="form-text">Коротко о себе / Подпись</div>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-text">Статус</span>
+                                    <InputSelect id="exampleInputLevel" @bind-Value="user_profile_result.AccessLevelUser" class="form-select" aria-label="Default select example" disabled="@(!CanEditAccessLevel)">
+                                        <option value="@AccessLevelsUsersEnum.Blocked">Заблокирован</option>
+                                        <option value="@AccessLevelsUsersEnum.Auth">Без подтверждения</option>
+                                        <option value="@AccessLevelsUsersEnum.Confirmed">Подтверждённый</option>
+                                        <option value="@AccessLevelsUsersEnum.Trusted">Проверенный</option>
+                                        <option value="@AccessLevelsUsersEnum.Manager" disabled="@(!IsAdminLevelAccess)">Менеджер</option>
+                                        <option value="@AccessLevelsUsersEnum.Admin" disabled="@(!IsRootLevelAccess)">Администратор</option>
+                                        <option value="@AccessLevelsUsersEnum.ROOT" disabled="disabled">ROOT</option>
+                                    </InputSelect>
+                                </div>
+                                <br />
+                                <div class="d-flex justify-content-end">
+                                    @{
+                                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                            <button class="btn btn-outline-@(CanSaveUserProfile ? "success" : "secondary")" type="submit" id="button-save-user-profile" disabled="@(!CanSaveUserProfile)">Сохранить</button>
+                                            <button @onclick="ResetFormAsync" type="button" class="btn btn-outline-@(CanSaveUserProfile ? "primary" : "secondary")" disabled="@(!CanSaveUserProfile)">Отмена</button>
+                                        </div>
+                                    }
+                                </div>
+                            </EditForm>
+                        </TabComponent>
+                        <TabComponent Title="Пароль">
+                            <h4>Изменение пароля</h4>
+                            <EditForm autocomplete="off" Model="@change_password">
+                                <DataAnnotationsValidator />
+                                <ValidationSummary />
+                                @{
+                                    if (IdProfile == 0)
+                                    {
+                                        <div class="mb-3 row">
+                                            <label for="inputPasswordCurrent" class="col-sm-1 col-form-label">Текущий</label>
+                                            <div class="col-sm-10">
+                                                <InputText @bind-Value="change_password.PasswordCurrent" type="password" class="form-control" id="inputPasswordCurrent"></InputText>
+                                                <div id="inputPasswordCurrentHelp" class="form-text">Введите действующий пароль от учётной записи</div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                                <div class="mb-3 row">
+                                    <label for="inputPasswordNew" class="col-sm-1 col-form-label">Новый</label>
+                                    <div class="col-sm-10">
+                                        <InputText @bind-Value="change_password.PasswordNew" type="password" class="form-control" id="inputPasswordNew"></InputText>
+                                        <div id="inputPasswordNewHelp" class="form-text">Введите новый пароль.</div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="inputPasswordConfirm" class="col-sm-1 col-form-label">Повтор</label>
+                                    <div class="col-sm-10">
+                                        <InputText @bind-Value="change_password.PasswordConfirm" type="password" class="form-control" id="inputPasswordConfirm"></InputText>
+                                        <div id="inputPasswordConfirmHelp" class="form-text">Подтверждение нового пароля.</div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" type="button" disabled="@IsBusyProgress" @onclick="NewPasswordHandleValidSubmitAsync">
+                                    @{
+                                        if (IsBusyProgress == true)
+                                        {
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            <text> Загрузка...</text>
+                                        }
+                                        else
+                                        {
+                                            <text>Сохранить</text>
+                                        }
+                                    }
+                                </button>
+                            </EditForm>
+                        </TabComponent>
+                        <TabComponent Title="Сессии" @ref="SessionsTab">
+                            <h4>Текущие/активные сессии пользователя</h4>
+                            <ol class="list-group list-group-numbered">
+                                @foreach (UserSessionModel s in UserSessions)
+                                {
+                                    bool is_current_session = SessionMarker.Token == s.GuidTokenSession.ToString();
+                                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                                        <div class="ms-2 me-auto">
+                                            <div class="fw-bold">@s.DateTimeStart || @s.IPAddressClient</div>
+                                            <span @onclick="@(e => KillSession(e, s.GuidTokenSession))" class="badge bg-@(is_current_session ? "primary" : "danger") rounded-pill @(is_current_session ? string.Empty : "buton-kill-session")">@(is_current_session ? "текущая" : "завершить")</span>
+                                            <small>@s.GuidTokenSession.ToString().Replace("-","")</small>
+                                        </div>
+                                    </li>
+                                }
+                            </ol>
+                        </TabComponent>
+                    </TabSetComponent>
+                </fieldset>
+            </Authorized>
+            <NotAuthorized>
+                @{
+                    if (!re_activate_is_sended)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <h4 class="alert-heading">Email не подтверждён!</h4>
+                            <p>Ваш акаунт будет ограничен до тех пор, пока вы не подвтердите свою электроную почту.</p>
+                            <hr>
+                            <p>После регистрации учётной записи - вам было отправлено предложение (от <u>@conf.EmailSenderAddress</u>) подвтердить её, перейдя по ссылке активации. Если по какой-то причине вы не получили письма, можете <a href=@(MyNavigationManager.Uri) @onclick="RenewConfirmRegistrationAsync">повторно запросить новый токен подвтерждения</a></p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info" role="alert">
+                            <h4 class="alert-heading">Повторная активация!</h4>
+                            <p>Вам повторно отправлена ссылка для активации вашей учётной записи (от <u>@conf.EmailSenderAddress</u>). @re_activate_info</p>
+                        </div>
+                    }
+                }
+            </NotAuthorized>
+        </AuthorizeView>
+    }
+    <ModalWindowComponent @ref="Modal">
+        <p>@ModalBodyText</p>
+    </ModalWindowComponent>
+}
+
+@code {
+    [Parameter] public int? IdProfile { get; set; }
+
+    private IEnumerable<UserSessionModel> UserSessions = Array.Empty<UserSessionModel>();
+    private ModalWindowComponent Modal { get; set; }
+    private string ModalBodyText { get; set; } = string.Empty;
+
+    private bool SessionTabSelected = false;
+    private TabComponent SessionsTab { get; set; }
+
+
+    private UserLiteModel? user_profile_result = null;
+    private PasswordsPairModel change_password = new PasswordsPairModel();
+
+    bool IsAdminLevelAccess => SessionMarker.AccessLevelUser >= AccessLevelsUsersEnum.Admin && CanEditAccessLevel;
+    bool IsRootLevelAccess => SessionMarker.AccessLevelUser == AccessLevelsUsersEnum.ROOT && CanEditAccessLevel;
+
+    bool CanEditAccessLevel => IdProfile.GetValueOrDefault(0) > 0 && (user_profile_result?.AccessLevelUser).GetValueOrDefault(AccessLevelsUsersEnum.Blocked) < SessionMarker.AccessLevelUser;
+    bool CanEditPublicName => IdProfile.GetValueOrDefault(0) == 0 || SessionMarker.AccessLevelUser >= AccessLevelsUsersEnum.Admin;
+    bool CanEditAbout => IdProfile.GetValueOrDefault(0) == 0 || SessionMarker.AccessLevelUser >= AccessLevelsUsersEnum.Admin;
+
+    AccessLevelsUsersEnum? old_value_access_level = null;
+    bool CanSaveNewAccessLavel => CanEditAccessLevel && old_value_access_level != null && old_value_access_level != user_profile_result.AccessLevelUser && user_profile_result.AccessLevelUser != AccessLevelsUsersEnum.ROOT;
+
+    string old_public_name = null;
+    bool CanSaveNewPublicName => CanEditPublicName && !string.IsNullOrWhiteSpace(user_profile_result.Name) && old_public_name != user_profile_result.Name;
+
+    string old_about = null;
+    bool CanSaveNewAbout => CanEditAbout && !string.IsNullOrWhiteSpace(user_profile_result.About) && old_about != user_profile_result.About;
+
+    bool CanSaveUserProfile => CanSaveNewAccessLavel || CanSaveNewPublicName || CanSaveNewAbout;
+
+    string user_email_host;
+
+    bool re_activate_is_sended = false;
+    string re_activate_info = string.Empty;
+
+    private async Task KillSession(MouseEventArgs e, string token)
+    {
+        if (SessionMarker.Token == token)
+        {
+            ModalBodyText = "Что бы закрыть текущую сессию - выполните выход";
+            Modal.Open("Внимание!");
+            return;
+        }
+        _logger.LogDebug($"kill session -> {token}");
+
+        IsBusyProgress = true;
+        UpdateUserProfileResponseModel rest = await usersProfilesRefitService.ChangeUserProfileAsync(UserProfileAreasEnum.KillSession, new ChangeUserProfileOptionsModel() { UserId = user_profile_result.Id, OptionAttribute = token });
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                ModalBodyText = rest.Message;
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(usersProfilesRefitService.ChangeUserProfileAsync)}({nameof(UserProfileAreasEnum.KillSession)})";
+            }
+            _logger.LogError(ModalBodyText);
+            Modal.Open("Ошибка!");
+        }
+        else
+        {
+            UserSessions = UserSessions.Where(x => x.GuidTokenSession != token);
+        }
+
+        IsBusyProgress = false;
+        SessionTabSelected = true;
+    }
+
+    private async Task OnNameChanged(ChangeEventArgs e)
+    {
+        user_profile_result.Name = e?.Value?.ToString();
+
+        //await PasswordChanged.InvokeAsync(password);
+    }
+
+    private async Task NewPasswordHandleValidSubmitAsync()
+    {
+        IsBusyProgress = true;
+        UpdateUserProfileResponseModel rest = await usersProfilesRefitService.ChangeUserProfileAsync(UserProfileAreasEnum.PasswordChange, new ChangeUserProfileOptionsModel() { UserId = user_profile_result.Id, OptionAttribute = JsonConvert.SerializeObject(change_password) });
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                ModalBodyText = rest.Message;
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(usersProfilesRefitService.ChangeUserProfileAsync)}({nameof(UserProfileAreasEnum.PasswordChange)})";
+            }
+            Modal.Open("Ошибка!");
+            _logger.LogError(ModalBodyText);
+            IsBusyProgress = false;
+            return;
+        }
+        ModalBodyText = "Пароль изменён";
+        Modal.Open("Ok");
+        IsBusyProgress = false;
+    }
+
+    private async Task RenewConfirmRegistrationAsync()
+    {
+        IsBusyProgress = true;
+        ResponseBaseModel res = await usersAuthRefitService.RestoreUserAsync(new UserRestoreModel());
+        re_activate_info = res.Message;
+        re_activate_is_sended = true;
+        IsBusyProgress = false;
+    }
+
+    protected override async void OnInitialized()
+    {
+        if (IdProfile.GetValueOrDefault(0) != 0)
+        {
+            change_password.PasswordCurrent = "admin";
+        }
+        if (SessionMarker.AccessLevelUser > AccessLevelsUsersEnum.Auth)
+            await GetUserProfile();
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (SessionTabSelected)
+            SessionsTab.ActivateTab();
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task GetUserProfile()
+    {
+        IsBusyProgress = true;
+
+        int client_id = SessionMarker.AccessLevelUser < AccessLevelsUsersEnum.Admin
+        ? 0
+        : IdProfile.GetValueOrDefault(0);
+
+        GetUserProfileResponseModel rest = await usersProfilesRefitService.GetUserProfileAsync(client_id);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                ModalBodyText = rest.Message;
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(usersProfilesRefitService.GetUserProfileAsync)}({nameof(client_id)}:{client_id})";
+            }
+            IsBusyProgress = false;
+            _logger.LogError(ModalBodyText);
+            Modal.Open("Error!");
+            await UserLogout();
+            return;
+        }
+
+        if (rest.Sessions is not null)
+            UserSessions = rest.Sessions;
+
+        user_profile_result = rest.User;
+        if (rest.IsSuccess)
+        {
+            await ReloadFormAsync();
+        }
+        else
+        {
+            ModalBodyText = $"Rest user is NULL! {rest.Message}".Trim();
+            Modal.Open("Ошибка!");
+        }
+    }
+
+    private async Task HandleValidSubmitAsync()
+    {
+        UpdateUserProfileResponseModel rest = await usersProfilesRefitService.UpdateUserProfileAsync(user_profile_result);
+        ModalBodyText = rest.Message;
+        Modal.Open(rest.IsSuccess ? "Сохранено" : "Ошибка!");
+        if (rest.IsSuccess)
+        {
+            user_profile_result = rest.User;
+            await ReloadFormAsync();
+        }
+    }
+
+    private async Task ResetFormAsync()
+    {
+        user_profile_result.AccessLevelUser = old_value_access_level.GetValueOrDefault(AccessLevelsUsersEnum.Anonim);
+        user_profile_result.Name = old_public_name;
+    }
+
+    private async Task ReloadFormAsync()
+    {
+        user_email_host = new System.Net.Mail.MailAddress(user_profile_result.Email).Host;
+
+        old_value_access_level = user_profile_result.AccessLevelUser;
+        old_public_name = user_profile_result.Name;
+
+        IsBusyProgress = false;
+        StateHasChanged();
+    }
+
+    private async Task UserLogout()
+    {
+        IsBusyProgress = true;
+        ResponseBaseModel? res = await SessionLocalStorage.LogoutAsync();
+
+        if (!string.IsNullOrEmpty(res?.Message))
+        {
+            if (res.IsSuccess)
+            {
+                _logger.LogInformation(res?.Message);
+            }
+            else
+            {
+                ModalBodyText = res?.Message;
+                _logger.LogError(ModalBodyText);
+                Modal.Open("Error!");
+            }
+        }
+
+        authState.AuthenticationStateChanged();
+        IsBusyProgress = false;
+    }
+}

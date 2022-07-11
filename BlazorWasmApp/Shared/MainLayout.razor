@@ -1,0 +1,29 @@
+﻿@using BlazorWasmApp.Shared.auth
+@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenuComponent />
+    </div>
+
+    <main>
+        <div class="top-row px-4 auth">
+            <LoginMenuDisplayComponent />
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+@code {
+   [Inject]
+   protected IJSRuntime JsRuntime { get; set; }
+
+   protected override void OnAfterRender(bool firstRender)
+   {
+       if (firstRender)
+           JsRuntime.InvokeVoidAsync("onBlazorReady");
+   }
+}

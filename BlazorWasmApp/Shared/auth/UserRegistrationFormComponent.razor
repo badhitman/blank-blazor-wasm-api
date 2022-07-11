@@ -1,0 +1,98 @@
+﻿@using SharedLib.Models
+@using Refit
+@using Microsoft.Extensions.Logging
+@using Microsoft.AspNetCore.Components.Authorization
+@using SharedLib
+@using Microsoft.Extensions.Options
+@using SharedLib.Services
+@inherits BlazorReCaptchaComponentBaseModel
+
+@inject CustomAuthStateProvider authState
+@inject IUsersAuthRestService usersAuthRefitService
+@inject ILogger<UserRegistrationFormComponent> Logger
+@inject ClientConfigModel Config
+@*@inject NavigationManager Navigation*@
+
+<h3>Регистрация</h3>
+<EditForm Model="@user_registration_obj" OnValidSubmit="@HandleValidSubmit">
+    <fieldset disabled="@IsBusyProgress">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="mb-3">
+            <label class="form-label" for="login">Login</label>
+            <InputText class="form-control" id="login" aria-describedby="loginHelp" @bind-Value="user_registration_obj.Login" />
+            <div class="form-text" id="loginHelp">Enter your login</div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="password">Password</label>
+            <InputText class="form-control" type="password" placeholder="Password" id="password" @bind-Value="user_registration_obj.Password" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="password_confirm">Confirm password</label>
+            <InputText class="form-control" type="password" placeholder="Confirm password" id="password_confirm" @bind-Value="user_registration_obj.PasswordConfirm" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="email">Email</label>
+            <InputText type="email" class="form-control" id="email" aria-describedby="emailHelp" @bind-Value="user_registration_obj.Email" />
+            <div class="form-text" id="emailHelp">Укажите свой Email. Мы никогда не будем делиться вашей электронной почтой с кем-либо еще.</div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="name">Public name</label>
+            <InputText type="name" class="form-control" id="name" aria-describedby="loginName" @bind-Value="user_registration_obj.PublicName" />
+            <div class="form-text" id="loginName">Ваше публичное имя</div>
+        </div>
+        <ReCAPTCHAComponent ReCaptchaExpiredCallback="@OnReCaptchaExpired" ReCaptchaSuccessCallback="@OnReCaptchaSuccess" />
+
+        <div class="alert alert-secondary" role="alert">Есть учётная запись? <a class="@ButtonClass(BootstrapColorsStylesEnum.Success)" style="@ButtonStyle" href=@($"/{GlobalStaticConstants.AUTHENTICATION_CONTROLLER_NAME}/{GlobalStaticConstants.LOGIN_ACTION_NAME}")>Войти</a>. Забыли логин/пароль? <a class="@ButtonClass(BootstrapColorsStylesEnum.Info)" style="@ButtonStyle" href=@($"/{GlobalStaticConstants.AUTHENTICATION_CONTROLLER_NAME}/{GlobalStaticConstants.RESTORE_ACTION_NAME}")>Восстановить доступ</a>.</div>
+
+        <button class="btn btn-primary" type="submit" disabled="@IsBusyProgress">
+            @{
+                if (IsBusyProgress == true)
+                {
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <text> Загрузка...</text>
+                }
+                else
+                {
+                    <text>Регистрация</text>
+                }
+            }
+        </button>
+        @{
+            if (!string.IsNullOrWhiteSpace(user_registration_result?.Message))
+            {
+                <p></p>
+                <div class="alert alert-danger" role="alert">
+                    @user_registration_result.Message
+                </div>
+            }
+        }
+    </fieldset>
+</EditForm>
+@code {
+    private UserRegistrationModel user_registration_obj = new();
+    private AuthUserResponseModel? user_registration_result = null;
+
+    public override void OnReCaptchaExpired() { user_registration_obj.ResponseReCAPTCHA = string.Empty; Logger.LogDebug(nameof(OnReCaptchaExpired)); }
+    public override void OnReCaptchaSuccess(string response_code) { user_registration_obj.ResponseReCAPTCHA = response_code; Logger.LogDebug(nameof(OnReCaptchaSuccess)); }
+    public override void OnReCaptchaFailure(string response_code) { Logger.LogError($"{nameof(OnReCaptchaFailure)}! response code: {response_code}"); }
+
+    private async Task HandleValidSubmit()
+    {
+        IsBusyProgress = true;
+
+        user_registration_result = await usersAuthRefitService.RegistrationNewUserAsync(user_registration_obj);
+        if (!user_registration_result.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(user_registration_result.Message))
+                Logger.LogError(user_registration_result.Message);
+            else
+                Logger.LogError($"Ошибка API: {nameof(usersAuthRefitService.LoginUserAsync)}");
+        }
+
+        authState.AuthenticationStateChanged();
+
+        IsBusyProgress = false;
+        this.StateHasChanged();
+    }
+}

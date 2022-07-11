@@ -1,0 +1,41 @@
+﻿@using System.ComponentModel
+@using SharedLib.Models
+@using Microsoft.Extensions.Options
+@inject ClientConfigModel Config
+@inject IJSRuntime JS;
+
+<h5>@reCAPTCHATitle</h5>
+
+<div id="recaptcha_container"></div>
+
+@code {
+    private int WidgetId = -1;
+    private string reCAPTCHATitle = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ReCaptchaSuccessCallback { get; set; }
+
+    [Parameter]
+    public EventCallback ReCaptchaExpiredCallback { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (Config.ReCaptchaConfig.Mode > ReCaptchaModesEnum.None)
+            {
+                reCAPTCHATitle = "Пройдите проверку reCAPTCHA";
+                string public_key = Config.ReCaptchaConfig.Mode == ReCaptchaModesEnum.Version2 ? Config.ReCaptchaConfig.ReCaptchaV2Config.PublicKey : Config.ReCaptchaConfig.ReCaptchaV2InvisibleConfig.PublicKey;
+                WidgetId = await JS.InvokeAsync<int>("render_recaptcha", DotNetObjectReference.Create(this), "recaptcha_container", public_key);
+            }
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    [JSInvokable, EditorBrowsable(EditorBrowsableState.Never)]
+    public void CallbackOnSuccess(string response) => ReCaptchaSuccessCallback.InvokeAsync(response);
+
+    [JSInvokable, EditorBrowsable(EditorBrowsableState.Never)]
+    public void CallbackOnExpired() => ReCaptchaExpiredCallback.InvokeAsync();
+}
