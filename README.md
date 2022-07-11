@@ -200,29 +200,7 @@ ResponseBaseModel()
 }
 ``` 
 
-Сессии со стороны сервера сейчас хранятся в Redis. Это значит, что на сервере требуется данный демон. Если у вас настройки отличаются от дефолтных, то не забудьте их поправить.
-
-```json
-"RedisConfig": {
-    "ResolveDns": false,
-    "Password": "",
-    "User": "",
-    "KeepAlive": 5,
-    "EndPoint": "localhost:6379",
-    "AbortOnConnectFail": false,
-    "ConnectTimeout": 10000,
-    "ConfigurationChannel": "",
-    "ConnectRetry": 5,
-    "ClientName": "",
-    "AsyncTimeout": 10000,
-    "AllowAdmin": true,
-    "Ssl": false,
-    "SslHost": "",
-    "SyncTimeout": 10000
-  }
-```
-
-> если быть точным, то сессии обслуживаются мемкешем, который сейчас реализован на движке Redis.
+Сессии со стороны сервера сейчас хранятся в Redis. Если быть точным, то сессии обслуживаются мемкешем, который сейчас реализован на движке Redis.
 ```c#
 builder.Services.AddSingleton<IManualMemoryCashe, RedisMemoryCasheService>();
 ```
@@ -244,7 +222,3 @@ builder.Services.AddSingleton<IManualMemoryCashe, RedisMemoryCasheService>();
 ```c#
 builder.Services.AddScoped<ISessionService, SessionService>();
 ```
-Отныне сессии я буду хранить где угодно, хоть в бд, хоть Mongo хоть в записной книжке.
-
-P.S.
-Да простит меня великий и могучий IT за этот велосипед, но инструмент годный.
