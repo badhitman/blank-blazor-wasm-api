@@ -45,7 +45,11 @@
 
         IsBusyProgress = true;
 
-        var rest = _logs_refit_service.GetLogsAsync(new LogPaginationByProjectAndOwnersTypesRequestModel() { ProjectId = project_id, PageNum = 1, PageSize = 10 });
+        LogsPaginationResponseModel rest = await _logs_refit_service.GetLogsAsync(new LogPaginationByProjectAndOwnersTypesRequestModel() 
+        { 
+            ProjectId = project_id, 
+            PageNum = 1, PageSize = 10 
+        });
 
         IsBusyProgress = false;
         StateHasChanged();
