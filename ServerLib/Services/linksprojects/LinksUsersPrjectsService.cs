@@ -15,23 +15,25 @@ namespace ServerLib
         readonly ILinksProjectsTable _links_users_to_projects_dt;
         readonly IProjectsTable _projects_dt;
         readonly IUsersTable _users_dt;
+        readonly ILogChangeTable _logs_dt;
 
         /// <summary>
         /// Конструктор
         /// </summary>
-        public LinksUsersPrjectsService(ISessionService set_session_service, ILogger<LinksUsersPrjectsService> set_logger, IUsersTable set_users_dt, IProjectsTable set_projects_dt, ILinksProjectsTable set_links_users_to_projects_dt)
+        public LinksUsersPrjectsService(ISessionService set_session_service, ILogger<LinksUsersPrjectsService> set_logger, IUsersTable set_users_dt, IProjectsTable set_projects_dt, ILinksProjectsTable set_links_users_to_projects_dt, ILogChangeTable logs_dt)
         {
             _users_dt = set_users_dt;
             _links_users_to_projects_dt = set_links_users_to_projects_dt;
             _session_service = set_session_service;
             _projects_dt = set_projects_dt;
+            _logs_dt = logs_dt;
         }
 
         /// <inheritdoc/>
         public async Task<ResponseBaseModel> DeleteToggleLinkProjectAsync(int link_id)
         {
             UserToProjectLinkModelDb? link_db = await _links_users_to_projects_dt.GetLinkUserToProjectAsync(link_id, true);
-            ResponseBaseModel res = new ResponseBaseModel() { IsSuccess = link_db is not null };
+            ResponseBaseModel res = new() { IsSuccess = link_db is not null };
             if (!res.IsSuccess)
             {
                 res.Message = "Ссылка не существует";
@@ -61,7 +63,7 @@ namespace ServerLib
         /// <inheritdoc/>
         public async Task<GetLinksProjectsResponseModel> GetLinksUsersByProjectAsync(int project_id)
         {
-            GetLinksProjectsResponseModel res = new GetLinksProjectsResponseModel() { IsSuccess = _session_service.SessionMarker.AccessLevelUser > AccessLevelsUsersEnum.Auth };
+            GetLinksProjectsResponseModel res = new() { IsSuccess = _session_service.SessionMarker.AccessLevelUser > AccessLevelsUsersEnum.Auth };
             if (!res.IsSuccess)
             {
                 res.Message = "Вы не подвтердили свою учётную запись.";
@@ -94,7 +96,7 @@ namespace ServerLib
         public async Task<AddLinkProjectResultModel> AddLinkProject(AddLinkProjectModel new_link_project, bool auto_save = true)
         {
             ProjectModelDB? project = await _projects_dt.GetProjectAsync(new_link_project.ProjectId, true);
-            AddLinkProjectResultModel res = new AddLinkProjectResultModel()
+            AddLinkProjectResultModel res = new()
             {
                 IsSuccess = project is not null
             };
@@ -142,7 +144,7 @@ namespace ServerLib
         public async Task<ResponseBaseModel> UtdateLevelLinkProjectAsync(UpdateLinkProjectModel set_level_for_link)
         {
             UserToProjectLinkModelDb? link_db = await _links_users_to_projects_dt.GetLinkUserToProjectAsync(set_level_for_link.LinkId, true);
-            ResponseBaseModel res = new ResponseBaseModel()
+            ResponseBaseModel res = new()
             {
                 IsSuccess = link_db is not null
             };
