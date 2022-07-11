@@ -61,7 +61,7 @@ builder.WebHost.UseKestrel(options =>
         case "loopback":
             options.Listen(IPAddress.Loopback, conf.WebConfig.Port);
             break;
-        case "None":
+        case "none":
             options.Listen(IPAddress.None, conf.WebConfig.Port);
             break;
         default:
