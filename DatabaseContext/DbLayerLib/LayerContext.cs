@@ -51,6 +51,7 @@ namespace DbLayerLib
             .HasOne(u => u.Metadata)
             .WithOne(p => p.User)
             .HasForeignKey<UserMetaModelDB>(p => p.UserId);
+
             modelBuilder.BuilderExtensionDesigner();
         }
 
