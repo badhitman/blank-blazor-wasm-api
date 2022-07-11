@@ -1,0 +1,56 @@
+﻿@page "/projects/edit/{id:int?}"
+
+@using BlazorWasmApp.Shared.project
+@using Microsoft.AspNetCore.Authorization
+@using SharedLib.Services
+@using SharedLib.Models
+@using BlazorWasmApp.Shared.tabs
+@using BlazorWasmApp.Shared.datatable.linkproject
+
+@inject SessionMarkerLiteModel _session_marker
+@inject IProjectsRestService _users_projects_refit_service
+@inject ILogger<ProjectEditPage> _logger
+
+@attribute [Authorize]
+
+<div class="card">
+    <div class="card-header">
+        <div class="row justify-content-between">
+            <div class="col-4">
+                @(Id.GetValueOrDefault(0) > 0 ? $"Проект #{Id}" : "Создание нового проекта")
+            </div>
+            <div class="col-4 text-end">
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <TabSetComponent>
+            <TabComponent Title="База" Tooltip="Основные настройки">
+                <UserProjectEditComponent id="@Id" @ref="userProjectEdit" />
+            </TabComponent>
+            <TabComponent Title="Права" Tooltip="Ссылки на проект (пользователи, связанные с проектом)." IsDisabled="@(Id.GetValueOrDefault(0) == 0)">
+                <LinksProjectManageComponent ProjectId="@Id" @ref="linksProjectComponent" />
+            </TabComponent>
+            <TabComponent Title="Состав" Tooltip="Отчёт о составе проекта." IsDisabled="@(Id.GetValueOrDefault(0) == 0)">
+                <ReportStructureProjectComponent ProjectId="@Id" />
+            </TabComponent>
+            <TabComponent Title="Логи" Tooltip="История редактирования." IsDisabled="@(Id.GetValueOrDefault(0) == 0)">
+                <ReportLogsProjectComponent ProjectId="@Id" />
+            </TabComponent>
+        </TabSetComponent>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    private UserProjectEditComponent userProjectEdit { get; set; }
+
+    private LinksProjectManageComponent linksProjectComponent { get; set; }
+
+    private async Task ReloadLinks(MouseEventArgs e)
+    {
+        _logger.LogWarning($"call > {nameof(ReloadLinks)}");
+    }
+}

@@ -1,0 +1,91 @@
+﻿@page "/enums/list"
+
+@using SharedLib
+@using SharedLib.Models
+@using SharedLib.Services
+@using Microsoft.AspNetCore.Components.Routing
+@using System.Collections.Specialized
+@using BlazorWasmApp.Shared.datatable
+@using BlazorWasmApp.Shared.project
+
+@*@inject NavigationManager _navigation_manager
+@inject ClientConfigModel _conf*@
+@inject IEnumsDesignRestService _design_enums_refit_service
+@inject ILogger<EnumsListPage> _logger
+
+@inherits PaginationsPagesBaseModel
+
+<div class="card">
+    @if (IsBusyProgress == true)
+    {
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Загрузка...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card-body">
+            <nav class="navbar navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand">Перечисления</a>
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="btn btn-outline-success oi oi-plus" role="button" href="@($"/{GlobalStaticConstants.ENUMS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}/")"></a>
+                        </li>
+                    </ul>
+                    <ProjectSelectorComponent SelectProjectHandler="Reload" />
+                </div>
+            </nav>
+            <hr />
+            <DataTableComponent DataProvider="@designEnumsDataTable" TotalRowsCount="@(ProjectEnums.TotalRowsCount)" PageNum="@(ProjectEnums.PageNum)" PageSize="@(ProjectEnums.PageSize)" />
+        </div>
+        <ModalWindowComponent @ref="Modal">
+            <p>@ModalBodyText</p>
+        </ModalWindowComponent>
+    }
+</div>
+
+@code {
+    SimplePaginationResponseModel ProjectEnums = new SimplePaginationResponseModel();
+    EnumsTableProvider designEnumsDataTable => new EnumsTableProvider(ProjectEnums, GlobalStaticConstants.ENUMS_CONTROLLER_NAME);
+
+    //DataTableComponent dataTable { get; set; }
+
+    int CurrentEditProject { get; set; }
+    void Reload(int project_id)
+    {
+        CurrentEditProject = project_id;
+        Rest();
+        //StateHasChanged();
+    }
+
+    private ModalWindowComponent Modal { get; set; }
+    private string ModalBodyText { get; set; } = string.Empty;
+
+    protected override string ControllerName => GlobalStaticConstants.ENUMS_CONTROLLER_NAME;
+
+    protected override async Task Rest()
+    {
+        if (CurrentEditProject <= 0)
+            return;
+        IsBusyProgress = true;
+
+        GetSimpleResponsePaginationModel rest = await _design_enums_refit_service.GetMyProjectsEnumsAsync(Pagination);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+                _logger.LogError(rest.Message);
+            else
+                _logger.LogError($"Ошибка API: {nameof(_design_enums_refit_service.GetMyProjectsEnumsAsync)}");
+        }
+        else
+        {
+            ProjectEnums = rest.PaginationResponse;
+        }
+
+        IsBusyProgress = false;
+        StateHasChanged();
+    }    
+}

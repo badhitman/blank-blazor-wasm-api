@@ -1,0 +1,175 @@
+﻿@using SharedLib.Services
+@using SharedLib.Models
+@using SharedLib
+
+@inject SessionMarkerLiteModel sessionMarker
+@inject ILinksProjectsRestService linksProjectsRefitService
+@inject ILogger<LinksProjectManageComponent> logger
+
+@inherits BlazorBusyComponentBaseModel
+
+@if (IsBusyProgress == true)
+{
+    <div class="text-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Загрузка...</span>
+        </div>
+    </div>
+}
+else if (ProjectId.GetValueOrDefault(0) <= 0)
+{
+    <div class="alert alert-secondary" role="alert">
+        Идентификатор пользовательского проекта не может быть 0!
+    </div>
+}
+else if (Links?.Any() != true)
+{
+    <div class="alert alert-secondary" role="alert">
+        Links?.Any() != true
+    </div>
+}
+else
+{
+    <style>
+        .is-deleted-row {
+        text-decoration: line-through;
+        }
+    </style>
+    @if (CanAdminProject)
+    {
+        <EditForm Model="@addUserEmail" OnValidSubmit="@HandleValidSubmitAsync">
+            <div class="row g-3 align-items-center d-flex justify-content-end">
+                <div class="col-auto">
+                    <label for="inputNewLinkProject" class="col-form-label">Добавить пользователя</label>
+                </div>
+                <div class="col-auto">
+                    <InputText placeholder="Email пользователя." type="email" class="form-control" id="inputNewLinkProject" @bind-Value="addUserEmail.Property" aria-describedby="newLinkHelpInline" />
+                </div>
+                <div class="col-auto">
+                    <span id="newLinkHelpInline" class="form-text">
+                        новый участник проекта
+                    </span>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Добавить</button>
+                </div>
+            </div>
+        </EditForm>
+        <br />
+    }
+    <table class="table table-sm table-light table-hover table-striped">
+        <thead>
+            <tr>
+                <th title="Номер по порядку" style="width: 1%; white-space: nowrap;" scope="col">№</th>
+                <th title="Идентификатор ссылки" style="width: 1%; white-space: nowrap;" scope="col">ID</th>
+                <th scope="col">Пользователь</th>
+                <th scope="col">Уровень</th>
+                @if (CanAdminProject)
+                {
+                    <th scope="col"></th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int index = 0;
+                foreach (UserToProjectLinkModelDb link in Links)
+                {
+                    index++;
+                    <LinkProjectTableRowComponent IndexRow="index" Link="link" CanAdminProject="CanAdminProject" />
+                }
+            }
+        </tbody>
+    </table>
+}
+
+<ModalWindowComponent @ref="Modal">
+    <p>@ModalBodyText</p>
+</ModalWindowComponent>
+
+@code {
+    [Parameter]
+    public int? ProjectId { get; set; }
+
+    List<UserToProjectLinkModelDb> Links { get; set; }
+
+    SingleStringPropertyModel addUserEmail { get; set; } = new SingleStringPropertyModel();
+
+    private ModalWindowComponent Modal { get; set; }
+    private string ModalBodyText { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Наличие прав у текущего пользователя к администрированию проекта
+    /// </summary>
+    public bool CanAdminProject => Links.Any(x => x.UserId == sessionMarker.Id && !x.IsDeleted && (x.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Owner || sessionMarker.AccessLevelUser >= AccessLevelsUsersEnum.Admin));
+
+    protected override async void OnInitialized()
+    {
+        if (ProjectId.GetValueOrDefault(0) == 0)
+        {
+            return;
+        }
+        await ReloadTable(ProjectId.Value);
+    }
+
+    public async Task ReloadTable(int project_id)
+    {
+        if (project_id <= 0)
+        {
+            ModalBodyText = "Идентификатор пользовательского проекта не может быть 0";
+            logger.LogError(ModalBodyText);
+            Modal.Open("Ошибка!");
+            return;
+        }
+
+        IsBusyProgress = true;
+        GetLinksProjectsResponseModel rest = await linksProjectsRefitService.GetLinksUsersByProject(project_id);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                logger.LogError(rest.Message);
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(linksProjectsRefitService.GetLinksUsersByProject)}";
+                logger.LogError(ModalBodyText);
+                Modal.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            Links = new List<UserToProjectLinkModelDb>(rest.Links);
+        }
+        IsBusyProgress = false;
+        StateHasChanged();
+    }
+
+    private async Task HandleValidSubmitAsync()
+    {
+        AddLinkProjectResultModel rest = await linksProjectsRefitService.AddLinkProject(new AddLinkProjectModel() { SetLevel = AccessLevelsUsersToProjectsEnum.Reader, ProjectId = ProjectId.Value, UserEmail = addUserEmail.Property });
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                logger.LogError(rest.Message);
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(linksProjectsRefitService.AddLinkProject)}";
+                logger.LogError(ModalBodyText);
+                Modal.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            addUserEmail.Property = "";
+            Links.Add(rest.LinkProject);
+            StateHasChanged();
+        }
+    }
+}

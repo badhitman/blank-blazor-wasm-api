@@ -1,0 +1,95 @@
+﻿@using Newtonsoft.Json
+@using SharedLib
+@using SharedLib.Services
+@using SharedLib.Models
+
+@inject IProjectsRestService usersProjectsRefitService
+@inject ILogger<ProjectSelectorComponent> _logger
+@inject SessionMarkerLiteModel sessionMarker
+
+@inherits BlazorBusyComponentBaseModel
+
+<div class="row g-3 align-items-center">
+    @if (IsBusyProgress == true)
+    {
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Загрузка...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="col-auto">
+            <label for="inputProjectSelector" class="col-form-label">Выбранный проект: </label>
+        </div>
+        <div iid="inputProjectSelector" class="col-auto">
+            <select @onchange="projectOnChangeAsync" class="form-select" aria-label="Default select example">
+                @foreach (LinkToProjectForUserModel project in UsersProjects)
+                {
+                    <option selected="@(CurrentEditProject == project.ProjectId && (sessionMarker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (!project.IsDeleted && !project.ProjectIsDeleted)))" value="@project.ProjectId" disabled="@(project.AccessLevelUser <= AccessLevelsUsersToProjectsEnum.Blocked || project.IsDeleted || project.ProjectIsDeleted)">@project.Name</option>
+                }
+            </select>
+        </div>
+    }
+</div>
+@code {
+    [Parameter]
+    public Action<int>? SelectProjectHandler { get; set; }
+
+    IEnumerable<LinkToProjectForUserModel> UsersProjects = Array.Empty<LinkToProjectForUserModel>();
+    int CurrentEditProject;
+
+    protected override async void OnInitialized()
+    {
+        base.OnInitialized();
+        await Rest();
+    }
+
+    async Task projectOnChangeAsync(ChangeEventArgs e)
+    {
+        _logger.LogDebug(e.Value.ToString());
+        await SetCurrentProjectForUserAsync(int.Parse(e.Value.ToString()));
+    }
+
+    async Task SetCurrentProjectForUserAsync(int project_id)
+    {
+        ResponseBaseModel rest = await usersProjectsRefitService.SetCurrentProjectForUserAsync(project_id);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+                _logger.LogError(rest.Message);
+            else
+                _logger.LogError($"Ошибка API: {nameof(usersProjectsRefitService.SetCurrentProjectForUserAsync)}");
+        }
+        if (SelectProjectHandler is not null)
+            SelectProjectHandler(project_id);
+    }
+
+    private async Task Rest()
+    {
+        IsBusyProgress = true;
+
+        GetUsersProjectsResponsePaginationModel rest = await usersProjectsRefitService.GetMyProjectsAsync(new PaginationRequestModel() { PageNum = 0, PageSize = int.MaxValue, SortBy = "Name", SortingDirection = VerticalDirectionsEnum.Down });
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+                _logger.LogError(rest.Message);
+            else
+                _logger.LogError($"Ошибка API: {nameof(usersProjectsRefitService.GetMyProjectsAsync)}");
+        }
+        else
+        {
+            UsersProjects = rest.Projects.RowsData;
+            CurrentEditProject = rest.CurrentEditProject;
+            _logger.LogDebug($"API-done: {nameof(usersProjectsRefitService.GetMyProjectsAsync)}{Environment.NewLine}\t{JsonConvert.SerializeObject(rest)}");
+            if (SelectProjectHandler is not null)
+            {
+                SelectProjectHandler(CurrentEditProject);
+            }
+        }
+
+        IsBusyProgress = false;
+        StateHasChanged();
+    }
+}

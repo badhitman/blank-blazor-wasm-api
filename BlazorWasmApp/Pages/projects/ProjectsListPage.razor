@@ -1,0 +1,99 @@
+﻿@page "/projects/list"
+
+@using SharedLib
+@using SharedLib.Models
+@using SharedLib.Services
+@using Microsoft.AspNetCore.Components.Routing
+@using System.Collections.Specialized
+@using BlazorWasmApp.Shared.datatable
+
+@inject IProjectsRestService _users_projects_refit_service
+@inject ILogger<ProjectsListPage> _logger
+
+@inherits PaginationsPagesBaseModel
+
+<style>
+    .projects-table tr a {
+        display: block;
+    }
+
+    .is-delete {
+        text-decoration: line-through;
+    }
+</style>
+
+<div class="card">
+    @if (IsBusyProgress == true)
+    {
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Загрузка...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card-body">
+            <nav class="navbar navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand">Проекты</a>
+                    <form class="d-flex">
+                        <a class="btn btn-outline-primary" href="@GlobalStaticConstants.PROJECTS_CONTROLLER_NAME/@GlobalStaticConstants.EDIT_ACTION_NAME/" role="button">Создать</a>
+                    </form>
+                </div>
+            </nav>
+            <hr />
+            @if (UsersProjects.RowsData.Any())
+            {
+                <DataTableComponent DataProvider="@userProjectsDataTable" TotalRowsCount="@(UsersProjects.TotalRowsCount)" PageNum="@(UsersProjects.PageNum)" PageSize="@(UsersProjects.PageSize)" />
+            }
+            else
+            {
+                <p class="card-text">У вас нет ни одного проекта. Создайте новый проект.</p>
+            }
+
+        </div>
+        <ModalWindowComponent @ref="Modal">
+            <p>@ModalBodyText</p>
+        </ModalWindowComponent>
+    }
+</div>
+
+@code {
+    ProjectsForUserPaginationResponseModel UsersProjects = new ProjectsForUserPaginationResponseModel() { RowsData = Array.Empty<LinkToProjectForUserModel>() };
+    UserProjectsTableProvider userProjectsDataTable => new UserProjectsTableProvider(UsersProjects, GlobalStaticConstants.PROJECTS_CONTROLLER_NAME,CurrentEditProject);
+    int CurrentEditProject = -1;
+
+    private ModalWindowComponent Modal { get; set; }
+    private string ModalBodyText { get; set; } = string.Empty;
+
+    protected override string ControllerName => GlobalStaticConstants.PROJECTS_CONTROLLER_NAME;
+
+    protected override async void OnInitialized()
+    {
+        base.OnInitialized();
+        await Rest();
+    }
+    
+    protected override async Task Rest()
+    {
+        IsBusyProgress = true;
+
+        GetUsersProjectsResponsePaginationModel rest = await _users_projects_refit_service.GetMyProjectsAsync(Pagination);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+                _logger.LogError(rest.Message);
+            else
+                _logger.LogError($"Ошибка API: {nameof(_users_projects_refit_service.GetMyProjectsAsync)}");
+        }
+        else
+        {
+            CurrentEditProject = rest.CurrentEditProject;
+            UsersProjects = rest.Projects;
+        }
+
+        IsBusyProgress = false;
+        StateHasChanged();
+    }
+}

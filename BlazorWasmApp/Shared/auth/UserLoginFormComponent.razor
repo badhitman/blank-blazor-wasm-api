@@ -10,7 +10,15 @@
 @inject CustomAuthStateProvider authState
 
 <h3>Вход</h3>
-
+@if (IsDemo)
+{
+    <div class="alert alert-primary" role="alert">
+        Похоже вы в режиме DEMO. Это означает, что вам доступны DEMO аккаунты. Попробуйте, например <button @onclick="LoginDemo" type="button" class="btn btn-outline-success btn-sm">Этот</button>
+        <p class="badge bg-success">
+            Процесс входа может длиться значительное время (до 1-2 минут). Это нормально. В этот момент база данных заново загружается новыми DEMO данными. Дождитесь окончания.
+        </p>
+    </div>
+}
 <EditForm Model="@user_auth_obj" OnValidSubmit="@HandleValidSubmitAsync">
     <fieldset disabled="@IsBusyProgress">
         <DataAnnotationsValidator />
@@ -59,9 +67,24 @@
     private UserAuthorizationModel user_auth_obj = new();
     private AuthUserResponseModel? user_auth_result = null;
 
+#if DEMO
+    bool IsDemo => true;
+#else
+    bool IsDemo => false;
+#endif
+
     public override void OnReCaptchaExpired() { user_auth_obj.ResponseReCAPTCHA = string.Empty; Logger.LogDebug(nameof(OnReCaptchaExpired)); }
     public override void OnReCaptchaSuccess(string response_code) { user_auth_obj.ResponseReCAPTCHA = response_code; Logger.LogDebug(nameof(OnReCaptchaSuccess)); }
     public override void OnReCaptchaFailure(string response_code) { user_auth_obj.ResponseReCAPTCHA = string.Empty; Logger.LogError($"{nameof(OnReCaptchaFailure)}! response code: {response_code}"); }
+
+#if DEMO
+    async Task LoginDemo()
+    {
+    user_auth_obj = new UserAuthorizationModel() { Login = "222222222", Password = "222222222" };
+    await HandleValidSubmitAsync();
+
+    }
+#endif
 
     private async Task HandleValidSubmitAsync()
     {

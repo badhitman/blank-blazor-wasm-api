@@ -14,6 +14,7 @@ namespace DbLayerLib
     public  partial class LayerContext : DbContext
     {
         protected DatabaseConfigModel _config { get; set; }
+        protected static bool IsEnsureDeleted { get; set; } = false;
         /// <summary>
         /// Конструктор
         /// </summary>
@@ -21,6 +22,13 @@ namespace DbLayerLib
         public LayerContext(IOptions<ServerConfigModel> set_config)
         {
             _config = set_config.Value.DatabaseConfig;
+#if DEMO
+            if (!IsEnsureDeleted)
+            {
+                Database.EnsureDeleted();
+                IsEnsureDeleted = true;
+            }
+#endif
             Database.EnsureCreated();
         }
 
@@ -43,6 +51,7 @@ namespace DbLayerLib
             .HasOne(u => u.Metadata)
             .WithOne(p => p.User)
             .HasForeignKey<UserMetaModelDB>(p => p.UserId);
+            modelBuilder.BuilderExtensionDesigner();
         }
 
         /// <summary>

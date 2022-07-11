@@ -31,6 +31,8 @@ builder.Services.AddScoped<IUsersTable, UsersTable>();
 
 #endregion
 
+builder.Services.BuildDesigner();
+
 #if DEBUG
 builder.Configuration.AddJsonFile("serverconfig.Development.json");
 #else

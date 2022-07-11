@@ -1,0 +1,157 @@
+﻿@using SharedLib
+@using SharedLib.Services
+@using SharedLib.Models
+
+@inject SessionMarkerLiteModel _session_marker
+@inject IProjectsRestService _users_projects_refit_service
+@inject ILogger<UserProjectEditComponent> _logger
+@inject NavigationManager _navigation_manager
+
+@inherits BlazorBusyComponentBaseModel
+
+@if (IsBusyProgress == true)
+{
+    <div class="text-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Загрузка...</span>
+        </div>
+    </div>
+}
+else
+{
+    <EditForm Model="@project" OnValidSubmit="@HandleValidSubmitProjectAsync">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label for="exampleInputName" class="form-label">Имя</label>
+            <InputText disabled="@(!canAdminProject)" class="form-control" id="exampleInputName" @bind-Value="project.Name" aria-describedby="nameHelp" />
+            <div id="nameHelp" class="form-text">Публичное наименование. Как видят пользователи.</div>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputNameSpace" class="form-label">Пространство имён</label>
+            <InputText disabled="@(!canAdminProject)" class="form-control" id="exampleInputNameSpace" @bind-Value="project.NameSpace" aria-describedby="nameSpaceHelp" />
+            <div id="nameSpaceHelp" class="form-text">Пространство имён.</div>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputAbout" class="form-label">Информация</label>
+            <InputRichTextComponent ReadOnly="@(!canAdminProject)" disabled="@(!canAdminProject)" Id="exampleInputAbout" @bind-Value="project.Description" />
+            <div id="nameAbout" class="form-text">Описание проекта</div>
+        </div>
+        <br />
+        <div class="d-flex justify-content-end">
+            @{
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button class="btn btn-@(canAdminProject ? "outline-success" : "secondary")" disabled="@(!canAdminProject)" type="submit">Записать</button>
+                    <button @onclick="SetDeleteProjectAsync" class="btn btn-@(canAdminProject && project?.Id > 0 ? $"outline-{(project.IsDeleted ? "warning" : "danger")}" : "secondary")" disabled="@(!canAdminProject || project?.Id == 0)" type="button">@(project.IsDeleted ? "Восстановить" : "Удалить")</button>
+                    <a class="btn btn-outline-primary" href="@($"/{GlobalStaticConstants.PROJECTS_CONTROLLER_NAME}/{GlobalStaticConstants.LIST_ACTION_NAME}")" role="button">Выход</a>
+                </div>
+            }
+        </div>
+    </EditForm>
+}
+
+<ModalWindowComponent @ref="Modal">
+    <p>@ModalBodyText</p>
+</ModalWindowComponent>
+
+@code {
+    [Parameter]
+    public int? id { get; set; }
+
+    /// <summary>
+    /// Наличие прав у текущего пользователя к администрированию проекта
+    /// </summary>
+    bool canAdminProject => _session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (currentUserLink is not null && !currentUserLink.IsDeleted && currentUserLink.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Owner);
+
+    ProjectModelDB project { get; set; } = new ProjectModelDB();
+    UserToProjectLinkModelDb currentUserLink { get; set; } = null;
+
+    private ModalWindowComponent Modal { get; set; }
+    private string ModalBodyText { get; set; } = string.Empty;
+
+    protected override async void OnInitialized()
+    {
+        if (id.GetValueOrDefault(0) == 0)
+        {
+            return;
+        }
+        await ReloadForm(id.Value);
+    }
+
+    public async Task ReloadForm(int id)
+    {
+        if (id <= 0)
+        {
+            ModalBodyText = "Идентификатор пользовательского проекта не может быть 0";
+            _logger.LogError(ModalBodyText);
+            Modal.Open("Ошибка!");
+            return;
+        }
+
+        IsBusyProgress = true;
+        UserProjectResponseModel rest = await _users_projects_refit_service.GetProjectAsync(id);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                _logger.LogError(rest.Message);
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(_users_projects_refit_service.GetProjectAsync)}";
+                _logger.LogError(ModalBodyText);
+                Modal.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            project = rest.Project;
+            currentUserLink = rest.CurrentUserLinkProject;
+        }
+        IsBusyProgress = false;
+        StateHasChanged();
+    }
+
+    private async Task SetDeleteProjectAsync()
+    {
+        if (!canAdminProject || project?.Id == 0)
+            return;
+
+        ResponseBaseModel rest = await _users_projects_refit_service.SetDeleteProjectAsync(project.Id);
+
+        if (rest.IsSuccess)
+        {
+            project.IsDeleted = !project.IsDeleted;
+            StateHasChanged();
+        }
+
+        ModalBodyText = rest.Message;
+        Modal.Open(rest.IsSuccess ? "Сохранено" : "Ошибка!");
+    }
+
+    private async Task HandleValidSubmitProjectAsync()
+    {
+        if (project.Id > 0)
+        {
+            ResponseBaseModel rest = await _users_projects_refit_service.UpdateProjectAsync((IdNameSpacedDescriptionSimpleModel)project);
+            ModalBodyText = rest.Message;
+            Modal.Open(rest.IsSuccess ? "Сохранено" : "Ошибка!");
+        }
+        else
+        {
+            IdResponseModel rest = await _users_projects_refit_service.AddProjectAsync((NameSpacedDescriptionSimpleModel)project);
+            if (rest.IsSuccess)
+            {
+                _navigation_manager.NavigateTo($"/{GlobalStaticConstants.PROJECTS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}/{rest.Id}", false);
+            }
+            else
+            {
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+        }
+    }
+}

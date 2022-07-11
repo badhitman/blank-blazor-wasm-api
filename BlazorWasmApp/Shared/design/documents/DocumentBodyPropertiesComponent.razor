@@ -1,0 +1,97 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using SharedLib.Models
+@using SharedLib.Services
+
+@inject SessionMarkerLiteModel _session_marker
+@inject IDocumentsPropertiesMainBodyDesignRestService _documents_properties_main_body_refit_service
+@inject IDocumentsPropertiesMainGridDesignRestService _documents_properties_main_grid_refit_service
+@inject ILogger<DocumentBodyPropertiesComponent> _logger
+
+@attribute [Authorize]
+<style>
+    .is-delete {
+        text-decoration: line-through;
+    }
+    .is-delete:hover {
+        text-decoration: line-through;
+    }
+</style>
+<div class="row">
+    <div class="col-4">
+        <ul class="list-group">
+            @foreach (SimplePropertyRealTypeModel p in DataRows)
+            {
+                bool isDisabledDownButton = IsDisabledDownButton(p);
+                bool isDisabledUpButton = IsDisabledUpButton(p);
+                <li @key="p.Id" @onclick="()=>{SetCurrentProperty(new PropertyEditRealTypeModel(p));}" class="list-group-item list-group-item-action@(p.Id == CurrentProperty.Id ? " active" : "") @(p.IsDeleted ? " is-delete" : "")">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">@(p.Name)</h5>
+                        <div>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+                                <button @onclick="async () => { if(!isDisabledDownButton) { await MovePropertyAsync(p.Id, DesignObjectsItemsActionsEnum.MoveDownAction);}}" type="button" disabled="@(isDisabledDownButton)" class="btn btn-outline-dark oi oi-arrow-circle-bottom"></button>
+                                <button @onclick="async () => { if(!isDisabledUpButton) { await MovePropertyAsync(p.Id, DesignObjectsItemsActionsEnum.MoveUpAction);}}" type="button" disabled="@(isDisabledUpButton)" class="btn btn-outline-dark oi oi-arrow-circle-top"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mb-1">
+                        @if (p.PropertyLink is null)
+                        {
+                            switch (p.PropertyType)
+                            {
+                                case PropertyTypesEnum.Bool:
+                                    <strong>Булево</strong>
+                                    break;
+                                case PropertyTypesEnum.DateTime:
+                                    <strong>Дата/Время</strong>
+                                    break;
+                                case PropertyTypesEnum.Decimal:
+                                    <strong>Дробное число</strong>
+                                    break;
+                                case PropertyTypesEnum.Int:
+                                    <strong>Целое число</strong>
+                                    break;
+                                case PropertyTypesEnum.String:
+                                    <strong>Строка</strong>
+                                    break;
+                            }
+                        }
+                        else if (p.PropertyLink.TypedDocument is not null && p.PropertyLink.TypedEnum is null)
+                        {
+                            <span class="badge bg-primary">
+                                Документ: <strong>#@(p.PropertyLink.TypedDocument.Id)</strong>
+                            </span>
+                            <u>@(p.PropertyLink.TypedDocument.Name)</u>
+                        }
+                        else if (p.PropertyLink.TypedEnum is not null && p.PropertyLink.TypedDocument is null)
+                        {
+                            <span class="badge bg-info text-dark">
+                                Перечисление: <strong>#@(p.PropertyLink.TypedEnum.Id)</strong>
+                            </span>
+                            <u>@(p.PropertyLink.TypedEnum.Name)</u>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Ошибка определения</span>
+                        }
+                    </p>
+                    <small>SystemCode: <mark>@(p.SystemCodeName)</mark></small>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="col-8">
+        <DocumentPropertyEditFormComponent AreaProperty="AreaProperty" UpdateDelegate="UpdateDelegate" CurrentProperty="CurrentProperty" DocumentsTypesOfProject="DocumentsTypesOfProject" EnumsTypesOfProject="EnumsTypesOfProject" />
+    </div>
+</div>
+<ModalWindowComponent @ref="Modal">
+    <p>
+        @ModalBodyText
+    </p>
+</ModalWindowComponent>
+@code {  
+    protected override Task OnInitializedAsync()
+    {
+        SetCurrentProperty(new PropertyEditRealTypeModel(DataRows.First()));
+        return base.OnInitializedAsync();
+    }
+}

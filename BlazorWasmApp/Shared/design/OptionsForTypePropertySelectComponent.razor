@@ -1,0 +1,39 @@
+﻿@using SharedLib.Models
+<option style="color: #adb5bd;" selected>Тип данных реквизита</option>
+<option value="@($"{(int)PropertyTypesEnum.Int}")">Целое число</option>
+<option value="@($"{(int)PropertyTypesEnum.Decimal}")">Число с запятой</option>
+<option value="@($"{(int)PropertyTypesEnum.String}")">Строка</option>
+<option value="@($"{(int)PropertyTypesEnum.Bool}")">Булево</option>
+<option value="@($"{(int)PropertyTypesEnum.DateTime}")">Дата/Время</option>
+@if (EnumsTypesOfProject?.Any() == true)
+{
+    <optgroup label="Перечисления">
+        @foreach (RealTypeLiteModel e in EnumsTypesOfProject)
+        {
+            <option value="@($"{(int)PropertyTypesEnum.SimpleEnum}:{e.Id}")" disabled="@(e.IsDeleted)">@($"{e.Name} [{e.SystemCodeName}]")</option>
+        }
+    </optgroup>
+}
+@if (DocumentsTypesOfProject?.Any() == true)
+{
+    <optgroup label="Документы">
+        @foreach (RealTypeLiteModel e in DocumentsTypesOfProject)
+        {
+            <option value="@($"{(int)PropertyTypesEnum.Document}:{e.Id}")" disabled="@(e.IsDeleted)">@($"{e.Name} [{e.SystemCodeName}]")</option>
+        }
+    </optgroup>
+}
+
+@code {
+    /// <summary>
+    /// Перечисления проекта
+    /// </summary>
+    [Parameter, EditorRequired]
+    public IEnumerable<RealTypeLiteModel> EnumsTypesOfProject { get; set; }
+
+    /// <summary>
+    /// Документы проекта
+    /// </summary>
+    [Parameter, EditorRequired]
+    public IEnumerable<RealTypeLiteModel> DocumentsTypesOfProject { get; set; }
+}

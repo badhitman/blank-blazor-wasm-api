@@ -1,0 +1,208 @@
+﻿@using BlazorWasmApp.Shared.design.documents
+@using BlazorWasmApp.Shared.tabs
+@using Microsoft.AspNetCore.Authorization
+@using SharedLib
+@using SharedLib.Models
+@using SharedLib.Services
+@using System.Text.RegularExpressions
+@using System.Collections.ObjectModel
+
+@inject SessionMarkerLiteModel _session_marker
+@inject IDocumentsPropertiesMainBodyDesignRestService _documents_properties_main_body_refit_service
+@inject IDocumentsPropertiesMainGridDesignRestService _documents_properties_main_grid_refit_service
+@inject ILogger<DocumentPropertiesComponent> _logger
+
+@attribute [Authorize]
+
+@inherits BlazorBusyComponentBaseModel
+
+<h4>
+    @switch (AreaProperty)
+    {
+        case AreasPropertiesEnum.Body:
+            <text>Реквизиты/свойства тела документа.</text>
+            <small class="text-muted">Основные поля в теле документа</small>
+            break;
+        case AreasPropertiesEnum.Table:
+            <text>Реквизиты/свойства табличной части документа.</text>
+            <small class="text-muted">Основные поля в табличной части документа</small>
+            break;
+    }
+
+</h4>
+<br />
+@if (IsBusyProgress == true)
+{
+    <div class="text-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Загрузка...</span>
+        </div>
+    </div>
+}
+else
+{
+    <EditForm autocomplete="off" Model="newPropertyMainBodyItemElement" OnValidSubmit="HandleSubmitAddingEnumElementAsync" class="row row-cols-lg-auto g-3 align-items-center justify-content-end">
+        <DataAnnotationsValidator />
+        <div class="col-12">
+            <div class="row mb-12">
+                <label for="inlineFormInputGroupSystemCodeName" class="col-sm-12 col-form-label">Новый реквизит</label>
+            </div>
+        </div>
+        <div class="col-8">
+            <label class="visually-hidden" for="inlineFormInputGroupName">Наименование</label>
+            <div class="input-group">
+                <InputText @bind-Value="newPropertyMainBodyItemElement.Name" type="text" class="form-control" id="inlineFormInputGroupName" placeholder="Заголовок" />
+            </div>
+        </div>
+        <div class="col-8">
+            <label class="visually-hidden" for="inlineFormInputGroupSystemCodeName">Системное/кодовое имя</label>
+            <div class="input-group">
+                <InputText @bind-Value="newPropertyMainBodyItemElement.SystemCodeName" type="text" class="form-control" id="inlineFormInputGroupSystemCodeName" placeholder="Системное имя" />
+            </div>
+        </div>
+        <div class="col-8">
+            <label class="visually-hidden" for="specificSelect">Preference</label>
+            <InputSelect @bind-Value="newPropertyMainBodyItemElement.SelectedTypeTemplate" class="form-select" id="specificSelect">
+                <OptionsForTypePropertySelectComponent DocumentsTypesOfProject="DocumentsTypesOfProject" EnumsTypesOfProject="EnumsTypesOfProject" />
+            </InputSelect>
+        </div>
+        <div class="col-8">
+            <button type="button" class="btn btn-primary">Добавить</button>
+        </div>
+    </EditForm>
+    <hr />
+    <DocumentBodyPropertiesComponent AreaProperty="AreaProperty" DocumentId="Id" DataRows="DataRows" DocumentsTypesOfProject="DocumentsTypesOfProject" EnumsTypesOfProject="EnumsTypesOfProject" />
+}
+<ModalWindowComponent @ref="Modal">
+    <p>
+        @ModalBodyText
+    </p>
+</ModalWindowComponent>
+
+@code {
+    [Parameter, EditorRequired]
+    public int Id { get; set; }
+
+    [Parameter, EditorRequired]
+    public AreasPropertiesEnum AreaProperty { get; set; }
+
+    PropertyCreateRealTypeModel newPropertyMainBodyItemElement { get; set; } = new PropertyCreateRealTypeModel();
+
+    private ModalWindowComponent Modal { get; set; }
+    private string ModalBodyText { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Данные
+    /// </summary>
+    public IEnumerable<SimplePropertyRealTypeModel> DataRows { get; set; } = Enumerable.Empty<SimplePropertyRealTypeModel>();
+
+    /// <summary>
+    /// Перечисления проекта
+    /// </summary>
+    public IEnumerable<RealTypeLiteModel> EnumsTypesOfProject { get; set; }
+
+    /// <summary>
+    /// Документы проекта
+    /// </summary>
+    public IEnumerable<RealTypeLiteModel> DocumentsTypesOfProject { get; set; }
+
+    protected override async void OnInitialized()
+    {
+        if (Id == 0)
+        {
+            return;
+        }
+        await ReloadForm(Id);
+    }
+
+    public async Task ReloadForm(int id)
+    {
+        if (id <= 0)
+        {
+            ModalBodyText = "Идентификатор не может быть 0";
+            _logger.LogError(ModalBodyText);
+            Modal.Open("Ошибка!");
+            return;
+        }
+
+        IsBusyProgress = true;
+        GetDocumentDataResponseModel rest = AreaProperty switch
+        {
+            AreasPropertiesEnum.Body => await _documents_properties_main_body_refit_service.GetPropertiesAsync(id),
+            AreasPropertiesEnum.Table => await _documents_properties_main_grid_refit_service.GetPropertiesAsync(id)
+        };
+
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                _logger.LogError(rest.Message);
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(_documents_properties_main_body_refit_service.GetPropertiesAsync)}";
+                _logger.LogError(ModalBodyText);
+                Modal.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            DataRows = rest.DataRows;
+            EnumsTypesOfProject = rest.EnumsTypesOfProject;
+            DocumentsTypesOfProject = rest.DocumentsTypesOfProject;
+        }
+        IsBusyProgress = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Создать/добавить поле основного тела документа
+    /// </summary>
+    private async Task HandleSubmitAddingEnumElementAsync()
+    {
+        if (Id <= 0)
+        {
+            return;
+        }
+        if (!Regex.IsMatch(newPropertyMainBodyItemElement.SystemCodeName, GlobalStaticConstants.SYSTEM_CODE_NAME_TEMPLATE))
+        {
+            ModalBodyText = $"Системное кодовое имя должно состоять из букв латинского алфавита не менее трёх символов.";
+            Modal.Open("Ошибка!");
+            return;
+        }
+        if (!newPropertyMainBodyItemElement.PropertyType.HasValue)
+        {
+            ModalBodyText = $"Укажите тип реквизита";
+            Modal.Open("Ошибка!");
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(newPropertyMainBodyItemElement.Name) || newPropertyMainBodyItemElement.Name.Trim().Length < 3)
+        {
+            ModalBodyText = $"Наименование реквизита должно иметь минимум 3 символа";
+            Modal.Open("Ошибка!");
+            return;
+        }
+
+        PropertySimpleRealTypeModel obj = (PropertySimpleRealTypeModel)newPropertyMainBodyItemElement;
+        obj.DocumentOwnerId = Id;
+        obj.DocumentPropertyLink = newPropertyMainBodyItemElement.DocumentPropertyLink;
+
+        GetPropertiesSimpleRealTypeResponseModel rest = AreaProperty switch
+        {
+            AreasPropertiesEnum.Body => await _documents_properties_main_body_refit_service.AddPropertyAsync(obj),
+            AreasPropertiesEnum.Table => await _documents_properties_main_grid_refit_service.AddPropertyAsync(obj)
+        };
+
+        if (!rest.IsSuccess)
+        {
+            ModalBodyText = rest.Message;
+            Modal.Open("Ошибка!");
+            return;
+        }
+        DataRows = rest.DataRows;
+        newPropertyMainBodyItemElement.Reset();
+        StateHasChanged();
+    }
+}

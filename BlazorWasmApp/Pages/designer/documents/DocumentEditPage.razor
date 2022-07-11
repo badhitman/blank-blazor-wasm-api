@@ -1,0 +1,213 @@
+﻿@page "/documents/edit/{id:int?}"
+
+@using BlazorWasmApp.Shared.design.documents
+@using BlazorWasmApp.Shared.tabs
+@using Microsoft.AspNetCore.Authorization
+@using SharedLib
+@using SharedLib.Models
+@using SharedLib.Services
+
+@inject SessionMarkerLiteModel _session_marker
+@inject IDocumentsDesignRestService _documents_design_refit_service
+@inject NavigationManager _navigation_manager
+@inject ILogger<DocumentEditPage> _logger
+
+@inherits BlazorBusyComponentBaseModel
+
+@attribute [Authorize]
+
+<div class="card">
+    <div class="card-header">
+        <div class="row justify-content-between">
+            <div class="col-4">
+                @(Id.GetValueOrDefault(0) > 0 ? $"Документ #{Id}" : "Создание нового документа")
+            </div>
+            <div class="col-4 text-end">
+                @(string.IsNullOrWhiteSpace(docomentObject?.Project?.Name) ? "" : $"Проект: #{docomentObject.Project.Id} {docomentObject.Project.Name}")
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <TabSetComponent>
+            <TabComponent Title="Настройки" Tooltip="Основные настройки">
+                @if (IsBusyProgress == true)
+                {
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Загрузка...</span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <EditForm autocomplete="off" Model="@docomentObject" OnValidSubmit="@HandleValidSubmitEnumAsync">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="row g-3">
+                            <div class="col">
+                                <label for="exampleInputName" class="form-label">Название</label>
+                                <InputText disabled="@(!canEditObject)" class="form-control" id="exampleInputName" @bind-Value="docomentObject.Name" aria-describedby="nameHelp" />
+                                <div id="nameHelp" class="form-text">Публичное наименование. Как видят пользователи.</div>
+                            </div>
+                            <div class="col">
+                                <label for="exampleInputName2" class="form-label">Системное имя</label>
+                                <InputText disabled="@(!canEditObject)" class="form-control" id="exampleInputName2" @bind-Value="docomentObject.SystemCodeName" aria-describedby="nameHelp2" />
+                                <div id="nameHelp2" class="form-text">Внутреннее системное имя документа C#.</div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="mb-3">
+                            <InputRichTextComponent ReadOnly="@(!canEditObject)" disabled="@(!canEditObject)" Id="exampleInputAbout" @bind-Value="docomentObject.Description" />
+                            <div id="nameAbout" class="form-text">Описание документа</div>
+                        </div>
+                        <br />
+                        <div class="d-flex justify-content-end">
+                            @{
+                                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                    <button class="btn btn-@(canEditObject ? "outline-success" : "secondary")" disabled="@(!canEditObject)" type="submit">Записать</button>
+                                    <button @onclick="SetDeleteEnumAsync" class="btn btn-@(canEditObject && docomentObject?.Id > 0 ? $"outline-{(docomentObject.IsDeleted ? "warning" : "danger")}" : "secondary")" disabled="@(!canEditObject || docomentObject?.Id == 0)" type="button">@(docomentObject.IsDeleted ? "Восстановить" : "Удалить")</button>
+                                    @if (docomentObject.IsDeleted && canEditObject)
+                                    {
+                                        <button disabled type="button" class="btn btn-warning">Удалить насовсем</button>
+                                    }
+                                    <a class="btn btn-outline-primary" href="@($"/{GlobalStaticConstants.DOCUMENTS_CONTROLLER_NAME}/{GlobalStaticConstants.LIST_ACTION_NAME}")" role="button">Выход</a>
+                                </div>
+                            }
+                        </div>
+                    </EditForm>
+                    <br />
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Таблица</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Метаданные табличной части документа (генерируется на оснвоании системного/кодового имени документа)</h6>
+                            <div class="row g-3">
+                                <div class="col">
+                                    <label for="exampleInputNameTableProperty" class="form-label">Имя поля</label>
+                                    <input readonly class="form-control" id="exampleInputNameTableProperty" value="@TablePropertyName" aria-describedby="nameTablePropertyHelp" />
+                                    <div id="nameTablePropertyHelp" class="form-text">Системное поле объекта документа</div>
+                                </div>
+                                <div class="col">
+                                    <label for="exampleInputNameTableType" class="form-label">Тип данных</label>
+                                    <input readonly class="form-control" id="exampleInputNameTableType" value="@TablePropertyModel" aria-describedby="nameTableTypeHelp" />
+                                    <div id="nameTableTypeHelp" class="form-text">Имя типа данных табличной части C#.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </TabComponent>
+            <TabComponent Title="Поля" Tooltip="Реквизиты/свойства документа." IsDisabled="@(Id.GetValueOrDefault(0) == 0)">
+                <DocumentPropertiesComponent Id="Id.GetValueOrDefault(0)" AreaProperty="AreasPropertiesEnum.Body" />
+            </TabComponent>
+            <TabComponent Title="Таблица" Tooltip="Табличная часть документа." IsDisabled="@(Id.GetValueOrDefault(0) == 0)">
+                <DocumentPropertiesComponent Id="Id.GetValueOrDefault(0)" AreaProperty="AreasPropertiesEnum.Table" />
+            </TabComponent>
+        </TabSetComponent>
+    </div>
+</div>
+
+<ModalWindowComponent @ref="Modal">
+    <p>@ModalBodyText</p>
+</ModalWindowComponent>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    private ModalWindowComponent Modal { get; set; }
+    private string ModalBodyText { get; set; } = string.Empty;
+
+    DocumentDesignModelDB docomentObject = new();
+    UserToProjectLinkModelDb currentUserLinkProject;
+    bool canEditObject => _session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed && currentUserLinkProject.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Editor);
+
+    string TablePropertyName => $"{docomentObject.SystemCodeName}{GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX}";
+    string TablePropertyModel => $"{docomentObject.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id.GetValueOrDefault(0) == 0)
+        {
+            return;
+        }
+        await ReloadForm(Id.Value);
+    }
+
+    private async Task HandleValidSubmitEnumAsync()
+    {
+        if (Id.GetValueOrDefault(0) > 0)
+        {
+            ResponseBaseCurrentProjectModel rest = await _documents_design_refit_service.UpdateDocumentAsync((IdNameDescriptionSimpleRealTypeModel)docomentObject);
+            ModalBodyText = rest.Message;
+            Modal.Open(rest.IsSuccess ? "Сохранено" : "Ошибка!");
+        }
+        else
+        {
+            IdResponseOwnedModel rest = await _documents_design_refit_service.AddDocumentAsync((NameDescriptionSimpleRealTypeModel)docomentObject);
+            if (rest.IsSuccess)
+            {
+                docomentObject.Project = new ProjectModelDB(rest.CurrentOwnerObject);
+                _navigation_manager.NavigateTo($"/{GlobalStaticConstants.DOCUMENTS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}/{rest.Id}", false);
+            }
+            else
+            {
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+        }
+    }
+
+    public async Task ReloadForm(int id)
+    {
+        if (id <= 0)
+        {
+            ModalBodyText = "Идентификатор документа не может быть 0";
+            _logger.LogError(ModalBodyText);
+            Modal.Open("Ошибка!");
+            return;
+        }
+
+        IsBusyProgress = true;
+        DocumentDesignResponseModel rest = await _documents_design_refit_service.GetDocumentAsync(id);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                _logger.LogError(rest.Message);
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(_documents_design_refit_service.GetDocumentAsync)}";
+                _logger.LogError(ModalBodyText);
+                Modal.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            docomentObject = rest.DocumentDesign;
+            currentUserLinkProject = rest.CurrentUserLinkProject;
+        }
+        IsBusyProgress = false;
+        StateHasChanged();
+    }
+
+    private async Task SetDeleteEnumAsync()
+    {
+        if (!canEditObject || docomentObject?.Id == 0)
+            return;
+
+        ResponseBaseModel rest = await _documents_design_refit_service.SetToggleDeleteDocumentAsync(docomentObject.Id);
+
+        if (rest.IsSuccess)
+        {
+            docomentObject.IsDeleted = !docomentObject.IsDeleted;
+            StateHasChanged();
+        }
+
+        ModalBodyText = rest.Message;
+        Modal.Open(rest.IsSuccess ? "Сохранено" : "Ошибка!");
+    }
+}

@@ -1,0 +1,296 @@
+﻿@page "/enums/edit/{id:int?}"
+
+@using Microsoft.AspNetCore.Authorization
+@using SharedLib
+@using SharedLib.Services
+@using SharedLib.Models
+@using BlazorWasmApp.Shared.tabs
+@using System.Text.RegularExpressions
+@using BlazorWasmApp.Shared.design.enums
+
+@inject SessionMarkerLiteModel _session_marker
+@inject IEnumsDesignRestService _enums_design_refit_service
+@inject ILogger<EnumEditPage> _logger
+@inject NavigationManager _navigation_manager
+
+@attribute [Authorize]
+
+@inherits BlazorBusyComponentBaseModel
+
+<style>
+    tr th:first-child, tr th:last-child {
+        width: 1%;
+        white-space: nowrap;
+    }
+
+    .is-delete input {
+        text-decoration: line-through;
+    }
+
+    tr td a {
+        text-decoration: none;
+        display: block;
+    }
+</style>
+
+<div class="card">
+    <div class="card-header">
+        <div class="row justify-content-between">
+            <div class="col-4">
+                @(Id.GetValueOrDefault(0) > 0 ? $"Перечисление #{Id}" : "Создание нового перечисления")
+            </div>
+            <div class="col-4 text-end">
+                @(string.IsNullOrWhiteSpace(enumObject?.Project?.Name) ? "" : $"Проект: #{enumObject.Project.Id} {enumObject.Project.Name}")
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        @if (IsBusyProgress == true)
+        {
+            <div class="text-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Загрузка...</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <TabSetComponent>
+                <TabComponent Title="Настройки" Tooltip="Основные настройки">
+                    <EditForm autocomplete="off" Model="@enumObject" OnValidSubmit="@HandleValidSubmitEnumAsync">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="row g-3">
+                            <div class="col">
+                                <label for="exampleInputName" class="form-label">Название</label>
+                                <InputText disabled="@(!canEditEnumObject)" class="form-control" id="exampleInputName" @bind-Value="enumObject.Name" aria-describedby="nameHelp" />
+                                <div id="nameHelp" class="form-text">Публичное наименование. Как видят пользователи.</div>
+                            </div>
+                            <div class="col">
+                                <label for="exampleInputName2" class="form-label">Системное кодовое имя</label>
+                                <InputText disabled="@(!canEditEnumObject)" class="form-control" id="exampleInputName2" @bind-Value="enumObject.SystemCodeName" aria-describedby="nameHelp2" />
+                                <div id="nameHelp2" class="form-text">Внутреннее системное имя перечисления C#.</div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="mb-3">
+                            <InputRichTextComponent ReadOnly="@(!canEditEnumObject)" disabled="@(!canEditEnumObject)" Id="exampleInputAbout" @bind-Value="enumObject.Description" />
+                            <div id="nameAbout" class="form-text">Описание перечисления</div>
+                        </div>
+                        <br />
+                        <div class="d-flex justify-content-end">
+                            @{
+                                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                    <button class="btn btn-@(canEditEnumObject ? "outline-success" : "secondary")" disabled="@(!canEditEnumObject)" type="submit">Записать</button>
+                                    <button @onclick="SetDeleteEnumAsync" class="btn btn-@(canEditEnumObject && enumObject?.Id > 0 ? $"outline-{(enumObject.IsDeleted ? "warning" : "danger")}" : "secondary")" disabled="@(!canEditEnumObject || enumObject?.Id == 0)" type="button">@(enumObject.IsDeleted ? "Восстановить" : "Удалить")</button>
+                                    @if (enumObject.IsDeleted && canEditEnumObject)
+                                    {
+                                        <button disabled type="button" class="btn btn-warning">Удалить насовсем</button>
+                                    }
+                                    <a class="btn btn-outline-primary" href="@($"/{GlobalStaticConstants.ENUMS_CONTROLLER_NAME}/{GlobalStaticConstants.LIST_ACTION_NAME}")" role="button">Выход</a>
+                                </div>
+                            }
+                        </div>
+                    </EditForm>
+                </TabComponent>
+                <TabComponent Title="Элементы" Tooltip="Состав перечисления" IsDisabled="@(Id.GetValueOrDefault(0) == 0)">
+                    <EditForm autocomplete="off" Model="@newEnumItemElement" OnSubmit="@HandleSubmitAddingEnumElementAsync" class="row row-cols-lg-auto g-3 align-items-center justify-content-end">
+                        <div class="col-12">
+                            <div class="row mb-12">
+                                <label for="inlineFormInputGroupSystemCodeName" class="col-sm-12 col-form-label">Новый элемент перечисления</label>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <label class="visually-hidden" for="inlineFormInputGroupSystemCodeName">Системное/кодовое имя</label>
+                            <div class="input-group">
+                                <InputText @bind-Value="newEnumItemElement.Name" type="text" class="form-control" id="inlineFormInputGroupSystemCodeName" placeholder="Системное имя" />
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <label class="visually-hidden" for="inlineFormInputGroupDescription">Примечание</label>
+                            <div class="input-group">
+                                <InputText @bind-Value="newEnumItemElement.Description" type="text" class="form-control" id="inlineFormInputGroupDescription" placeholder="Примечание" />
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <button type="submit" class="btn btn-primary">Добавить</button>
+                        </div>
+                    </EditForm>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">№</th>
+                                <th scope="col">Имя</th>
+                                <th scope="col">Описание</th>
+                                @if (canEditEnumObject)
+                                {
+                                    <th scope="col"></th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int i = -1;
+                                int total_count_elements = enumObject.EnumItems.Count(x => !x.IsDeleted) - 1;
+                            }
+                            @foreach (EnumDesignItemModelDB row in enumObject.EnumItems.OrderBy(x => x.SortIndex))
+                            {
+                                i = row.IsDeleted ? i : ++i;
+                                <EnumItemElementRowComponent @key="row.Id" ReloadAction="@ReloadForm" CanEditEnumObject="@canEditEnumObject" OwnerEnumId="@(Id.Value)" IsDeleted="@(row.IsDeleted)" TotalCountElements="@total_count_elements" IndexElement="@i" ElementEnumId="@(row.Id)" Name="@(row.Name)" Description="@(row.Description)" />
+                            }
+                        </tbody>
+                    </table>
+                </TabComponent>
+            </TabSetComponent>
+        }
+    </div>
+</div>
+
+<ModalWindowComponent @ref="Modal">
+    <p>@ModalBodyText</p>
+</ModalWindowComponent>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    EnumDesignModelDB enumObject = new EnumDesignModelDB();
+
+    UserToProjectLinkModelDb currentUserLinkProject;
+
+    private ModalWindowComponent Modal { get; set; }
+    private string ModalBodyText { get; set; } = string.Empty;
+
+    bool canEditEnumObject => _session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed && currentUserLinkProject.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Editor);
+
+    NameDescriptionSimpleModel newEnumItemElement = new NameDescriptionSimpleModel();
+
+    protected override async void OnInitialized()
+    {
+        if (Id.GetValueOrDefault(0) == 0)
+        {
+            return;
+        }
+        await ReloadForm(Id.Value);
+    }
+
+    public void ReloadForm(IEnumerable<EnumDesignItemModelDB> enum_items)
+    {
+        enumObject.EnumItems = enum_items.ToList();
+        StateHasChanged();
+    }
+
+    public async Task ReloadForm(int id)
+    {
+        if (id <= 0)
+        {
+            ModalBodyText = "Идентификатор перечисления не может быть 0";
+            _logger.LogError(ModalBodyText);
+            Modal.Open("Ошибка!");
+            return;
+        }
+
+        IsBusyProgress = true;
+        EnumDesignResponseModel rest = await _enums_design_refit_service.GetEnumAsync(id);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                _logger.LogError(rest.Message);
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(_enums_design_refit_service.GetEnumAsync)}";
+                _logger.LogError(ModalBodyText);
+                Modal.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            enumObject = rest.EnumDesign;
+            currentUserLinkProject = rest.CurrentUserLinkProject;
+        }
+        IsBusyProgress = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Создать/добавить элемент перечисления
+    /// </summary>
+    private async Task HandleSubmitAddingEnumElementAsync()
+    {
+        if (Id.GetValueOrDefault(0) <= 0)
+        {
+            return;
+        }
+        if (!Regex.IsMatch(newEnumItemElement.Name, GlobalStaticConstants.SYSTEM_CODE_NAME_TEMPLATE))
+        {
+            ModalBodyText = $"Системное кодовое имя должно состоять из букв латинского алфавита не менее трёх символов.";
+            Modal.Open("Ошибка!");
+            return;
+        }
+
+        EnumItemActionRequestModel obj = new EnumItemActionRequestModel()
+            {
+                Name = newEnumItemElement.Name,
+                Description = newEnumItemElement.Description,
+                OwnerEnumId = Id.Value
+            };
+        GetEnumItemsResponseModel rest = await _enums_design_refit_service.CreateEnumItemElementAsync(obj);
+        if (!rest.IsSuccess)
+        {
+            ModalBodyText = rest.Message;
+            Modal.Open("Ошибка!");
+            return;
+        }
+        newEnumItemElement.Name = string.Empty;
+        newEnumItemElement.Description = string.Empty;
+        enumObject.EnumItems = rest.EnumItems.ToList();        
+        StateHasChanged();
+    }
+
+    private async Task HandleValidSubmitEnumAsync()
+    {
+        if (Id.GetValueOrDefault(0) > 0)
+        {
+            ResponseBaseCurrentProjectModel rest = await _enums_design_refit_service.UpdateEnumAsync((IdNameDescriptionSimpleRealTypeModel)enumObject);
+            ModalBodyText = rest.Message;
+            Modal.Open(rest.IsSuccess ? "Сохранено" : "Ошибка!");
+        }
+        else
+        {
+            IdResponseOwnedModel rest = await _enums_design_refit_service.AddEnumAsync((NameDescriptionSimpleRealTypeModel)enumObject);
+            if (rest.IsSuccess)
+            {
+                enumObject.Project = new ProjectModelDB(rest.CurrentOwnerObject);
+                enumObject.EnumItems = new List<EnumDesignItemModelDB>();
+                _navigation_manager.NavigateTo($"/{GlobalStaticConstants.ENUMS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}/{rest.Id}", false);
+            }
+            else
+            {
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+        }
+    }
+
+    private async Task SetDeleteEnumAsync()
+    {
+        if (!canEditEnumObject || enumObject?.Id == 0)
+            return;
+
+        ResponseBaseModel rest = await _enums_design_refit_service.SetToggleDeleteEnumAsync(enumObject.Id);
+
+        if (rest.IsSuccess)
+        {
+            enumObject.IsDeleted = !enumObject.IsDeleted;
+            StateHasChanged();
+        }
+
+        ModalBodyText = rest.Message;
+        Modal.Open(rest.IsSuccess ? "Сохранено" : "Ошибка!");
+    }
+}

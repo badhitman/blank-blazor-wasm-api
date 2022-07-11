@@ -1,0 +1,164 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using SharedLib.Models
+@using SharedLib.Services
+@using System.Text.RegularExpressions
+
+@inject SessionMarkerLiteModel _session_marker
+@inject IDocumentsPropertiesMainBodyDesignRestService _documents_properties_main_body_refit_service
+@inject IDocumentsPropertiesMainGridDesignRestService _documents_properties_main_grid_refit_service
+@inject ILogger<DocumentPropertyEditFormComponent> _logger
+
+@attribute [Authorize]
+
+<EditForm autocomplete="off" Model="@CurrentProperty" OnValidSubmit="@HandleSubmitUpdatePropertyAsync" class="">
+    <div class="nav justify-content-end">
+        <div class="btn-group me-2" role="group" aria-label="Second group">
+            @if (CurrentProperty.IsDeleted)
+            {
+                <button disabled="@(isModified)" @onclick="DeleteMarkToggleAsync" type="button" class="btn btn-outline-primary">Восстановить</button>
+                <button disabled="@(isModified)" @onclick="TrashAsync" type="button" class="btn btn-danger">Удалить окончательно</button>
+            }
+            else
+            {
+                <button disabled="@(isModified)" @onclick="DeleteMarkToggleAsync" type="button" class="btn btn-outline-danger">Удаление</button>
+            }
+
+            <button disabled="@(!isModified)" type="submit" class="btn btn-outline-success">Записать</button>
+            <button disabled="@(!isModified)" @onclick="ResetChange" type="button" class="btn btn-outline-primary">Отмена</button>
+        </div>
+    </div>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label for="exampleInputName" class="form-label">Наименование реквизита</label>
+        <input @bind="CurrentProperty.Name" @bind:event="oninput" type="text" class="form-control" id="exampleInputName" aria-describedby="nameHelp" />
+        <div id="nameHelp" class="form-text">Заголовок поля в форме и комментарий к классу/class.</div>
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputSystemCode" class="form-label">Кодовое имя</label>
+        <input @bind="CurrentProperty.SystemCodeName" @bind:event="oninput" type="text" class="form-control" id="exampleInputSystemCode" aria-describedby="systemCodeHelp" />
+        <div id="systemCodeHelp" class="form-text">Системное имя типа данных C#.</div>
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputType" class="form-label">Тип данных поля/реквизита</label>
+        <select @bind:event="oninput" @bind="CurrentProperty.SelectedTypeTemplate" class="form-select" id="exampleInputType" aria-describedby="typeHelp">
+            <OptionsForTypePropertySelectComponent DocumentsTypesOfProject="DocumentsTypesOfProject" EnumsTypesOfProject="EnumsTypesOfProject" />
+        </select>
+        <div id="typeHelp" class="form-text">Тип данных поля/реквизита</div>
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputAbout" class="form-label">Справочная информация</label>
+        <textarea @bind:event="oninput" class="form-control" rows="5" placeholder="Комментарий для поля" Id="exampleInputAbout" @bind="CurrentProperty.Description" aria-describedby="aboutHelp" />
+        <div id="aboutHelp" class="form-text">Описание поля (подсказка). Избегайте использование HTML в этом описании.</div>
+    </div>
+</EditForm>
+<ModalWindowComponent @ref="Modal">
+    <p>
+        @ModalBodyText
+    </p>
+</ModalWindowComponent>
+@code {
+    [Parameter, EditorRequired]
+    public PropertyEditRealTypeModel CurrentProperty { get; set; }
+
+    /// <summary>
+    /// Перечисления проекта
+    /// </summary>
+    [Parameter, EditorRequired]
+    public IEnumerable<RealTypeLiteModel> EnumsTypesOfProject { get; set; }
+
+    /// <summary>
+    /// Документы проекта
+    /// </summary>
+    [Parameter, EditorRequired]
+    public IEnumerable<RealTypeLiteModel> DocumentsTypesOfProject { get; set; }
+
+    [Parameter, EditorRequired]
+    public Action<IEnumerable<SimplePropertyRealTypeModel>> UpdateDelegate { get; set; }
+
+    [Parameter, EditorRequired]
+    public AreasPropertiesEnum AreaProperty { get; set; }
+
+    bool canEditObject => true;
+
+    private ModalWindowComponent Modal { get; set; }
+    private string ModalBodyText { get; set; } = string.Empty;
+
+    bool isModified
+    {
+        get
+        {
+            return CurrentProperty.Description != CurrentProperty.OriginalProperty.Description
+            || CurrentProperty.Name != CurrentProperty.OriginalProperty.Name
+            || CurrentProperty.SystemCodeName != CurrentProperty.OriginalProperty.SystemCodeName
+            || CurrentProperty.SelectedTypeTemplate != CurrentProperty.OriginalProperty.SelectedTypeTemplate;
+        }
+    }
+
+    private async Task HandleSubmitUpdatePropertyAsync()
+    {
+        if (!Regex.IsMatch(CurrentProperty.SystemCodeName, GlobalStaticConstants.SYSTEM_CODE_NAME_TEMPLATE))
+        {
+            ModalBodyText = $"Системное кодовое имя должно состоять из букв латинского алфавита не менее трёх символов.";
+            Modal.Open("Ошибка!");
+            return;
+        }
+
+        PropertyOfDocumentModel obj = (PropertyOfDocumentModel)CurrentProperty;
+
+        GetPropertiesSimpleRealTypeResponseModel rest = AreaProperty switch
+        {
+            AreasPropertiesEnum.Body => await _documents_properties_main_body_refit_service.UpdatePropertyAsync(obj),
+            AreasPropertiesEnum.Table => await _documents_properties_main_grid_refit_service.UpdatePropertyAsync(obj)
+        };
+        if (!rest.IsSuccess)
+        {
+            ModalBodyText = rest.Message;
+            Modal.Open("Ошибка!");
+            return;
+        }
+        CurrentProperty.UpdatedState();
+        UpdateDelegate(rest.DataRows);
+    }
+
+    async Task DeleteMarkToggleAsync()
+    {
+        GetPropertiesSimpleRealTypeResponseModel rest = AreaProperty switch
+        {
+            AreasPropertiesEnum.Body => await _documents_properties_main_body_refit_service.SetToggleDeletePropertyAsync(CurrentProperty.Id),
+            AreasPropertiesEnum.Table => await _documents_properties_main_grid_refit_service.SetToggleDeletePropertyAsync(CurrentProperty.Id)
+        };
+        if (!rest.IsSuccess)
+        {
+            ModalBodyText = rest.Message;
+            Modal.Open("Ошибка!");
+            return;
+        }
+        CurrentProperty.UpdatedState();
+        UpdateDelegate(rest.DataRows);
+        StateHasChanged();
+    }
+
+    async Task TrashAsync()
+    {
+        GetPropertiesSimpleRealTypeResponseModel rest = AreaProperty switch
+        {
+            AreasPropertiesEnum.Body => await _documents_properties_main_body_refit_service.TrashPropertyAsync(CurrentProperty.Id),
+            AreasPropertiesEnum.Table => await _documents_properties_main_grid_refit_service.TrashPropertyAsync(CurrentProperty.Id)
+        };
+        if (!rest.IsSuccess)
+        {
+            ModalBodyText = rest.Message;
+            Modal.Open("Ошибка!");
+            return;
+        }
+        CurrentProperty.UpdatedState();
+        UpdateDelegate(rest.DataRows);
+    }
+
+    void ResetChange()
+    {
+        CurrentProperty.Reset();
+    }
+}

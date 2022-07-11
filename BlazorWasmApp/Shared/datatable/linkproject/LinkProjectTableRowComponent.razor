@@ -1,0 +1,144 @@
+﻿@using SharedLib
+@using SharedLib.Models
+@using SharedLib.Services
+
+@inject ILogger<LinkProjectTableRowComponent> logger
+@inject SessionMarkerLiteModel sessionMarker
+@inject ILinksProjectsRestService linksProjectsRefitService
+
+@inherits BlazorBusyComponentBaseModel
+
+<tr title="@(isMyLink ? "ваша ссылка на проект" : "")" class="@(Link.IsDeleted ? "is-deleted-row" : "") @(isMyLink ? " table-info" : "")">
+    @if (IsBusyProgress == true)
+    {
+        <td colspan="@(CanAdminProject ? "5" : "4")">
+            <div class="text-center">
+                <div class="spinner-border" role="status" style="width: 1rem;height: 1rem;">
+                    <span class="visually-hidden">Загрузка...</span>
+                </div>
+            </div>
+        </td>
+    }
+    else
+    {
+        <th scope="row">@IndexRow</th>
+        <td>@($"#{Link.Id}")</td>
+        <td>@($"{Link.User} ({Link.User.Email})")</td>
+        <td>
+            <span @onclick="openWindowForChangeLinkAccessLevelUser" style="cursor:@(isMyLink || !CanAdminProject ? "" : "pointer");" class="badge bg-@(isMyLink ? "light text-dark" : "dark")">@Link.AccessLevelUser</span>
+        </td>
+        @if (CanAdminProject)
+        {
+            <td style="text-decoration:none;">
+                @if (!isMyLink && CanAdminProject)
+                {
+                    <span @onclick="toggleDeleteLink" class="oi oi-@(Link.IsDeleted ? "pulse" : "trash")" style="cursor:pointer;">@(Link.IsDeleted ? $" восстановить" : $" удалить")</span>
+                }
+            </td>
+        }
+    }
+</tr>
+<ModalWindowComponent @ref="ModalChangeLinkAccessLevelUser">
+    <ul class="list-group">
+        @foreach (AccessLevelsUsersToProjectsEnum access in Enum.GetValues<AccessLevelsUsersToProjectsEnum>())
+        {
+            <li @onclick="@(e => changeLinkAccessLevelUser(e, access))" style="cursor:@(Link.AccessLevelUser == access ? "default" : "pointer");" class="list-group-item@(Link.AccessLevelUser == access ? " active" : "")" aria-current="@(Link.AccessLevelUser == access ? "true" : "false")">@access</li>
+        }
+    </ul>
+</ModalWindowComponent>
+
+<ModalWindowComponent @ref="ModalWin">
+    <p>@ModalBodyText</p>
+</ModalWindowComponent>
+
+@code {
+    private ModalWindowComponent ModalChangeLinkAccessLevelUser { get; set; }
+    private ModalWindowComponent ModalWin { get; set; }
+    string ModalBodyText { get; set; }
+
+    [Parameter]
+    public UserToProjectLinkModelDb Link { get; set; }
+    [Parameter]
+    public int IndexRow { get; set; }
+
+    /// <summary>
+    /// Наличие прав у текущего пользователя к администрированию проекта
+    /// </summary>
+    [Parameter]
+    public bool CanAdminProject { get; set; }
+
+    bool isMyLink => Link.UserId == sessionMarker.Id;
+
+    async Task changeLinkAccessLevelUser(MouseEventArgs args, AccessLevelsUsersToProjectsEnum access)
+    {
+        if (!CanAdminProject || Link.AccessLevelUser == access)
+        {
+            return;
+        }
+        ModalChangeLinkAccessLevelUser.Close();
+
+        IsBusyProgress = true;
+        ResponseBaseModel rest = await linksProjectsRefitService.UtdateLevelLinkProjectAsync(new UpdateLinkProjectModel() { SetLevel = access, LinkId = Link.Id });
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                ModalBodyText = rest.Message;
+                logger.LogError(rest.Message);
+                ModalWin.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(linksProjectsRefitService.UtdateLevelLinkProjectAsync)}";
+                logger.LogError(ModalBodyText);
+                ModalWin.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            Link.AccessLevelUser = access;
+        }
+        IsBusyProgress = false;
+        StateHasChanged();
+    }
+
+    void openWindowForChangeLinkAccessLevelUser(MouseEventArgs args)
+    {
+        if (Link.UserId == sessionMarker.Id || !CanAdminProject)
+            return;
+
+        ModalChangeLinkAccessLevelUser.Open($"Уровнь доступа: {Link.User} ({Link.User.Email})");
+    }
+
+    async Task toggleDeleteLink(MouseEventArgs args)
+    {
+        if (!CanAdminProject || isMyLink)
+        {
+            return;
+        }
+
+        IsBusyProgress = true;
+        ResponseBaseModel rest = await linksProjectsRefitService.DeleteToggleLinkProject(Link.Id);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                ModalBodyText = rest.Message;
+                logger.LogError(rest.Message);
+                ModalWin.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(linksProjectsRefitService.DeleteToggleLinkProject)}";
+                logger.LogError(ModalBodyText);
+                ModalWin.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            Link.IsDeleted = !Link.IsDeleted;
+        }
+        IsBusyProgress = false;
+        StateHasChanged();
+    }
+}

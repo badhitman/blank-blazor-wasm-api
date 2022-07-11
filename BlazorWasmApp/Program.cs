@@ -23,6 +23,7 @@ builder.Logging.SetMinimumLevel(LogLevel.Warning);
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 builder.Services.AddScoped<CustomAuthStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<CustomAuthStateProvider>());
+builder.Services.AddTransient<IGeneratorCSharpService, GeneratorCSharpService>();
 
 builder.Services.AddScoped<IClientSession, ClientSessionService>();
 
@@ -88,6 +89,7 @@ if (remote_conf.RefitHandlerLifetimeMinutes > 0)
     refit_handler_lifetime = TimeSpan.FromMinutes(remote_conf.RefitHandlerLifetimeMinutes);
 //
 builder.Services.InitRefit(conf, refit_handler_lifetime);
+builder.Services.InitRefitDesigner(conf, refit_handler_lifetime);
 
 WebAssemblyHost WebHost = builder.Build();
 

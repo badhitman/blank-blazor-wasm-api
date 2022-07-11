@@ -1,0 +1,50 @@
+﻿@using SharedLib
+@using SharedLib.Services
+@using SharedLib.Models
+
+@inject SessionMarkerLiteModel sessionMarker
+@inject ILogger<ReportLogsProjectComponent> logger
+
+@inherits BlazorBusyComponentBaseModel
+
+<h3>
+  Отчёт изменений
+  <small class="text-muted">Активность работ над проектом</small>
+</h3>
+
+<div class="alert alert-info" role="alert">
+    ToDo
+</div>
+
+@code {
+    [Parameter]
+    public int? ProjectId { get; set; }
+
+    private ModalWindowComponent Modal { get; set; }
+    private string ModalBodyText { get; set; } = string.Empty;
+
+    protected override async void OnInitialized()
+    {
+        if (ProjectId.GetValueOrDefault(0) == 0)
+        {
+            return;
+        }
+        await ReloadLogs(ProjectId.Value);
+    }
+
+    public async Task ReloadLogs(int project_id)
+    {
+        if (project_id <= 0)
+        {
+            ModalBodyText = "Идентификатор пользовательского проекта не может быть 0";
+            logger.LogError(ModalBodyText);
+            Modal.Open("Ошибка!");
+            return;
+        }
+
+        IsBusyProgress = true;
+
+        IsBusyProgress = false;
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,271 @@
+﻿@using SharedLib.Models;
+@using SharedLib.Services
+
+@inject IEnumsDesignRestService _enums_design_refit_service
+@inject ILogger<EnumItemElementRowComponent> _logger
+
+<tr class="@(IsDeleted ? "is-delete" : "")">
+    <th scope="row">@(IsDeleted ? null : IndexElement)</th>
+    <td>
+        <input @bind="_name" @bind:event="oninput" type="text" class="form-control form-control-sm" readonly="@(!CanEditEnumObject)" />
+    </td>
+    <td>
+        <input @bind="_description" @bind:event="oninput" type="text" class="form-control form-control-sm" readonly="@(!CanEditEnumObject)" />
+    </td>
+    @if (CanEditEnumObject)
+    {
+        <td>
+            <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+                @if (IndexElement == 0 || IsDeleted)
+                {
+                    <button type="button" class="btn btn-outline-secondary oi oi-arrow-circle-top" disabled></button>
+                }
+                else
+                {
+                    <button @onclick="MoveUpItemAsync" type="button" class="btn btn-outline-dark oi oi-arrow-circle-top"></button>
+                }
+                @if (IndexElement == TotalCountElements || IsDeleted)
+                {
+                    <button type="button" class="btn btn-outline-secondary oi oi-arrow-circle-bottom" disabled></button>
+                }
+                else
+                {
+                    <button @onclick="MoveDownItemAsync" type="button" class="btn btn-outline-dark oi oi-arrow-circle-bottom"></button>
+                }
+                @if (IsDeleted)
+                {
+                    <button @onclick="DeleteMarkToggleAsync" type="button" class="btn btn-outline-success oi oi-action-undo"></button>
+                    <button @onclick="TrashElementAsync" type="button" class="btn btn-outline-danger oi oi-trash"></button>
+                }
+                else
+                {
+                    <button @onclick="DeleteMarkToggleAsync" type="button" class="btn btn-outline-danger oi oi-x"></button>
+                }
+
+                <button @onclick="EnumItemUpdateAsync" style="display:@(can_save ? "initial" : "none")" type="button" class="btn btn-outline-primary oi oi-cloud-upload"></button>
+                <button @onclick="ResetChange" style="display:@(can_save ? "initial" : "none")" type="button" class="btn btn-outline-primary oi oi-loop-circular"></button>
+            </div>
+        </td>
+    }
+
+</tr>
+<ModalWindowComponent @ref="Modal">
+    <p>@ModalBodyText</p>
+</ModalWindowComponent>
+@code {
+    [Inject]
+    protected IJSRuntime JsRuntime { get; set; }
+
+    bool can_save => Name != _name || Description != _description;
+
+    private ModalWindowComponent Modal { get; set; }
+    private string ModalBodyText { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Системное кодовое имя элемента перечисления
+    /// </summary>
+    [Parameter]
+    public string Name { get; set; }
+    string _name { get; set; }
+
+    /// <summary>
+    /// Примечание/аодсказка к элементу перечисления
+    /// </summary>
+    [Parameter]
+    public string Description { get; set; }
+    string _description;
+
+    /// <summary>
+    /// Идентификатор перечисления, которому принадлежит элемент
+    /// </summary>
+    [Parameter]
+    public int OwnerEnumId { get; set; }
+
+    /// <summary>
+    /// Идентификатор элемента перечсиления
+    /// </summary>
+    [Parameter]
+    public int ElementEnumId { get; set; }
+
+    /// <summary>
+    /// Индекс элемента перечисления
+    /// </summary>
+    [Parameter]
+    public int IndexElement { get; set; }
+
+    /// <summary>
+    /// Общее количество элементов в перечислении
+    /// </summary>
+    [Parameter]
+    public int TotalCountElements { get; set; }
+
+    /// <summary>
+    /// Признак пометки удаления
+    /// </summary>
+    [Parameter]
+    public bool IsDeleted { get; set; }
+
+    /// <summary>
+    /// Доступ к редактированию объекта
+    /// </summary>
+    [Parameter]
+    public bool CanEditEnumObject { get; set; }
+
+    [Parameter]
+    public Action<IEnumerable<EnumDesignItemModelDB>> ReloadAction { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        _name = Name;
+        _description = Description;
+        return base.OnInitializedAsync();
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        JsRuntime.InvokeVoidAsync("tooltipeHide");
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    public async Task EnumItemUpdateAsync()
+    {
+        IdNameDescriptionSimpleModel enum_element_upd = new IdNameDescriptionSimpleModel()
+            {
+                Description = _description,
+                Name = _name,
+                Id = ElementEnumId
+            };
+        GetEnumItemsResponseModel rest = await _enums_design_refit_service.EnumItemUpdateAsync(enum_element_upd);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                _logger.LogError(rest.Message);
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(_enums_design_refit_service.EnumItemUpdateAsync)}";
+                _logger.LogError(ModalBodyText);
+                Modal.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            ReloadAction(rest.EnumItems);
+        }
+
+        StateHasChanged();
+    }
+
+    public async Task DeleteMarkToggleAsync()
+    {
+        GetEnumItemsResponseModel rest = await _enums_design_refit_service.DeleteMarkToggleAsync(ElementEnumId);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                _logger.LogError(rest.Message);
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(_enums_design_refit_service.DeleteMarkToggleAsync)}";
+                _logger.LogError(ModalBodyText);
+                Modal.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            ReloadAction(rest.EnumItems);
+        }
+
+        StateHasChanged();
+    }
+
+    public async Task TrashElementAsync()
+    {
+        GetEnumItemsResponseModel rest = await _enums_design_refit_service.TrashElementAsync(ElementEnumId);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                _logger.LogError(rest.Message);
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(_enums_design_refit_service.TrashElementAsync)}";
+                _logger.LogError(ModalBodyText);
+                Modal.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            ReloadAction(rest.EnumItems);
+        }
+
+        StateHasChanged();
+    }
+
+    public async Task MoveUpItemAsync()
+    {
+        GetEnumItemsResponseModel rest = await _enums_design_refit_service.MoveUpAsync(ElementEnumId);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                _logger.LogError(rest.Message);
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(_enums_design_refit_service.MoveUpAsync)}";
+                _logger.LogError(ModalBodyText);
+                Modal.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            ReloadAction(rest.EnumItems);
+        }
+
+        StateHasChanged();
+    }
+
+    public async Task MoveDownItemAsync()
+    {
+        GetEnumItemsResponseModel rest = await _enums_design_refit_service.MoveDownAsync(ElementEnumId);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                _logger.LogError(rest.Message);
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(_enums_design_refit_service.MoveDownAsync)}";
+                _logger.LogError(ModalBodyText);
+                Modal.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            ReloadAction(rest.EnumItems);
+        }
+
+        StateHasChanged();
+    }
+
+    void ResetChange()
+    {
+        _name = Name;
+        _description = Description;
+    }
+}

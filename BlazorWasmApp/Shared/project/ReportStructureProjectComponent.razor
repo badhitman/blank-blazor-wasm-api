@@ -1,0 +1,299 @@
+﻿@using Newtonsoft.Json
+@using SharedLib
+@using SharedLib.Services
+@using SharedLib.Models
+@using System.IO
+@using System.Text
+@using System.IO.Compression
+@using System.Reflection
+@using System.Diagnostics
+
+@inject SessionMarkerLiteModel _session_marker
+@inject ILogger<ReportStructureProjectComponent> _logger
+@inject IProjectsRestService _users_projects_refit_service
+@inject IJSRuntime JS
+@inject IGeneratorCSharpService _csharp_gen
+
+@inherits BlazorBusyComponentBaseModel
+
+<style>
+    .is-deleted {
+        text-decoration: line-through;
+    }
+</style>
+<h3>
+    Дизайн проекта
+    <small class="text-muted">Структура/состав проекта</small>
+</h3>
+@if (IsBusyProgress == true)
+{
+    <div class="text-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Загрузка...</span>
+        </div>
+    </div>
+}
+else
+{
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand">Скачать</a>
+            <div class="d-flex">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+                    <button @onclick="DownloadJsonFileFromStreamAsync" type="button" title="Генерация JSON дампа" class="btn btn-outline-dark">JSON</button>
+                    <button @onclick="DownloadCSharpFileFromStreamAsync" type="button" title="Комплект C#" class="btn btn-outline-dark">C#</button>
+                    <button type="button" disabled title="в разработке" class="btn btn-outline-dark">PHP</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <p></p>
+    <div class="card">
+        <div class="card-body">
+            <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+                @foreach (EnumFitModel row in StructureData.Enums)
+                {
+                    <div class="col@(row.IsDeleted ? " opacity-25" : "")" title="@(row.IsDeleted ? "удалено" : $"Перечисление: {row.Description}")">
+                        <div class="p-3 shadow-sm border border-@(row.IsDeleted ? "danger bg-light is-deleted text-secondary" : "secondary")">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">
+                                    <button @onclick="async () => { CurentOffCanvasEnum = row; await ShowEnumCanvas();}" role="button" class="button btn-sm btn-outline-@(row.IsDeleted ? "secondary" : "primary")" type="button">@(row.Name)</button>
+                                </h5>
+                                <small>≡@(row.EnumItems.Count())</small>
+                            </div>
+                            <small>SystemCode: <mark>@(row.SystemCodeName)</mark></small>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="card">
+        <div class="card-body">
+            <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+                @foreach (DocumentFitModel row in StructureData.Documents)
+                {
+                    <div class="col@(row.IsDeleted ? " opacity-25" : "")" title="@(row.IsDeleted ? "удалено" : $"Документ: {row.Description}")">
+                        <div class="p-3 shadow-sm border border-@(row.IsDeleted ? "danger bg-light is-deleted text-secondary" : "dark")">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">
+                                    <button @onclick="async () => { CurrentOffCanvasDocument = row; await ShowDocumentOffCanvas();}" class="button btn-sm btn-outline-@(row.IsDeleted ? "secondary" : "dark")" type="button">@(row.Name)</button>
+                                </h5>
+                                <small>≡@(row.PropertiesBody.Count()) ⁞@(row.PropertiesGrid.Count())</small>
+                            </div>
+                            <small>SystemCode: <mark>@(row.SystemCodeName)</mark></small>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+@if (CurentOffCanvasEnum is not null)
+{
+    <div data-bs-scroll="false" class="offcanvas offcanvas-start@(OffCanvasEnumIsShow?" show":"")" aria-hidden="@(OffCanvasEnumIsShow ? false : true)" aria-modal="@(OffCanvasEnumIsShow ? true : false)" style="visibility: @(OffCanvasEnumIsShow ? "visible" : "hidden");" tabindex="-1" aria-labelledby="offcanvasExampleEnumLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleEnumLabel">Перечисление: @(CurentOffCanvasEnum.Name)</h5>
+            <button @onclick="ShowEnumCanvas" type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <figure>
+                <p class="lead">
+                    @(CurentOffCanvasEnum.Description)
+                </p>
+                <figcaption class="blockquote-footer">
+                    Системное имя: <cite title="Source Title">@(CurentOffCanvasEnum.SystemCodeName)</cite>
+                </figcaption>
+            </figure>
+            <hr />
+            <ul class="list-group list-group-flush">
+                @foreach (var row in CurentOffCanvasEnum.EnumItems.OrderBy(x => x.SortIndex))
+                {
+                    <li class="list-group-item">@(row.Name)</li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+@if (CurrentOffCanvasDocument is not null)
+{
+    <div data-bs-scroll="false" class="offcanvas offcanvas-end@(OffCanvasDocumentIsShow?" show":"")" aria-hidden="@(OffCanvasDocumentIsShow ? false : true)" aria-modal="@(OffCanvasDocumentIsShow ? true : false)" style="visibility: @(OffCanvasDocumentIsShow ? "visible" : "hidden");" tabindex="-1" aria-labelledby="offcanvasExampDocumentleLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampDocumentleLabel">Документ: @(CurrentOffCanvasDocument.Name)</h5>
+            <button @onclick="ShowDocumentOffCanvas" type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <figure>
+                <p class="lead">
+                    @(CurrentOffCanvasDocument.Description)
+                </p>
+                <figcaption class="blockquote-footer">
+                    Системное имя: <cite title="Source Title">@(CurrentOffCanvasDocument.SystemCodeName)</cite>
+                </figcaption>
+            </figure>
+            <hr />
+            <div class="card">
+                <div class="card-header">
+                    Тело документа
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var row in CurrentOffCanvasDocument.PropertiesGrid.OrderBy(x => x.SortIndex))
+                    {
+                        <li class="list-group-item">@(row.Name)</li>
+                    }
+                </ul>
+            </div>
+            <br />
+            <div class="card">
+                <div class="card-header">
+                    Таблица документа
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var row in CurrentOffCanvasDocument.PropertiesBody.OrderBy(x => x.SortIndex))
+                    {
+                        <li class="list-group-item">@(row.Name)</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+@if (OffCanvasEnumIsShow || OffCanvasDocumentIsShow)
+{
+    <div @onclick="OffCanvasBackdropClickHandle" class="offcanvas-backdrop fade show"></div>
+}
+
+@code {
+    [Inject]
+    protected IJSRuntime JsRuntime { get; set; }
+
+    [Parameter]
+    public int? ProjectId { get; set; }
+
+    private ModalWindowComponent Modal { get; set; }
+    private string ModalBodyText { get; set; } = string.Empty;
+
+    StructureProjectModel StructureData;
+    NameSpacedModel ProjectInfo;
+
+    EnumFitModel CurentOffCanvasEnum = null;
+    bool OffCanvasEnumIsShow { get; set; }
+    async Task ShowEnumCanvas()
+    {
+        OffCanvasEnumIsShow = !OffCanvasEnumIsShow;
+        StateHasChanged();
+    }
+
+    DocumentFitModel CurrentOffCanvasDocument = null;
+    bool OffCanvasDocumentIsShow { get; set; }
+    async Task ShowDocumentOffCanvas()
+    {
+        OffCanvasDocumentIsShow = !OffCanvasDocumentIsShow;
+        StateHasChanged();
+        await JsRuntime.InvokeVoidAsync("tooltipeHide");
+    }
+
+    async Task OffCanvasBackdropClickHandle()
+    {
+        OffCanvasDocumentIsShow = false;
+        OffCanvasEnumIsShow = false;
+        StateHasChanged();
+        await JsRuntime.InvokeVoidAsync("tooltipeHide");
+    }
+
+    protected override async void OnInitialized()
+    {
+        if (ProjectId.GetValueOrDefault(0) > 0)
+        {
+            await Reload(ProjectId.Value);
+        }
+    }
+
+    private async Task<Stream> GetCsharpFileStreamAsync()
+    {
+        return await _csharp_gen.GetFullStream(StructureData, new CodeGeneratorConfigModel() { ProjectInfo = ProjectInfo });
+    }
+
+    private async Task DownloadCSharpFileFromStreamAsync()
+    {
+        Stream fileStream = await GetCsharpFileStreamAsync();
+        string fileName = $"project-{ProjectId}-codebase-{DateTime.Now.ToString()}.zip";
+
+        using DotNetStreamReference streamRef = new DotNetStreamReference(stream: fileStream);
+        try
+        {
+            await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+            fileStream.Close();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "downloadFileFromStream");
+        }
+    }
+
+    private Stream GetJsonFileStream()
+    {
+        string app_version = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+
+        string json_raw = JsonConvert.SerializeObject(new ProjectJsonDumpModel() { Dump = StructureData, Version = app_version }, Formatting.Indented);
+        byte[] bytes = Encoding.UTF8.GetBytes(json_raw);
+        Stream fileStream = new MemoryStream(bytes);
+
+        return fileStream;
+    }
+
+    private async Task DownloadJsonFileFromStreamAsync()
+    {
+        Stream fileStream = GetJsonFileStream();
+        string fileName = $"project-{ProjectId}-dump-{DateTime.Now.ToString()}.json";
+
+        using DotNetStreamReference streamRef = new DotNetStreamReference(stream: fileStream);
+        try
+        {
+            await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "downloadFileFromStream");
+        }
+    }
+
+    public async Task Reload(int project_id)
+    {
+        if (project_id <= 0)
+        {
+            ModalBodyText = "Идентификатор пользовательского проекта не может быть 0";
+            _logger.LogError(ModalBodyText);
+            Modal.Open("Ошибка!");
+            return;
+        }
+
+        IsBusyProgress = true;
+
+        ProjectStructureResponseModel rest = await _users_projects_refit_service.GetStructureProject(ProjectId.Value);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                _logger.LogError(rest.Message);
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(_users_projects_refit_service.GetStructureProject)}";
+                _logger.LogError(ModalBodyText);
+                Modal.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            StructureData = rest.StructureData;
+            ProjectInfo = rest.Project;
+        }
+
+        IsBusyProgress = false;
+        StateHasChanged();
+    }
+}
