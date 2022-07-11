@@ -17,13 +17,14 @@ namespace ServerLib
         readonly ISessionService _session_service;
         readonly IProjectsTable _projects_dt;
         readonly ILinksProjectsTable _links_dt;
+        readonly ILogChangeTable _logs_dt;
 
         readonly MemCasheComplexKeyModel CurrentProjectMemKey;
 
         /// <summary>
         /// Конструктор
         /// </summary>
-        public ProjectsService(ISessionService set_session_service, ILinksProjectsTable set_links_dt, ILogger<ProjectsService> set_logger, IProjectsTable set_projects_dt, IManualMemoryCashe set_mem_cashe)
+        public ProjectsService(ISessionService set_session_service, ILinksProjectsTable set_links_dt, ILogger<ProjectsService> set_logger, IProjectsTable set_projects_dt, IManualMemoryCashe set_mem_cashe, ILogChangeTable logs_dt)
         {
             _logger = set_logger;
             _mem_cashe = set_mem_cashe;
@@ -32,6 +33,7 @@ namespace ServerLib
             _links_dt = set_links_dt;
 
             CurrentProjectMemKey = new MemCasheComplexKeyModel(_session_service.SessionMarker.Login, new MemCashePrefixModel(GlobalStaticConstants.PROJECTS_CONTROLLER_NAME, GlobalStaticConstants.EDIT_ACTION_NAME));
+            _logs_dt = logs_dt;
         }
 
         /// <inheritdoc/>
@@ -224,6 +226,7 @@ namespace ServerLib
             }
 
             await _projects_dt.UpdateProjectAsync(project_db);
+            await _logs_dt.AddLogAsync(new LogChangeModelDB() { AuthorId = _session_service.SessionMarker.Id, OwnerType = ContextesChangeLogEnum.Project, OwnerId = project_db.Id, Name = "Проект обновлён", Description = $"[name:{project_db.Name}] [descr:{project_db.Description}] [ns:{project_db.NameSpace}]" });
             res.Message = $"Проект успешно обновлён: {res.Message}";
             return res;
         }
@@ -239,6 +242,11 @@ namespace ServerLib
 
             await _projects_dt.AddProjectAsync(project_db);
             res.Id = project_db.Id;
+            await _logs_dt.AddRangeAsync(new LogChangeModelDB[]
+            {
+                new LogChangeModelDB() { AuthorId = _session_service.SessionMarker.Id, OwnerType = ContextesChangeLogEnum.Project, OwnerId = project_db.Id, Name = "Проект создан", Description = $"[name:{project_db.Name}] [descr:{project_db.Description}] [ns:{project_db.NameSpace}]" },
+                new LogChangeModelDB() { AuthorId = _session_service.SessionMarker.Id, OwnerType = ContextesChangeLogEnum.Project, OwnerId = project_db.Id, Name = "Добавлен пользователь", Description = "Автоматическая ссылка на автора" }
+            });
             await _links_dt.AddLinkProject(AccessLevelsUsersToProjectsEnum.Owner, project_db.Id, _session_service.SessionMarker.Id);
             return res;
         }
@@ -297,6 +305,8 @@ namespace ServerLib
                 ? "Проект момечен как удалённый"
                 : "С проекта снята пометка удаления";
 
+            await _logs_dt.AddLogAsync(new LogChangeModelDB() { AuthorId = _session_service.SessionMarker.Id, OwnerType = ContextesChangeLogEnum.Project, OwnerId = project_db.Id, Name = "Удаление", Description = res.Message });
+
             return res;
         }
 
@@ -325,7 +335,6 @@ namespace ServerLib
                 await _mem_cashe.UpdateValueAsync(CurrentProjectMemKey, res.Project.Id.ToString());
             }
             res.CurrentUserLinkProject = res.Project.UsersLinks.FirstOrDefault(x => x.UserId == _session_service.SessionMarker.Id);
-            //res.Project.UsersLinks = null;
 
             return res;
         }

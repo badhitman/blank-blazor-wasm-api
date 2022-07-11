@@ -39,6 +39,15 @@ namespace DbTablesLib
         }
 
         /// <inheritdoc/>
+        public async Task AddRangeAsync(IEnumerable<LogChangeModelDB> logs, bool auto_save = true)
+        {
+            await _db_context.AddRangeAsync(logs);
+
+            if (auto_save)
+                await _db_context.SaveChangesAsync();
+        }
+
+        /// <inheritdoc/>
         public async Task<LogsPaginationResponseModel> GetLogsAsync(LogPaginationByAuthorAndOwnersTypesRequestModel request)
         {
             IQueryable<LogChangeModelDB>? query = _db_context.ChangeLogs.Where(x => x.OwnerId == request.AuthorId).AsQueryable();

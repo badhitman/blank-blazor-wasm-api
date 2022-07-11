@@ -19,6 +19,13 @@ namespace SharedLib
         public Task AddLogAsync(LogChangeModelDB log, bool auto_save = true);
 
         /// <summary>
+        /// Добавить записи логирования
+        /// </summary>
+        /// <param name="logs">Перечень регистров изменений</param>
+        /// <param name="auto_save">Автоматический записать/сохранить данные в БД</param>
+        public Task AddRangeAsync(IEnumerable<LogChangeModelDB> logs, bool auto_save = true);
+
+        /// <summary>
         /// Получить логи по автору и типам владельцов изменений
         /// </summary>
         /// <param name="request">Запрос логов</param>

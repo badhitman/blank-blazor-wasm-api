@@ -26,15 +26,21 @@ namespace SharedLib.Models
                 },
                 new TableDataColumnModel()
                 {
+                    ColumnDataName = nameof(LogChangeModelDB.CreatedAt),
+                    SortingDirection = DetectSort(nameof(LogChangeModelDB.CreatedAt)),
+                    Title = "Date/Time"
+                },
+                new TableDataColumnModel()
+                {
                     ColumnDataName = nameof(LogChangeModelDB.Name),
                     SortingDirection = DetectSort(nameof(EnumDesignModel.Name)),
                     Title = "Название"
                 },
                 new TableDataColumnModel()
                 {
-                    ColumnDataName = nameof(LogChangeModelDB.CreatedAt),
-                    SortingDirection = DetectSort(nameof(LogChangeModelDB.CreatedAt)),
-                    Title = "Date/Time"
+                    ColumnDataName = nameof(LogChangeModelDB.Description),
+                    SortingDirection = DetectSort(nameof(EnumDesignModel.Description)),
+                    Title = "Описание"
                 }
             };
             SequenceStartNum = ((logs_api_response.Pagination.PageNum - 1) * logs_api_response.Pagination.PageSize) + 1;
@@ -50,8 +56,9 @@ namespace SharedLib.Models
                 data_row.Cells = new TableDataCellModel[]
                 {
                     new TableDataCellModel() { DataCellValue = $"#{row.Id}" },
+                    new TableDataCellModel() { DataCellValue = row.CreatedAt },
                     new TableDataCellModel() { DataCellValue = row.Name },
-                    new TableDataCellModel() { DataCellValue = row.CreatedAt }
+                    new TableDataCellModel() { DataCellValue = row.Description }
                 };
                 TableData.AddRow(data_row);
             }
