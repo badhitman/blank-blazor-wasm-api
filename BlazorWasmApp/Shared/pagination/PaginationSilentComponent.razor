@@ -8,12 +8,13 @@
     <ul class="@ul_css">
         <li class="page-item@(PageNum == 1 ? " disabled" : "")">
             @*@($"{ButtonAction}?{nameof(PaginationsPagesBaseModel.PageNum)}={PageNum - 1}&{nameof(PaginationsPagesBaseModel.PageSize)}={PageSize}&{nameof(PaginationsPagesBaseModel.SortBy)}={SortBy}&{nameof(PaginationsPagesBaseModel.SortingDirection)}={SortingDirection}")*@
-            <a @onclick="() => {if(PageNum > 1){ButtonAction(PageNum - 1);}}" class="page-link" href="#" aria-label="Previous">
+            <a @onclick="() => {if(PageNum > 1){ButtonAction(PageNum - 1);}}" class="page-link" href="javascript: void(0);" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
         @for (uint i = 1; TotalPagesCount >= i; i++)
         {
+            uint i_val = i;
             if (TotalPagesCount > 7)
             {
                 if (PageNum < 5)
@@ -26,7 +27,7 @@
                     {
                         <li class="page-item@(PageNum == i ? " active" : "")">
                             @*@($"{ButtonAction}?{nameof(PaginationsPagesBaseModel.PageNum)}={i}&{nameof(PaginationsPagesBaseModel.PageSize)}={PageSize}&{nameof(PaginationsPagesBaseModel.SortBy)}={SortBy}&{nameof(PaginationsPagesBaseModel.SortingDirection)}={SortingDirection}")*@
-                            <a @onclick="() => {ButtonAction((int)i);}" class="page-link" href="#">@i</a>
+                            <a @onclick="() => {ButtonAction((int)i_val);}" class="page-link" href="javascript: void(0);">@i</a>
                         </li>
                     }
                     else
@@ -44,7 +45,7 @@
                     {
                         <li class="page-item@(PageNum == i ? " active" : "")">
                             @*@($"{ButtonAction}?{nameof(PaginationsPagesBaseModel.PageNum)}={i}&{nameof(PaginationsPagesBaseModel.PageSize)}={PageSize}&{nameof(PaginationsPagesBaseModel.SortBy)}={SortBy}&{nameof(PaginationsPagesBaseModel.SortingDirection)}={SortingDirection}")*@
-                            <a @onclick="() => {ButtonAction((int)i);}" class="page-link" href="#">@i</a>
+                            <a @onclick="() => {ButtonAction((int)i_val);}" class="page-link" href="javascript: void(0);">@i</a>
                         </li>
                     }
                     else
@@ -62,7 +63,7 @@
                     {
                         <li class="page-item@(PageNum == i ? " active" : "")">
                             @*@($"{ButtonAction}?{nameof(PaginationsPagesBaseModel.PageNum)}={i}&{nameof(PaginationsPagesBaseModel.PageSize)}={PageSize}&{nameof(PaginationsPagesBaseModel.SortBy)}={SortBy}&{nameof(PaginationsPagesBaseModel.SortingDirection)}={SortingDirection}")*@
-                            <a @onclick="() => {ButtonAction((int)i);}" class="page-link" href="#">@i</a>
+                            <a @onclick="() => {ButtonAction((int)i_val);}" class="page-link" href="javascript: void(0);">@i</a>
                         </li>
                     }
                     else
@@ -75,14 +76,14 @@
             {
                 <li class="page-item@(PageNum == i ? " active" : "")">
                     @*@($"{ButtonAction}?{nameof(PaginationsPagesBaseModel.PageNum)}={i}&{nameof(PaginationsPagesBaseModel.PageSize)}={PageSize}&{nameof(PaginationsPagesBaseModel.SortBy)}={SortBy}&{nameof(PaginationsPagesBaseModel.SortingDirection)}={SortingDirection}")*@
-                    <a @onclick="() => {ButtonAction((int)i);}" class="page-link" href="#">@i</a>
+                    <a @onclick="() => {ButtonAction((int)i_val);}" class="page-link" href="javascript: void(0);">@i</a>
                 </li>
             }
         }
 
         <li class="page-item@(PageNum == TotalPagesCount ? " disabled" : "")">
             @*@($"{ButtonAction}?{nameof(PaginationsPagesBaseModel.PageNum)}={PageNum + 1}&{nameof(PaginationsPagesBaseModel.PageSize)}={PageSize}&{nameof(PaginationsPagesBaseModel.SortBy)}={SortBy}&{nameof(PaginationsPagesBaseModel.SortingDirection)}={SortingDirection}")*@
-            <a @onclick="() => {if(PageNum < TotalPagesCount){ButtonAction(PageNum + 1);}}" class="page-link" href="#" aria-label="Next">
+            <a @onclick="() => {if(PageNum < TotalPagesCount){ButtonAction(PageNum + 1);}}" class="page-link" href="javascript: void(0);" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
             </a>
         </li>

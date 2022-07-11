@@ -30,7 +30,7 @@ namespace DbTablesLib
         }
 
         /// <inheritdoc/>
-        public async Task AddLogAsync(ChangeLogModelDB log, bool auto_save = true)
+        public async Task AddLogAsync(LogChangeModelDB log, bool auto_save = true)
         {
             await _db_context.AddAsync(log);
 
@@ -41,7 +41,7 @@ namespace DbTablesLib
         /// <inheritdoc/>
         public async Task<LogsPaginationResponseModel> GetLogsAsync(LogPaginationByAuthorAndOwnersTypesRequestModel request)
         {
-            IQueryable<ChangeLogModelDB>? query = _db_context.ChangeLogs.Where(x => x.OwnerId == request.AuthorId).AsQueryable();
+            IQueryable<LogChangeModelDB>? query = _db_context.ChangeLogs.Where(x => x.OwnerId == request.AuthorId).AsQueryable();
             if (request.OwnersTypes?.Any() == true)
                 query = query.Where(x => request.OwnersTypes.Contains(x.OwnerType));
 
@@ -67,7 +67,7 @@ namespace DbTablesLib
 
             switch (res.Pagination.SortBy)
             {
-                case nameof(ChangeLogModelDB.Name):
+                case nameof(LogChangeModelDB.Name):
                     query = res.Pagination.SortingDirection == VerticalDirectionsEnum.Up
                         ? query.OrderByDescending(x => x.Name)
                         : query.OrderBy(x => x.Name);
@@ -88,7 +88,7 @@ namespace DbTablesLib
         /// <inheritdoc/>
         public async Task<LogsPaginationResponseModel> GetLogsAsync(LogPaginationByProjectAndOwnersTypesRequestModel request)
         {
-            IQueryable<ChangeLogModelDB>? query = _db_context.ChangeLogs
+            IQueryable<LogChangeModelDB>? query = _db_context.ChangeLogs
                 .Where(x => (x.OwnerType == ContextesChangeLogEnum.Project && x.OwnerId == request.ProjectId) || (x.OwnerType == ContextesChangeLogEnum.Enum && _db_context.DesignEnums.Any(y => y.ProjectId == request.ProjectId && y.Id == x.OwnerId)) || (x.OwnerType == ContextesChangeLogEnum.Document && _db_context.DesignDocuments.Any(y => y.ProjectId == request.ProjectId && y.Id == x.OwnerId)))
                 .AsQueryable();
 
@@ -117,7 +117,7 @@ namespace DbTablesLib
 
             switch (res.Pagination.SortBy)
             {
-                case nameof(ChangeLogModelDB.Name):
+                case nameof(LogChangeModelDB.Name):
                     query = res.Pagination.SortingDirection == VerticalDirectionsEnum.Up
                         ? query.OrderByDescending(x => x.Name)
                         : query.OrderBy(x => x.Name);

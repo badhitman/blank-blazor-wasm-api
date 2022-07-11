@@ -1,0 +1,191 @@
+﻿@using BlazorWasmApp.Shared.pagination
+@using SharedLib
+@using SharedLib.Models
+@using SharedLib.Services
+
+@inject ClientConfigModel conf
+
+<style>
+    .is-delete {
+        text-decoration: line-through;
+    }
+
+    thead td a {
+        text-decoration: none;
+        color: #212529;
+    }
+
+    tr th:first-child {
+        width: 1%;
+        white-space: nowrap;
+    }
+</style>
+
+@{
+    int sequence_start_num = DataProvider.SequenceStartNum;
+}
+<PaginationSilentComponent ButtonAction="@(ButtonAction)" TotalRowsCount="@TotalRowsCount" PageNum="@PageNum" PageSize="@PageSize" SortBy="@(DataProvider.SortBy)" SortingDirection="@(DataProvider.SortingDirection)" Size="SizingsSimpleEnum.Norm" Alignment="HorizontalAlignmentsEnum.Right" />
+
+@if (DataProvider?.RowsAny != true || DataProvider?.ColumnsAny != true)
+{
+    if (_firstRender)
+    {
+        <p class="lead">
+            TRUE Загрузка данных @(PageNum > 0 ? $"страницы №{PageNum} " : "")...
+        </p>
+    }
+    else
+    {
+        <p class="lead">
+            Загрузка данных @(PageNum > 0 ? $"страницы №{PageNum} не возможна." : "")...
+        </p>
+    }
+}
+else
+{
+    <table class="table table-striped table-hover projects-table">
+        <thead>
+            <tr>
+                <th>
+                    №
+                </th>
+                @foreach (TableDataColumnModel col in DataProvider.Columns())
+                {
+                    <th style="@col.Style">
+                        <table>
+                            <tr>
+                                <td>
+                                    @if (string.IsNullOrWhiteSpace(DataProvider.ControllerName))
+                                    {
+                                        <text>@col.Title</text>
+                                    }
+                                    else
+                                    {
+                                        <a href="@(GetHrefColumn(col))">@col.Title</a>
+                                    }
+                                </td>
+                                @{
+                                    string sort_mode = string.Empty;
+                                    if (col.SortingDirection == VerticalDirectionsEnum.Down)
+                                        sort_mode = "asc";
+                                    else if (col.SortingDirection == VerticalDirectionsEnum.Up)
+                                        sort_mode = "desc";
+
+                                    if (!string.IsNullOrEmpty(sort_mode))
+                                        sort_mode = $"oi oi-sort-{sort_mode}ending text-primary";
+                                }
+                                <td class="@sort_mode">
+                                </td>
+                            </tr>
+                        </table>
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (TableDataRowModel row in DataProvider.Rows())
+            {
+                <tr>
+                    <td>
+                        <small><strong>@(sequence_start_num++)</strong></small>
+                    </td>
+                    @foreach (TableDataCellModel cel in row.Cells)
+                    {
+                        <td>
+                            @if (string.IsNullOrWhiteSpace(cel.Tag))
+                            {
+                                if (string.IsNullOrWhiteSpace(DataProvider.ControllerName))
+                                {
+                                    <text>@cel.DataCellValue</text>
+                                }
+                                else
+                                {
+                                    <a class="@(row.IsDeleted ? "is-delete link-secondary" : "")" href="@($"{DataProvider.ControllerName}/{GlobalStaticConstants.EDIT_ACTION_NAME}/{row.Id}")">@cel.DataCellValue</a>
+                                }
+                            }
+                            else
+                            {
+                                <div class="row">
+                                    <div class="col col-auto">
+                                        <span class="@(cel.Tag) text-danger"></span>
+                                    </div>
+                                    <div class="col">
+                                        @if (string.IsNullOrWhiteSpace(DataProvider.ControllerName))
+                                        {
+                                            <text>@cel.DataCellValue</text>
+                                        }
+                                        else
+                                        {
+                                            <a class="@(row.IsDeleted ? "is-delete link-secondary" : "")" href="@($"{DataProvider.ControllerName}/{GlobalStaticConstants.EDIT_ACTION_NAME}/{row.Id}")">@cel.DataCellValue</a>
+                                        }                                        
+                                    </div>
+                                </div>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<PaginationSilentComponent ButtonAction="@(ButtonAction)" TotalRowsCount="@TotalRowsCount" PageNum="@PageNum" PageSize="@PageSize" SortBy="@(DataProvider.SortBy)" SortingDirection="@(DataProvider.SortingDirection)" Size="SizingsSimpleEnum.Norm" Alignment="HorizontalAlignmentsEnum.Right" />
+
+@code {
+    /// <summary>
+    /// Провайдер данных для отрисовки таблицы
+    /// </summary>
+    [Parameter, EditorRequired]
+    public TableProviderAbstract DataProvider { get; set; }
+
+    [Parameter, EditorRequired]
+    public Action<int> ButtonAction { get; set; }
+
+    /// <summary>
+    /// Общее/всего количество элементов
+    /// </summary>
+    [Parameter, EditorRequired]
+    public int TotalRowsCount { get; set; }
+
+    /// <summary>
+    /// Размер страницы (количество элементов на странице)
+    /// </summary>
+    [Parameter, EditorRequired]
+    public int PageSize { get; set; }
+
+    /// <summary>
+    /// Номер текущей страницы
+    /// </summary>
+    [Parameter, EditorRequired]
+    public int PageNum { get; set; }
+
+    public void UpdateTableProvider(TableProviderAbstract data_provider, int total_rows_count, int page_size, int page_num)
+    {
+        DataProvider = data_provider;
+        TotalRowsCount = total_rows_count;
+        PageSize = page_size;
+        PageNum = page_num;
+        StateHasChanged();
+    }
+
+    bool _firstRender = true;
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        _firstRender = firstRender;
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    string GetHrefColumn(TableDataColumnModel column)
+    {
+        string query = $"{DataProvider.ControllerName}/{GlobalStaticConstants.LIST_ACTION_NAME}?{nameof(PaginationsPagesBaseModel.PageNum)}={PageNum}&{nameof(PaginationsPagesBaseModel.PageSize)}={PageSize}&{nameof(PaginationsPagesBaseModel.SortBy)}={column.ColumnDataName}&{nameof(PaginationsPagesBaseModel.SortingDirection)}=";
+
+        switch (column.SortingDirection)
+        {
+            case VerticalDirectionsEnum.Down:
+                return $"{query}{VerticalDirectionsEnum.Up}";
+            case VerticalDirectionsEnum.Up:
+                return $"{query}{VerticalDirectionsEnum.Down}";
+            default:
+                return $"{query}{conf.PaginationDefaultSorting}";
+        }
+    }
+}

@@ -104,7 +104,7 @@ namespace DbLayerLib
             rand_links = rand_links.Take(projects_num * 3).ToList();
             int log_change_index_id = 0;
 
-            List<ChangeLogModelDB> change_logs = new(demo_projects.Select(x => new ChangeLogModelDB() { Id = ++log_change_index_id, OwnerType = ContextesChangeLogEnum.Project, OwnerId = x.Id, Name = $"Создан проект (demo HasData)", Description = $"[name:{x.Name}] [ns:{x.NameSpace}] [descr:{x.Description}]" }));
+            List<LogChangeModelDB> change_logs = new(demo_projects.Select(x => new LogChangeModelDB() { Id = ++log_change_index_id, OwnerType = ContextesChangeLogEnum.Project, OwnerId = x.Id, Name = $"Создан проект (demo HasData)", Description = $"[name:{x.Name}] [ns:{x.NameSpace}] [descr:{x.Description}]" }));
 
             int index_id = 0;
             IEnumerable<UserToProjectLinkModelDb> users_to_project_link = rand_links.Select(x => new UserToProjectLinkModelDb()
@@ -121,7 +121,7 @@ namespace DbLayerLib
             change_logs.AddRange(users_to_project_link.Select(x =>
             {
                 curr_user = users_demo.First(u => u.Id == x.UserId);
-                return new ChangeLogModelDB()
+                return new LogChangeModelDB()
                 {
                     Id = ++log_change_index_id,
                     OwnerType = ContextesChangeLogEnum.Project,
@@ -145,7 +145,7 @@ namespace DbLayerLib
 
             change_logs.AddRange(enums_demo_data.Select(x =>
             {
-                return new ChangeLogModelDB()
+                return new LogChangeModelDB()
                 {
                     Id = ++log_change_index_id,
                     OwnerType = ContextesChangeLogEnum.Enum,
@@ -173,7 +173,7 @@ namespace DbLayerLib
 
             change_logs.AddRange(enums_items_demo_data.Select(x =>
             {
-                return new ChangeLogModelDB()
+                return new LogChangeModelDB()
                 {
                     Id = ++log_change_index_id,
                     OwnerType = ContextesChangeLogEnum.Enum,
@@ -197,7 +197,7 @@ namespace DbLayerLib
 
             change_logs.AddRange(documents_demo_data.Select(x =>
             {
-                return new ChangeLogModelDB()
+                return new LogChangeModelDB()
                 {
                     Id = ++log_change_index_id,
                     OwnerType = ContextesChangeLogEnum.Document,
@@ -273,7 +273,7 @@ namespace DbLayerLib
             DocumentPropertyLinkModelDB prop_link;
             change_logs.AddRange(doc_props_demo_data_body.Select(x =>
             {
-                ChangeLogModelDB log_obj = new ChangeLogModelDB()
+                LogChangeModelDB log_obj = new LogChangeModelDB()
                 {
                     Id = ++log_change_index_id,
                     OwnerType = ContextesChangeLogEnum.Document,
@@ -355,7 +355,7 @@ namespace DbLayerLib
 
             change_logs.AddRange(doc_props_demo_data_grid.Select(x =>
             {
-                ChangeLogModelDB log_obj = new ChangeLogModelDB()
+                LogChangeModelDB log_obj = new LogChangeModelDB()
                 {
                     Id = ++log_change_index_id,
                     OwnerType = ContextesChangeLogEnum.Document,
@@ -379,7 +379,7 @@ namespace DbLayerLib
             }));
 
             change_logs.ForEach(x => { x.AuthorId = 1; });
-            modelBuilder.Entity<ChangeLogModelDB>().HasData(change_logs);
+            modelBuilder.Entity<LogChangeModelDB>().HasData(change_logs);
         }
     }
 }

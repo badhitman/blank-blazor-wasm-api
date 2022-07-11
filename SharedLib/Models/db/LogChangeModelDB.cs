@@ -11,7 +11,7 @@ namespace SharedLib.Models
     /// </summary>
     [Index(nameof(OwnerType))]
     [Index(nameof(OwnerId))]
-    public class ChangeLogModelDB : IdNameDescriptionSimpleModel
+    public class LogChangeModelDB : IdNameDescriptionSimpleModel
     {
         /// <summary>
         /// FK: Автор изменений

@@ -55,6 +55,6 @@ namespace DbLayerLib
         /// <summary>
         /// Лог изменений
         /// </summary>
-        public DbSet<ChangeLogModelDB> ChangeLogs { get; set; }
+        public DbSet<LogChangeModelDB> ChangeLogs { get; set; }
     }
 }

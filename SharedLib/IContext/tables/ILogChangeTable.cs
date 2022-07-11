@@ -16,7 +16,7 @@ namespace SharedLib
         /// </summary>
         /// <param name="log">Регистр изменений</param>
         /// <param name="auto_save">Автоматический записать/сохранить данные в БД</param>
-        public Task AddLogAsync(ChangeLogModelDB log, bool auto_save = true);
+        public Task AddLogAsync(LogChangeModelDB log, bool auto_save = true);
 
         /// <summary>
         /// Получить логи по автору и типам владельцов изменений
