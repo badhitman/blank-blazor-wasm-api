@@ -37,7 +37,7 @@ namespace ServerLib
         /// <inheritdoc/>
         public async Task<GetUsersProjectsResponsePaginationModel> GetMyProjectsAsync(PaginationRequestModel pagination)
         {
-            GetUsersProjectsResponsePaginationModel res = new GetUsersProjectsResponsePaginationModel() { IsSuccess = _session_service.SessionMarker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed };
+            GetUsersProjectsResponsePaginationModel res = new() { IsSuccess = _session_service.SessionMarker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed };
 
             if (!res.IsSuccess)
             {
