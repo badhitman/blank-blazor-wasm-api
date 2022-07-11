@@ -30,15 +30,6 @@
     "SessionCookieSslSecureOnly": false,
     "SessionTokenName": "token-session-id"
   },
-  "WebConfig": {
-    "ClientOrignsCORS": [ "https://localhost:7222" ],
-    "AllowedHosts": "*",
-    "MaxConcurrentConnections": 100,
-    "MaxRequestBodySize": 30000000,
-    "KeepAliveTimeout": 120,
-    "MaxRequestHeadersTotalSize": 32768,
-    "MaxRequestLineSize": 8192
-  },
   "SmtpConfig": {
     "EmailNotificationRecipients": [
       "ru.usa@mail.ru",
@@ -69,12 +60,17 @@
     "SslHost": "",
     "SyncTimeout": 10000
   },
-  "ApiConfig": {
-    "Host": "localhost",
-    "Port": 5501,
-    "HttpSheme": "http"
+  "WebConfig": {
+    "ClientOrignsCORS": [ "https://localhost:7222" ],
+    "AllowedHosts": "*",
+    "MaxConcurrentConnections": 100,
+    "MaxRequestBodySize": 30000000,
+    "KeepAliveTimeout": 120,
+    "MaxRequestHeadersTotalSize": 32768,
+    "MaxRequestLineSize": 8192,
+    "Port": 5501
   },
-  "KestrelHostConfig": {
+  "ApiConfig": {
     "Host": "localhost",
     "Port": 5501,
     "HttpSheme": "http"

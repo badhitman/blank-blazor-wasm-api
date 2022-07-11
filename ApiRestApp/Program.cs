@@ -56,16 +56,16 @@ builder.WebHost.UseKestrel(options =>
     switch (conf.WebConfig.AllowedHosts.Trim().ToLower())
     {
         case "broadcast":
-            options.Listen(IPAddress.Broadcast, conf.KestrelHostConfig.Port);
+            options.Listen(IPAddress.Broadcast, conf.WebConfig.Port);
             break;
         case "loopback":
-            options.Listen(IPAddress.Loopback, conf.KestrelHostConfig.Port);
+            options.Listen(IPAddress.Loopback, conf.WebConfig.Port);
             break;
         case "None":
-            options.Listen(IPAddress.None, conf.KestrelHostConfig.Port);
+            options.Listen(IPAddress.None, conf.WebConfig.Port);
             break;
         default:
-            options.Listen(IPAddress.Any, conf.KestrelHostConfig.Port);
+            options.Listen(IPAddress.Any, conf.WebConfig.Port);
             break;
     }
 });

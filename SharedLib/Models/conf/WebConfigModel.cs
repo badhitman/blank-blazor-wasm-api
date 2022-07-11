@@ -44,5 +44,10 @@ namespace SharedLib.Models
         /// Максимально допустимый размер строки HTTP-запроса. По умолчанию 8192 байта (8 КБ).
         /// </summary>
         public int MaxRequestLineSize { get; set; } = 8192;
+
+        /// <summary>
+        /// Порт обслуживающий Kestrel
+        /// </summary>
+        public int Port { get; set; }
     }
 }

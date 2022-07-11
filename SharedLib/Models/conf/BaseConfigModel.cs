@@ -15,11 +15,6 @@ namespace SharedLib.Models
         public HostConfigModel ApiConfig { get; set; } = new HostConfigModel() { Host = "localhost", Port = 5501, HttpSheme = "http" };
 
         /// <summary>
-        /// Настройки хоста API сервера
-        /// </summary>
-        public HostConfigModel KestrelHostConfig { get; set; } = new HostConfigModel() { Host = "localhost", Port = 5501, HttpSheme = "http" };
-
-        /// <summary>
         /// Конфигурацияя кукисов сессии
         /// </summary>
         public HttpSessionCookieConfigModel CookiesConfig { get; set; } = new HttpSessionCookieConfigModel();

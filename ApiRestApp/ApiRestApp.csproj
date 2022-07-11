@@ -48,6 +48,9 @@
 		<Content Update="appsettings.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
+		<Content Update="serverconfig.Development.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 		<Content Update="serverconfig.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
