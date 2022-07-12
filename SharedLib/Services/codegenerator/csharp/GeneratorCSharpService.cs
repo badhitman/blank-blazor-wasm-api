@@ -410,6 +410,7 @@ namespace SharedLib.Services
         {
             string crud_type_name;
             string service_type_name;
+            string response_type_name;
             ZipArchiveEntry enumEntry;
             StreamWriter writer;
 
@@ -417,6 +418,28 @@ namespace SharedLib.Services
             foreach (DocumentFitModel doc_obj in docs.Where(x => !x.IsDeleted))
             {
                 #region тело документа
+
+                response_type_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
+                enumEntry = archive.CreateEntry(Path.Combine(dir, "response_models", $"{response_type_name}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.SystemCodeName} : Response model");
+
+                await writer.WriteLineAsync($"\tpublic partial class {response_type_name} : ResponseBaseModel");
+                await writer.WriteLineAsync("\t{");
+                await writer.WriteLineAsync($"\t\tpublic {doc_obj.SystemCodeName}{GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX}");
+                await writer.WriteLineAsync("\t}");
+
+
+                response_type_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
+                enumEntry = archive.CreateEntry(Path.Combine(dir, "response_models", $"{response_type_name}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.SystemCodeName} : Response model");
+
+                await writer.WriteLineAsync($"\tpublic partial class {response_type_name} : ResponseBaseModel");
+                await writer.WriteLineAsync("\t{");
+
+                await writer.WriteLineAsync("\t}");
+
 
                 crud_type_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.DATABASE_TABLE_ACESSOR_PREFIX}";
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "crud_interfaces", $"{crud_type_name}.cs"));
