@@ -107,7 +107,7 @@ namespace BlazorWasmApp.Shared.design.documents
             DataRows = rows;
             SimplePropertyRealTypeModel? curr = DataRows.FirstOrDefault(x => x.Id == CurrentProperty.Id);
             if (curr is null)
-                DataRows.FirstOrDefault();
+                curr = DataRows.FirstOrDefault();
 
             SetCurrentProperty(new PropertyEditRealTypeModel(curr is null ? new SimplePropertyRealTypeModel() : curr));
 
