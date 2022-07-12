@@ -127,4 +127,10 @@ public static class GlobalStaticConstants
     public const string DATABASE_TABLE_ACESSOR_PREFIX = "_TableAccessor";
 
     public const string DATABASE_SERVICE_ACESSOR_PREFIX = "_Service";
+
+    public const string SINGLE_REPONSE_MODEL_PREFIX = "_ResponseModel";
+
+    public const string MULTI_REPONSE_MODEL_PREFIX = "_ResponseListModel";
+
+    public const string RESPONSE_PROPERTY_NAME_PREFIX = "_ResponseProperty";
 }
