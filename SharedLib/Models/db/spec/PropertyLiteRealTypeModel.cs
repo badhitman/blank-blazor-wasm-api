@@ -27,6 +27,6 @@ namespace SharedLib.Models
         /// <summary>
         /// 
         /// </summary>
-        public DocumentDesignModelDB DocumentOwner { get; set; }
+        public DocumentDesignModelDB? DocumentOwner { get; set; }
     }
 }

@@ -36,7 +36,7 @@ namespace DbTablesLib
             {
                 query = _db_context.DesignEnums
                     .Where(x => x.SystemCodeName == system_code_name && x.ProjectId == project_id && x.Id != object_id).Select(x => new EntryModel() { Id = x.Id, IsDeleted = x.IsDeleted, Name = x.Name })
-                    .Union(_db_context.DesignDocuments.Where(x => (x.SystemCodeName == system_code_name || $"{x.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}" == system_code_name) && x.ProjectId == project_id).Select(x => new EntryModel() { Id = x.Id, IsDeleted = x.IsDeleted, Name = x.Name }))
+                    .Union(_db_context.DesignDocuments.Where(x => (x.SystemCodeName == system_code_name || x.SystemCodeName + GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX == system_code_name) && x.ProjectId == project_id).Select(x => new EntryModel() { Id = x.Id, IsDeleted = x.IsDeleted, Name = x.Name }))
                     .Union(_db_context.DesignDocumentsMainBodyProperties.Where(x => x.SystemCodeName == system_code_name && x.DocumentOwner.ProjectId == project_id).Select(x => new EntryModel() { Id = x.Id, IsDeleted = x.IsDeleted, Name = x.Name }))
                     .Union(_db_context.DesignDocumentsMainGridProperties.Where(x => x.SystemCodeName == system_code_name && x.DocumentOwner.ProjectId == project_id).Select(x => new EntryModel() { Id = x.Id, IsDeleted = x.IsDeleted, Name = x.Name }));
             }
@@ -53,7 +53,7 @@ namespace DbTablesLib
             {
                 query = _db_context.DesignDocumentsMainBodyProperties
                     .Where(x => x.SystemCodeName == system_code_name && x.DocumentOwner.ProjectId == project_id && x.Id != object_id).Select(x => new EntryModel() { Id = x.Id, IsDeleted = x.IsDeleted, Name = x.Name })
-                    .Union(_db_context.DesignDocuments.Where(x => (x.SystemCodeName == system_code_name || $"{x.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}" == system_code_name) && x.ProjectId == project_id).Select(x => new EntryModel() { Id = x.Id, IsDeleted = x.IsDeleted, Name = x.Name }))
+                    .Union(_db_context.DesignDocuments.Where(x => (x.SystemCodeName == system_code_name || x.SystemCodeName + GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX == system_code_name) && x.ProjectId == project_id).Select(x => new EntryModel() { Id = x.Id, IsDeleted = x.IsDeleted, Name = x.Name }))
                     .Union(_db_context.DesignDocumentsMainGridProperties.Where(x => x.SystemCodeName == system_code_name && x.DocumentOwner.ProjectId == project_id).Select(x => new EntryModel() { Id = x.Id, IsDeleted = x.IsDeleted, Name = x.Name }))
                     .Union(_db_context.DesignEnums.Where(x => x.SystemCodeName == system_code_name && x.ProjectId == project_id).Select(x => new EntryModel() { Id = x.Id, IsDeleted = x.IsDeleted, Name = x.Name }));
             }
@@ -61,7 +61,7 @@ namespace DbTablesLib
             {
                 query = _db_context.DesignDocumentsMainGridProperties
                     .Where(x => x.SystemCodeName == system_code_name && x.DocumentOwner.ProjectId == project_id && x.Id != object_id).Select(x => new EntryModel() { Id = x.Id, IsDeleted = x.IsDeleted, Name = x.Name })
-                    .Union(_db_context.DesignDocuments.Where(x => (x.SystemCodeName == system_code_name || $"{x.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}" == system_code_name) && x.ProjectId == project_id).Select(x => new EntryModel() { Id = x.Id, IsDeleted = x.IsDeleted, Name = x.Name }))
+                    .Union(_db_context.DesignDocuments.Where(x => (x.SystemCodeName == system_code_name || x.SystemCodeName + GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX == system_code_name) && x.ProjectId == project_id).Select(x => new EntryModel() { Id = x.Id, IsDeleted = x.IsDeleted, Name = x.Name }))
                     .Union(_db_context.DesignDocumentsMainBodyProperties.Where(x => x.SystemCodeName == system_code_name && x.DocumentOwner.ProjectId == project_id).Select(x => new EntryModel() { Id = x.Id, IsDeleted = x.IsDeleted, Name = x.Name }))
                     .Union(_db_context.DesignEnums.Where(x => x.SystemCodeName == system_code_name && x.ProjectId == project_id).Select(x => new EntryModel() { Id = x.Id, IsDeleted = x.IsDeleted, Name = x.Name }));
             }

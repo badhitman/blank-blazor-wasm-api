@@ -16,15 +16,17 @@ namespace ServerLib
         readonly IDesignerSharedService _shared_service;
         readonly IDesignerItemsEnumsTable _items_enums_dt;
         readonly ILinksUsersProjectsService _links_users_projects_service;
+        readonly ILogChangeTable _log_dt;
 
         /// <inheritdoc/>
-        public DesignerEnumsService(ISessionService set_session_service, ILinksUsersProjectsService set_links_users_projects_service, IDesignerItemsEnumsTable set_items_enums_dt, IDesignerSharedService set_shared_service, IDesignerEnumsTable set_enums_dt)
+        public DesignerEnumsService(ISessionService set_session_service, ILinksUsersProjectsService set_links_users_projects_service, IDesignerItemsEnumsTable set_items_enums_dt, IDesignerSharedService set_shared_service, IDesignerEnumsTable set_enums_dt, ILogChangeTable log_dt)
         {
             _session_service = set_session_service;
             _enums_dt = set_enums_dt;
             _shared_service = set_shared_service;
             _items_enums_dt = set_items_enums_dt;
             _links_users_projects_service = set_links_users_projects_service;
+            _log_dt = log_dt;
         }
 
         /// <inheritdoc/>
@@ -94,7 +96,7 @@ namespace ServerLib
             enum_object.SystemCodeName = enum_object.SystemCodeName.Trim();
 
             UserProjectResponseModel check = await _shared_service.CheckComplexAsync(0, enum_object.Name, enum_object.SystemCodeName, typeof(EnumDesignModelDB));
-            IdResponseOwnedModel res = new IdResponseOwnedModel()
+            IdResponseOwnedModel res = new()
             {
                 IsSuccess = check.IsSuccess
             };
@@ -106,7 +108,7 @@ namespace ServerLib
 
             res.CurrentOwnerObject = check.Project;
 
-            EnumDesignModelDB enum_new = new ()
+            EnumDesignModelDB enum_new = new()
             {
                 Description = enum_object.Description,
                 IsDeleted = false,
@@ -119,6 +121,14 @@ namespace ServerLib
             {
                 await _enums_dt.AddEnumAsync(enum_new, true);
                 res.Id = enum_new.Id;
+                await _log_dt.AddLogAsync(new LogChangeModelDB()
+                {
+                    AuthorId = _session_service.SessionMarker.Id,
+                    OwnerType = ContextesChangeLogEnum.Enum,
+                    OwnerId = enum_new.Id,
+                    Name = "Перечисление добавлено",
+                    Description = $"[code:{enum_new.SystemCodeName}] [name:{enum_new.Name}] [descr:{enum_new.Description}]"
+                });
             }
             catch (Exception ex)
             {
@@ -137,7 +147,7 @@ namespace ServerLib
             enum_obj.SystemCodeName = enum_obj.SystemCodeName.Trim();
 
             UserProjectResponseModel check = await _shared_service.CheckComplexAsync(enum_obj.Id, enum_obj.Name, enum_obj.SystemCodeName, typeof(EnumDesignModelDB));
-            ResponseBaseCurrentProjectModel res = new ResponseBaseCurrentProjectModel()
+            ResponseBaseCurrentProjectModel res = new()
             {
                 IsSuccess = check.IsSuccess
             };
@@ -164,7 +174,7 @@ namespace ServerLib
                 return res;
             }
 
-            List<string> actions_edit = new List<string>();
+            List<string> actions_edit = new();
 
             if (enum_db.Name != enum_obj.Name)
             {
@@ -192,18 +202,27 @@ namespace ServerLib
             try
             {
                 await _enums_dt.UpdateEnumAsync(enum_db, true);
+                await _log_dt.AddLogAsync(new LogChangeModelDB()
+                {
+                    AuthorId = _session_service.SessionMarker.Id,
+                    OwnerType = ContextesChangeLogEnum.Enum,
+                    OwnerId = enum_db.Id,
+                    Name = "Перечисление отредактировано",
+                    Description = $"[code:{enum_db.SystemCodeName}] [name:{enum_db.Name}] [descr:{enum_db.Description}]"
+                });
             }
             catch (Exception ex)
             {
                 res.IsSuccess = false;
                 res.Message = ex.Message;
             }
+
             res.Message = "Изменения записаны.";
             return res;
         }
 
         /// <inheritdoc/>
-        public async Task<ResponseBaseModel> SetToggleDeleteEnumAsync(int id)
+        public async Task<ResponseBaseModel> EnumDeleteToggleAsync(int id)
         {
             ResponseBaseModel res = new()
             {
@@ -237,11 +256,20 @@ namespace ServerLib
                 ? "Перечисление момечено как удалённое"
                 : "С перечисления снята пометка удаления";
 
+            await _log_dt.AddLogAsync(new LogChangeModelDB()
+            {
+                AuthorId = _session_service.SessionMarker.Id,
+                OwnerType = ContextesChangeLogEnum.Enum,
+                OwnerId = enum_db.Id,
+                Name = "Перечисление: пометка удаления",
+                Description = res.Message
+            });
+
             return res;
         }
 
         /// <inheritdoc/>
-        public async Task<ResponseBaseModel> ConfirmDeleteEnumAsync(ConfirmActionByNameModel confirm_delete)
+        public async Task<ResponseBaseModel> EnumDeleteConfirmAsync(ConfirmActionByNameModel confirm_delete)
         {
             ResponseBaseModel res = new()
             {
@@ -306,15 +334,15 @@ namespace ServerLib
                 return res;
             }
 
-            res.EnumDesignItem = await _items_enums_dt.GetEnumItemAsync(enum_item_element_id);
-            res.IsSuccess = res.EnumDesignItem is not null;
+            res.EnumItemDesign = await _items_enums_dt.GetEnumItemAsync(enum_item_element_id);
+            res.IsSuccess = res.EnumItemDesign is not null;
             if (!res.IsSuccess)
             {
                 res.Message = "Указанный элемент перечисления не найден в БД";
                 return res;
             }
 
-            res.IsSuccess = check.Project.Id == res.EnumDesignItem.OwnerEnum.ProjectId;
+            res.IsSuccess = check.Project.Id == res.EnumItemDesign.OwnerEnum.ProjectId;
             if (!res.IsSuccess)
             {
                 res.Message = "Текущий проект пользователя не совпадает с проектом перечисления";
@@ -325,7 +353,7 @@ namespace ServerLib
         }
 
         /// <inheritdoc/>
-        public async Task<GetEnumItemsResponseModel> EnumItemUpdateNameAndDescriotionActionAsync(IdNameDescriptionSimpleModel action)
+        public async Task<GetEnumItemsResponseModel> EnumItemUpdateAsync(IdNameDescriptionSimpleModel action)
         {
             GetEnumDesignItemForProjectResponseModel? check = await CheckExistingEnumItemElementObjectAsync(action.Id);
             GetEnumItemsResponseModel res = new GetEnumItemsResponseModel() { IsSuccess = check.IsSuccess };
@@ -342,7 +370,7 @@ namespace ServerLib
                 return res;
             }
 
-            EnumDesignItemModelDB control_enum_item_db = await _items_enums_dt.GetEnumItemAsync(action.Name, check.EnumDesignItem.OwnerEnumId);
+            EnumDesignItemModelDB control_enum_item_db = await _items_enums_dt.GetEnumItemAsync(action.Name, check.EnumItemDesign.OwnerEnumId);
             res.IsSuccess = control_enum_item_db.Id == action.Id;
             if (!res.IsSuccess)
             {
@@ -366,10 +394,19 @@ namespace ServerLib
             res.IsSuccess = edit_props.Any();
             if (res.IsSuccess)
             {
-                await _items_enums_dt.UpdateEnumItemAsync(check.EnumDesignItem, true);
+                await _items_enums_dt.UpdateEnumItemAsync(check.EnumItemDesign, true);
                 res.Message = $"Элемент перечисления обновлён: {string.Join(";", edit_props)};";
 
-                res.EnumItems = await _items_enums_dt.GetEnumItemsAsync(check.EnumDesignItem.OwnerEnumId);
+                res.EnumItems = await _items_enums_dt.GetEnumItemsAsync(check.EnumItemDesign.OwnerEnumId);
+
+                await _log_dt.AddLogAsync(new LogChangeModelDB()
+                {
+                    AuthorId = _session_service.SessionMarker.Id,
+                    OwnerType = ContextesChangeLogEnum.Enum,
+                    OwnerId = check.EnumItemDesign.OwnerEnumId,
+                    Name = "Элемент перечисления отредактировано",
+                    Description = $"[name:{check.EnumItemDesign.Name}] [index:{check.EnumItemDesign.SortIndex}] [descr:{check.EnumItemDesign.Description}]"
+                });
             }
             else
             {
@@ -379,7 +416,7 @@ namespace ServerLib
         }
 
         /// <inheritdoc/>
-        public async Task<GetEnumItemsResponseModel> EnumItemMoveUpActionAsync(int id)
+        public async Task<GetEnumItemsResponseModel> EnumItemMoveUpAsync(int id)
         {
             GetEnumDesignItemForProjectResponseModel? check = await CheckExistingEnumItemElementObjectAsync(id);
             GetEnumItemsResponseModel res = new GetEnumItemsResponseModel() { IsSuccess = check.IsSuccess };
@@ -389,7 +426,7 @@ namespace ServerLib
                 return res;
             }
 
-            List<EnumDesignItemModelDB> enum_items = new List<EnumDesignItemModelDB>(await _items_enums_dt.GetEnumItemsAsync(check.EnumDesignItem.OwnerEnumId));
+            List<EnumDesignItemModelDB> enum_items = new List<EnumDesignItemModelDB>(await _items_enums_dt.GetEnumItemsAsync(check.EnumItemDesign.OwnerEnumId));
             int index_at = enum_items.FindIndex(e => e.Id == id);
             res.IsSuccess = index_at > 0;
             if (!res.IsSuccess)
@@ -403,12 +440,22 @@ namespace ServerLib
             upd_items[1].SortIndex--;
 
             await _items_enums_dt.UpdateEnumItemsRangeAsync(upd_items, true);
-            res.EnumItems = await _items_enums_dt.GetEnumItemsAsync(check.EnumDesignItem.OwnerEnumId);
+            res.EnumItems = await _items_enums_dt.GetEnumItemsAsync(check.EnumItemDesign.OwnerEnumId);
+
+            await _log_dt.AddLogAsync(new LogChangeModelDB()
+            {
+                AuthorId = _session_service.SessionMarker.Id,
+                OwnerType = ContextesChangeLogEnum.Enum,
+                OwnerId = check.EnumItemDesign.OwnerEnumId,
+                Name = "Элемент перечисления сдвинут вверх",
+                Description = $"[name:{check.EnumItemDesign.Name}] [index:{check.EnumItemDesign.SortIndex}] [descr:{check.EnumItemDesign.Description}]"
+            });
+
             return res;
         }
 
         /// <inheritdoc/>
-        public async Task<GetEnumItemsResponseModel> EnumItemMoveDownActionAsync(int id)
+        public async Task<GetEnumItemsResponseModel> EnumItemMoveDownAsync(int id)
         {
             GetEnumDesignItemForProjectResponseModel? check = await CheckExistingEnumItemElementObjectAsync(id);
             GetEnumItemsResponseModel res = new GetEnumItemsResponseModel() { IsSuccess = check.IsSuccess };
@@ -418,7 +465,7 @@ namespace ServerLib
                 return res;
             }
 
-            List<EnumDesignItemModelDB> enum_items = new List<EnumDesignItemModelDB>(await _items_enums_dt.GetEnumItemsAsync(check.EnumDesignItem.OwnerEnumId));
+            List<EnumDesignItemModelDB> enum_items = new List<EnumDesignItemModelDB>(await _items_enums_dt.GetEnumItemsAsync(check.EnumItemDesign.OwnerEnumId));
             int index_at = enum_items.FindIndex(e => e.Id == id);
             res.IsSuccess = index_at < enum_items.Count - 1;
             if (!res.IsSuccess)
@@ -432,12 +479,22 @@ namespace ServerLib
             upd_items[1].SortIndex--;
 
             await _items_enums_dt.UpdateEnumItemsRangeAsync(upd_items, true);
-            res.EnumItems = await _items_enums_dt.GetEnumItemsAsync(check.EnumDesignItem.OwnerEnumId);
+
+            await _log_dt.AddLogAsync(new LogChangeModelDB()
+            {
+                AuthorId = _session_service.SessionMarker.Id,
+                OwnerType = ContextesChangeLogEnum.Enum,
+                OwnerId = check.EnumItemDesign.OwnerEnumId,
+                Name = "Элемент перечисления сдвинут ниже",
+                Description = $"[name:{check.EnumItemDesign.Name}] [index:{check.EnumItemDesign.SortIndex}] [descr:{check.EnumItemDesign.Description}]"
+            });
+
+            res.EnumItems = await _items_enums_dt.GetEnumItemsAsync(check.EnumItemDesign.OwnerEnumId);
             return res;
         }
 
         /// <inheritdoc/>
-        public async Task<GetEnumItemsResponseModel> EnumItemDeleteMarkToggleActionAsync(int id)
+        public async Task<GetEnumItemsResponseModel> EnumItemDeleteToggleAsync(int id)
         {
             GetEnumDesignItemForProjectResponseModel? check = await CheckExistingEnumItemElementObjectAsync(id);
             GetEnumItemsResponseModel res = new() { IsSuccess = check.IsSuccess };
@@ -447,16 +504,25 @@ namespace ServerLib
                 return res;
             }
 
-            check.EnumDesignItem.IsDeleted = !check.EnumDesignItem.IsDeleted;
+            check.EnumItemDesign.IsDeleted = !check.EnumItemDesign.IsDeleted;
 
-            await _items_enums_dt.UpdateEnumItemAsync(check.EnumDesignItem, true);
+            await _items_enums_dt.UpdateEnumItemAsync(check.EnumItemDesign, true);
 
-            res.EnumItems = await _items_enums_dt.GetEnumItemsAsync(check.EnumDesignItem.OwnerEnumId);
+            await _log_dt.AddLogAsync(new LogChangeModelDB()
+            {
+                AuthorId = _session_service.SessionMarker.Id,
+                OwnerType = ContextesChangeLogEnum.Enum,
+                OwnerId = check.EnumItemDesign.OwnerEnumId,
+                Name = $"Элемент перечисления: {(check.EnumItemDesign.IsDeleted ? "помечен на удаление" : "пометка удаления снята")}",
+                Description = $"[name:{check.EnumItemDesign.Name}] [index:{check.EnumItemDesign.SortIndex}] [descr:{check.EnumItemDesign.Description}]"
+            });
+
+            res.EnumItems = await _items_enums_dt.GetEnumItemsAsync(check.EnumItemDesign.OwnerEnumId);
             return res;
         }
 
         /// <inheritdoc/>
-        public async Task<GetEnumItemsResponseModel> EnumItemTrashElementActionAsync(int id)
+        public async Task<GetEnumItemsResponseModel> EnumItemDeleteConfirmAsync(int id)
         {
             GetEnumDesignItemForProjectResponseModel? check = await CheckExistingEnumItemElementObjectAsync(id);
             GetEnumItemsResponseModel res = new() { IsSuccess = check.IsSuccess };
@@ -465,21 +531,30 @@ namespace ServerLib
                 res.Message = check.Message;
                 return res;
             }
-            res.IsSuccess = check.EnumDesignItem.IsDeleted;
+            res.IsSuccess = check.EnumItemDesign.IsDeleted;
             if (!res.IsSuccess)
             {
                 res.Message = "Прежде чем удалить элемент перечисления - требуется пометить объект как удалённый.";
                 return res;
             }
 
-            await _items_enums_dt.DeleteEnumItemAsync(check.EnumDesignItem, true);
+            await _items_enums_dt.DeleteEnumItemAsync(check.EnumItemDesign, true);
 
-            res.EnumItems = await _items_enums_dt.GetEnumItemsAsync(check.EnumDesignItem.OwnerEnumId);
+            await _log_dt.AddLogAsync(new LogChangeModelDB()
+            {
+                AuthorId = _session_service.SessionMarker.Id,
+                OwnerType = ContextesChangeLogEnum.Enum,
+                OwnerId = check.EnumItemDesign.OwnerEnumId,
+                Name = "Элемент перечисления: удалён окончательно",
+                Description = $"[name:{check.EnumItemDesign.Name}] [index:{check.EnumItemDesign.SortIndex}] [descr:{check.EnumItemDesign.Description}]"
+            });
+
+            res.EnumItems = await _items_enums_dt.GetEnumItemsAsync(check.EnumItemDesign.OwnerEnumId);
             return res;
         }
 
         /// <inheritdoc/>
-        public async Task<GetEnumItemsResponseModel> CreateEnumItemAsync(EnumItemActionRequestModel action)
+        public async Task<GetEnumItemsResponseModel> EnumItemCreateAsync(EnumItemActionRequestModel action)
         {
             UserProjectResponseModel? check = await _shared_service.CheckLiteAsync();
             GetEnumItemsResponseModel res = new GetEnumItemsResponseModel() { IsSuccess = check.IsSuccess };
@@ -495,13 +570,23 @@ namespace ServerLib
                 res.Message = "Системный код объекта должен иметь коректное значение";
                 return res;
             }
-            var new_item = (EnumDesignItemModelDB)action;
-            var current_enum = await GetEnumAsync(new_item.OwnerEnumId);
+            EnumDesignItemModelDB new_item = (EnumDesignItemModelDB)action;
+            EnumDesignResponseModel current_enum = await GetEnumAsync(new_item.OwnerEnumId);
             new_item.OwnerEnum = current_enum.EnumDesign;
-            var links_users_projects = await _links_users_projects_service.GetLinksUsersByProjectAsync(new_item.OwnerEnum.ProjectId);
+            GetLinksProjectsResponseModel links_users_projects = await _links_users_projects_service.GetLinksUsersByProjectAsync(new_item.OwnerEnum.ProjectId);
             new_item.OwnerEnum.Project.UsersLinks = links_users_projects.Links;
             new_item.SortIndex = await _items_enums_dt.NextSortIndexAsync(new_item.OwnerEnumId);
             await _items_enums_dt.AddEnumItemAsync(new_item);
+
+            await _log_dt.AddLogAsync(new LogChangeModelDB()
+            {
+                AuthorId = _session_service.SessionMarker.Id,
+                OwnerType = ContextesChangeLogEnum.Enum,
+                OwnerId = new_item.OwnerEnumId,
+                Name = "Элемент перечисления создан",
+                Description = $"[name:{new_item.Name}] [index:{new_item.SortIndex}] [descr:{new_item.Description}]"
+            });
+
             res.EnumItems = await _items_enums_dt.GetEnumItemsAsync(new_item.OwnerEnumId);
             return res;
         }

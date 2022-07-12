@@ -41,7 +41,7 @@
 }
 else
 {
-    <EditForm autocomplete="off" Model="newPropertyMainBodyItemElement" OnValidSubmit="HandleSubmitAddingEnumElementAsync" class="row row-cols-lg-auto g-3 align-items-center justify-content-end">
+    <EditForm autocomplete="off" Model="newPropertyMainBodyItemElement" OnSubmit="HandleSubmitAddingPropertyAsync" class="row row-cols-lg-auto g-3 align-items-center justify-content-end">
         <DataAnnotationsValidator />
         <div class="col-12">
             <div class="row mb-12">
@@ -67,7 +67,7 @@ else
             </InputSelect>
         </div>
         <div class="col-8">
-            <button type="button" class="btn btn-primary">Добавить</button>
+            <button type="submit" class="btn btn-primary">Добавить</button>
         </div>
     </EditForm>
     <hr />
@@ -160,7 +160,7 @@ else
     /// <summary>
     /// Создать/добавить поле основного тела документа
     /// </summary>
-    private async Task HandleSubmitAddingEnumElementAsync()
+    private async Task HandleSubmitAddingPropertyAsync()
     {
         if (Id <= 0)
         {

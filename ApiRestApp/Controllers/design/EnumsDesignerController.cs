@@ -95,7 +95,7 @@ namespace ApiRestApp.Controllers
         [HttpPatch($"{nameof(DesignObjectsItemsActionsEnum.MoveUpAction)}/{{id}}")]
         public async Task<GetEnumItemsResponseModel> MoveUp([FromRoute] int id)
         {
-            return await _enums_service.EnumItemMoveUpActionAsync(id);
+            return await _enums_service.EnumItemMoveUpAsync(id);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace ApiRestApp.Controllers
         [HttpPatch($"{nameof(DesignObjectsItemsActionsEnum.MoveDownAction)}/{{id}}")]
         public async Task<GetEnumItemsResponseModel> MoveDown([FromRoute] int id)
         {
-            return await _enums_service.EnumItemMoveDownActionAsync(id);
+            return await _enums_service.EnumItemMoveDownAsync(id);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace ApiRestApp.Controllers
         [HttpPatch(nameof(DesignObjectsItemsActionsEnum.CreateAction))]
         public async Task<GetEnumItemsResponseModel> CreateEnumItemElementAsync(EnumItemActionRequestModel action)
         {
-            return await _enums_service.CreateEnumItemAsync(action);
+            return await _enums_service.EnumItemCreateAsync(action);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace ApiRestApp.Controllers
         [HttpPatch(nameof(DesignObjectsItemsActionsEnum.UpdateAction))]
         public async Task<GetEnumItemsResponseModel> UpdateNameAndDescriotion(IdNameDescriptionSimpleModel action)
         {
-            return await _enums_service.EnumItemUpdateNameAndDescriotionActionAsync(action);
+            return await _enums_service.EnumItemUpdateAsync(action);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace ApiRestApp.Controllers
         [HttpPatch($"{nameof(DesignObjectsItemsActionsEnum.DeleteMarkToggleAction)}/{{id}}")]
         public async Task<GetEnumItemsResponseModel> DeleteMarkToggle([FromRoute] int id)
         {
-            return await _enums_service.EnumItemDeleteMarkToggleActionAsync(id);
+            return await _enums_service.EnumItemDeleteToggleAsync(id);
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace ApiRestApp.Controllers
         [HttpPatch($"{nameof(DesignObjectsItemsActionsEnum.TrashAction)}/{{id}}")]
         public async Task<GetEnumItemsResponseModel> TrashElement([FromRoute] int id)
         {
-            return await _enums_service.EnumItemTrashElementActionAsync(id);
+            return await _enums_service.EnumItemDeleteConfirmAsync(id);
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace ApiRestApp.Controllers
         [HttpDelete("{id}")]
         public async Task<ResponseBaseModel> Delete([FromRoute] int id)
         {
-            return await _enums_service.SetToggleDeleteEnumAsync(id);
+            return await _enums_service.EnumDeleteToggleAsync(id);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace ApiRestApp.Controllers
         [HttpDelete]
         public async Task<ResponseBaseModel> Delete(ConfirmActionByNameModel confirm_delete)
         {
-            return await _enums_service.ConfirmDeleteEnumAsync(confirm_delete);
+            return await _enums_service.EnumDeleteConfirmAsync(confirm_delete);
         }
     }
 }

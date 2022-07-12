@@ -44,55 +44,55 @@ namespace ServerLib
         /// </summary>
         /// <param name="id">Идентификатор перечисления</param>
         /// <returns>Результат обработки запроса</returns>
-        public Task<ResponseBaseModel> SetToggleDeleteEnumAsync(int id);
+        public Task<ResponseBaseModel> EnumDeleteToggleAsync(int id);
 
         /// <summary>
         /// Подвтердить удаление объекта перечисления (для объектов, которые помечены).
         /// </summary>
         /// <param name="confirm_delete">Подвтерждение удаления</param>
         /// <returns>Результат обработки запроса</returns>
-        public Task<ResponseBaseModel> ConfirmDeleteEnumAsync(ConfirmActionByNameModel confirm_delete);
+        public Task<ResponseBaseModel> EnumDeleteConfirmAsync(ConfirmActionByNameModel confirm_delete);
 
         /// <summary>
         /// Сдвинуть выше елемент перечисления, относительно других элементов перечисления
         /// </summary>
         /// <param name="id">Идентификатор объекта</param>
         /// <returns>Результат обработки запроса</returns>
-        public Task<GetEnumItemsResponseModel> EnumItemMoveUpActionAsync(int id);
+        public Task<GetEnumItemsResponseModel> EnumItemMoveUpAsync(int id);
 
         /// <summary>
         /// Сдвинуть ниже елемент перечисления, относительно других элементов перечисления
         /// </summary>
         /// <param name="id">Идентификатор объекта</param>
         /// <returns>Результат обработки запроса</returns>
-        public Task<GetEnumItemsResponseModel> EnumItemMoveDownActionAsync(int id);
+        public Task<GetEnumItemsResponseModel> EnumItemMoveDownAsync(int id);
 
         /// <summary>
         /// Обновить (или создать) элемент перечисления
         /// </summary>
         /// <param name="action">Операция</param>
         /// <returns>Результат обработки запроса</returns>
-        public Task<GetEnumItemsResponseModel> EnumItemUpdateNameAndDescriotionActionAsync(IdNameDescriptionSimpleModel action);
+        public Task<GetEnumItemsResponseModel> EnumItemUpdateAsync(IdNameDescriptionSimpleModel action);
 
         /// <summary>
         /// Инверсия пометки удаления элемента перечисления
         /// </summary>
         /// <param name="id">Идентификатор объекта</param>
         /// <returns>Результат обработки запроса</returns>
-        public Task<GetEnumItemsResponseModel> EnumItemDeleteMarkToggleActionAsync(int id);
+        public Task<GetEnumItemsResponseModel> EnumItemDeleteToggleAsync(int id);
 
         /// <summary>
         /// Удалить безвовзратно элемент перечисления
         /// </summary>
         /// <param name="id">Идентификатор объекта</param>
         /// <returns>Результат обработки запроса</returns>
-        public Task<GetEnumItemsResponseModel> EnumItemTrashElementActionAsync(int id);
+        public Task<GetEnumItemsResponseModel> EnumItemDeleteConfirmAsync(int id);
 
         /// <summary>
         /// Создать новый элемент перечисления
         /// </summary>
         /// <param name="action">Данные для создания</param>
         /// <returns>Результат выполенния запроса</returns>
-        public Task<GetEnumItemsResponseModel> CreateEnumItemAsync(EnumItemActionRequestModel action);
+        public Task<GetEnumItemsResponseModel> EnumItemCreateAsync(EnumItemActionRequestModel action);
     }
 }

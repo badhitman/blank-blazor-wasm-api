@@ -12,6 +12,6 @@ namespace SharedLib.Models
         /// <summary>
         /// Типы владельцев изменений
         /// </summary>
-        public IEnumerable<ContextesChangeLogEnum>? OwnersTypes { get; set; }
+        public ContextesChangeLogEnum? OwnerType { get; set; }
     }
 }

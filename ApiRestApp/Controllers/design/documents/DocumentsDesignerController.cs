@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using ServerLib;
@@ -18,7 +17,7 @@ namespace ApiRestApp.Controllers
     public class DocumentsDesignerController : ControllerBase
     {
         readonly IOptions<ServerConfigModel> _config;
-        readonly IDesignerDocumentsService _documents_service;
+        readonly IDesignerDocumentsService _documents_service;        
 
         public DocumentsDesignerController(IOptions<ServerConfigModel> set_config, IDesignerDocumentsService set_documents_service)
         {
@@ -96,7 +95,7 @@ namespace ApiRestApp.Controllers
         [HttpDelete("{id}")]
         public async Task<ResponseBaseModel> Delete([FromRoute] int id)
         {
-            return await _documents_service.SetToggleDeleteDocumentAsync(id);
+            return await _documents_service.DocumentToggleDeleteAsync(id);
         }
     }
 }

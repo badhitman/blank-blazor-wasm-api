@@ -51,8 +51,8 @@ namespace DbTablesLib
         public async Task<LogsPaginationResponseModel> GetLogsAsync(LogPaginationByAuthorAndOwnersTypesRequestModel request)
         {
             IQueryable<LogChangeModelDB>? query = _db_context.ChangeLogs.Where(x => x.OwnerId == request.AuthorId).AsQueryable();
-            if (request.OwnersTypes?.Any() == true)
-                query = query.Where(x => request.OwnersTypes.Contains(x.OwnerType));
+            if (request.OwnerType.HasValue)
+                query = query.Where(x => request.OwnerType == x.OwnerType);
 
             LogsPaginationResponseModel res = new()
             {
@@ -101,8 +101,8 @@ namespace DbTablesLib
                 .Where(x => (x.OwnerType == ContextesChangeLogEnum.Project && x.OwnerId == request.ProjectId) || (x.OwnerType == ContextesChangeLogEnum.Enum && _db_context.DesignEnums.Any(y => y.ProjectId == request.ProjectId && y.Id == x.OwnerId)) || (x.OwnerType == ContextesChangeLogEnum.Document && _db_context.DesignDocuments.Any(y => y.ProjectId == request.ProjectId && y.Id == x.OwnerId)))
                 .AsQueryable();
 
-            if (request.OwnersTypes?.Any() == true)
-                query = query.Where(x => request.OwnersTypes.Contains(x.OwnerType));
+            if (request.OwnerType.HasValue)
+                query = query.Where(x => request.OwnerType == x.OwnerType);
 
             LogsPaginationResponseModel res = new()
             {

@@ -13,15 +13,17 @@ namespace ServerLib
         readonly ISessionService _session_service;
         readonly IDesignerSharedService _shared_service;
         readonly IDesignerDocumensTable _documens_dt;
+        readonly ILogChangeTable _logs_dt;
 
         /// <summary>
         /// Конструткор
         /// </summary>
-        public DesignerDocumentsService(ISessionService set_session_service, IDesignerSharedService shared_service, IDesignerDocumensTable documens_dt)
-        {           
+        public DesignerDocumentsService(ISessionService set_session_service, IDesignerSharedService shared_service, IDesignerDocumensTable documens_dt, ILogChangeTable logs_dt)
+        {
             _session_service = set_session_service;
             _shared_service = shared_service;
             _documens_dt = documens_dt;
+            _logs_dt = logs_dt;
         }
 
         /// <inheritdoc/>
@@ -113,11 +115,20 @@ namespace ServerLib
                 ProjectId = check.Project.Id,
                 SystemCodeName = document_object.SystemCodeName
             };
-              
+
             try
             {
                 await _documens_dt.AddDocumentAsync(document_new, true);
                 res.Id = document_new.Id;
+
+                await _logs_dt.AddLogAsync(new LogChangeModelDB()
+                {
+                    AuthorId = _session_service.SessionMarker.Id,
+                    OwnerType = ContextesChangeLogEnum.Document,
+                    OwnerId = document_new.Id,
+                    Name = "Документ добавлен",
+                    Description = $"[code:{document_new.SystemCodeName}] [name:{document_new.Name}] [descr:{document_new.Description}]"
+                });
             }
             catch (Exception ex)
             {
@@ -192,6 +203,15 @@ namespace ServerLib
             try
             {
                 await _documens_dt.UpdateDocumentAsync(document_db, true);
+
+                await _logs_dt.AddLogAsync(new LogChangeModelDB()
+                {
+                    AuthorId = _session_service.SessionMarker.Id,
+                    OwnerType = ContextesChangeLogEnum.Document,
+                    OwnerId = document_db.Id,
+                    Name = "Документ обновлён",
+                    Description = $"[code:{document_db.SystemCodeName}] [name:{document_db.Name}] [descr:{document_db.Description}]"
+                });
             }
             catch (Exception ex)
             {
@@ -203,7 +223,7 @@ namespace ServerLib
         }
 
         /// <inheritdoc/>
-        public Task<ResponseBaseModel> SetToggleDeleteDocumentAsync(int id)
+        public Task<ResponseBaseModel> DocumentToggleDeleteAsync(int id)
         {
             throw new NotImplementedException();
         }

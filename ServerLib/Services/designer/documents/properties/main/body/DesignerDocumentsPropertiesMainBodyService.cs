@@ -15,17 +15,19 @@ namespace ServerLib
         readonly IDesignerDocumensPropertiesMainBodyTable _documens_properties_main_body_dt;
         readonly IDesignerDocumensTable _documens_dt;
         readonly IProjectsTable _projects_dt;
+        readonly ILogChangeTable _logs_dt;
 
         /// <summary>
         /// Конструткор
         /// </summary>
-        public DesignerDocumentsPropertiesMainBodyService(ISessionService set_session_service, IDesignerSharedService shared_service, IDesignerDocumensPropertiesMainBodyTable documens_main_body_dt, IDesignerDocumensTable set_documens_dt, IProjectsTable set_projects_dt)
+        public DesignerDocumentsPropertiesMainBodyService(ISessionService set_session_service, IDesignerSharedService shared_service, IDesignerDocumensPropertiesMainBodyTable documens_main_body_dt, IDesignerDocumensTable set_documens_dt, IProjectsTable set_projects_dt, ILogChangeTable logs_dt)
         {
             _session_service = set_session_service;
             _shared_service = shared_service;
             _documens_properties_main_body_dt = documens_main_body_dt;
             _documens_dt = set_documens_dt;
             _projects_dt = set_projects_dt;
+            _logs_dt = logs_dt;
         }
 
         /// <inheritdoc/>
@@ -33,7 +35,7 @@ namespace ServerLib
         {
             UserProjectResponseModel check = await _shared_service.CheckLiteAsync();
 
-            GetDocumentDataResponseModel res = new GetDocumentDataResponseModel() { IsSuccess = check.IsSuccess };
+            GetDocumentDataResponseModel res = new() { IsSuccess = check.IsSuccess };
             if (!res.IsSuccess)
             {
                 res.Message = check.Message;
@@ -77,7 +79,7 @@ namespace ServerLib
             property_object.SystemCodeName = property_object.SystemCodeName.Trim();
 
             UserProjectResponseModel check = await _shared_service.CheckComplexAsync(0, property_object.Name, property_object.SystemCodeName, typeof(DocumentPropertyMainBodyModelDB));
-            GetPropertiesSimpleRealTypeResponseModel res = new GetPropertiesSimpleRealTypeResponseModel()
+            GetPropertiesSimpleRealTypeResponseModel res = new()
             {
                 IsSuccess = check.IsSuccess
             };
@@ -129,6 +131,14 @@ namespace ServerLib
                 try
                 {
                     await _documens_properties_main_body_dt.UpdatePropertiesRangeAsync(res.DataRows, true);
+                    await _logs_dt.AddLogAsync(new LogChangeModelDB()
+                    {
+                        AuthorId = _session_service.SessionMarker.Id,
+                        OwnerType = ContextesChangeLogEnum.Document,
+                        OwnerId = property_new.DocumentOwnerId,
+                        Name = "Поле тела документа добавлено",
+                        Description = $"[code:{property_new.SystemCodeName}] [name:{property_new.Name}] [type:{property_new.PropertyType}]"
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -144,14 +154,14 @@ namespace ServerLib
         public async Task<GetPropertiesSimpleRealTypeResponseModel> PropertyMoveUpAsync(int id)
         {
             GetPropertyMainBodyResponseModel? check = await CheckExistingPropertyDocumentObjectAsync(id);
-            GetPropertiesSimpleRealTypeResponseModel res = new GetPropertiesSimpleRealTypeResponseModel() { IsSuccess = check.IsSuccess };
+            GetPropertiesSimpleRealTypeResponseModel res = new() { IsSuccess = check.IsSuccess };
             if (!res.IsSuccess)
             {
                 res.Message = check.Message;
                 return res;
             }
 
-            List<SimplePropertyRealTypeModel> properties_items = new List<SimplePropertyRealTypeModel>(await _documens_properties_main_body_dt.GetPropertiesAsync(check.Property.DocumentOwnerId));
+            List<SimplePropertyRealTypeModel> properties_items = new(await _documens_properties_main_body_dt.GetPropertiesAsync(check.Property.DocumentOwnerId));
             int index_at = properties_items.FindIndex(e => e.Id == id);
             res.IsSuccess = index_at > 0;
             if (!res.IsSuccess)
@@ -173,14 +183,14 @@ namespace ServerLib
         public async Task<GetPropertiesSimpleRealTypeResponseModel> PropertyMoveDownAsync(int id)
         {
             GetPropertyMainBodyResponseModel? check = await CheckExistingPropertyDocumentObjectAsync(id);
-            GetPropertiesSimpleRealTypeResponseModel res = new GetPropertiesSimpleRealTypeResponseModel() { IsSuccess = check.IsSuccess };
+            GetPropertiesSimpleRealTypeResponseModel res = new() { IsSuccess = check.IsSuccess };
             if (!res.IsSuccess)
             {
                 res.Message = check.Message;
                 return res;
             }
 
-            List<SimplePropertyRealTypeModel> properties_items = new List<SimplePropertyRealTypeModel>(await _documens_properties_main_body_dt.GetPropertiesAsync(check.Property.DocumentOwnerId));
+            List<SimplePropertyRealTypeModel> properties_items = new(await _documens_properties_main_body_dt.GetPropertiesAsync(check.Property.DocumentOwnerId));
             int index_at = properties_items.FindIndex(e => e.Id == id);
             res.IsSuccess = index_at < properties_items.Count - 1;
             if (!res.IsSuccess)
@@ -201,7 +211,7 @@ namespace ServerLib
         private async Task<GetPropertyMainBodyResponseModel> CheckExistingPropertyDocumentObjectAsync(int property_document_id)
         {
             UserProjectResponseModel check = await _shared_service.CheckLiteAsync();
-            GetPropertyMainBodyResponseModel res = new GetPropertyMainBodyResponseModel()
+            GetPropertyMainBodyResponseModel res = new()
             {
                 IsSuccess = check.IsSuccess,
             };
@@ -244,7 +254,7 @@ namespace ServerLib
             action.SystemCodeName = action.SystemCodeName.Trim();
 
             UserProjectResponseModel check = await _shared_service.CheckComplexAsync(action.Id, action.Name, action.SystemCodeName, typeof(DocumentPropertyMainBodyModelDB));
-            GetPropertiesSimpleRealTypeResponseModel res = new GetPropertiesSimpleRealTypeResponseModel()
+            GetPropertiesSimpleRealTypeResponseModel res = new()
             {
                 IsSuccess = check.IsSuccess
             };
@@ -269,7 +279,7 @@ namespace ServerLib
                 return res;
             }
 
-            List<string> actions_edit = new List<string>();
+            List<string> actions_edit = new();
 
             if (property_db.Name != action.Name)
             {
@@ -325,7 +335,7 @@ namespace ServerLib
         public async Task<GetPropertiesSimpleRealTypeResponseModel> SetToggleDeletePropertyAsync(int id)
         {
             GetPropertyMainBodyResponseModel? check = await CheckExistingPropertyDocumentObjectAsync(id);
-            GetPropertiesSimpleRealTypeResponseModel res = new GetPropertiesSimpleRealTypeResponseModel() { IsSuccess = check.IsSuccess };
+            GetPropertiesSimpleRealTypeResponseModel res = new() { IsSuccess = check.IsSuccess };
             if (!res.IsSuccess)
             {
                 res.Message = check.Message;
@@ -341,7 +351,7 @@ namespace ServerLib
         public async Task<GetPropertiesSimpleRealTypeResponseModel> PropertyTrashAsync(int id)
         {
             GetPropertyMainBodyResponseModel? check = await CheckExistingPropertyDocumentObjectAsync(id);
-            GetPropertiesSimpleRealTypeResponseModel res = new GetPropertiesSimpleRealTypeResponseModel() { IsSuccess = check.IsSuccess };
+            GetPropertiesSimpleRealTypeResponseModel res = new() { IsSuccess = check.IsSuccess };
             if (!res.IsSuccess)
             {
                 res.Message = check.Message;

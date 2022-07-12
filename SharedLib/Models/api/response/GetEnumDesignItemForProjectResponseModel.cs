@@ -12,6 +12,6 @@ namespace SharedLib.Models
         /// <summary>
         /// Элемент перечисления
         /// </summary>
-        public EnumDesignItemModelDB EnumDesignItem { get; set; }
+        public EnumDesignItemModelDB EnumItemDesign { get; set; }
     }
 }
