@@ -12,9 +12,10 @@
     .is-delete {
         text-decoration: line-through;
     }
-    .is-delete:hover {
-        text-decoration: line-through;
-    }
+
+        .is-delete:hover {
+            text-decoration: line-through;
+        }
 </style>
 <div class="row">
     <div class="col-4">
@@ -88,10 +89,14 @@
         @ModalBodyText
     </p>
 </ModalWindowComponent>
-@code {  
+@code {
     protected override Task OnInitializedAsync()
     {
-        SetCurrentProperty(new PropertyEditRealTypeModel(DataRows.First()));
+        SimplePropertyRealTypeModel firs_el = DataRows.FirstOrDefault();
+        if (firs_el is not null)
+            SetCurrentProperty(new PropertyEditRealTypeModel(DataRows.First()));
+        else
+            CurrentProperty = new PropertyEditRealTypeModel() { };
         return base.OnInitializedAsync();
     }
 }

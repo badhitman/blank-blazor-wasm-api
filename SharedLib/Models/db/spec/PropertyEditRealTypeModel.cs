@@ -12,7 +12,7 @@ namespace SharedLib.Models
         /// <summary>
         /// Идентификатор поля документа
         /// </summary>
-        public int Id => OriginalProperty.Id;
+        public int Id => OriginalProperty?.Id ?? 0;
 
         /// <summary>
         /// Помечено на удалоение
@@ -23,6 +23,11 @@ namespace SharedLib.Models
         /// Описание
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        public PropertyEditRealTypeModel() { }
 
         /// <summary>
         /// Конструктор

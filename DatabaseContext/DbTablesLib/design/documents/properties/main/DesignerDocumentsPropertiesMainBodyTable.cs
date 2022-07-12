@@ -62,7 +62,7 @@ namespace DbTablesLib
         /// <inheritdoc/>
         public async Task<DocumentPropertyMainBodyModelDB?> GetPropertyAsync(int property_id, bool include_users_links_for_project = true)
         {
-            IQueryable<DocumentPropertyMainBodyModelDB> query = _db_context.DesignDocumentsMainBodyProperties.AsQueryable();
+            IQueryable<DocumentPropertyMainBodyModelDB> query = _db_context.DesignDocumentsMainBodyProperties.Include(x => x.PropertyLink).AsQueryable();
             query = include_users_links_for_project
                 ? query.Include(x => x.DocumentOwner).ThenInclude(x => x.Project).ThenInclude(x => x.UsersLinks)
                 : query.Include(x => x.DocumentOwner).ThenInclude(x => x.Project);
@@ -86,7 +86,16 @@ namespace DbTablesLib
         /// <inheritdoc/>
         public async Task<int> SaveChangesAsync(Dictionary<string, string?>? cashe_upd = null)
         {
-            return await _db_context.SaveChangesAsync();
+            try
+            {
+                return await _db_context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка записи изменений в БД");
+                return 0;
+            }
+
         }
 
         /// <inheritdoc/>

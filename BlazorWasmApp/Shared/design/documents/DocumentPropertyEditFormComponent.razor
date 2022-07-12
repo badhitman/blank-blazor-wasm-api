@@ -20,7 +20,7 @@
             }
             else
             {
-                <button disabled="@(isModified)" @onclick="DeleteMarkToggleAsync" type="button" class="btn btn-outline-danger">Удаление</button>
+                <button disabled="@(CurrentProperty.Id <= 0)" @onclick="DeleteMarkToggleAsync" type="button" class="btn btn-outline-danger">Удаление</button>
             }
 
             <button disabled="@(!isModified)" type="submit" class="btn btn-outline-success">Записать</button>
@@ -32,17 +32,17 @@
 
     <div class="mb-3">
         <label for="exampleInputName" class="form-label">Наименование реквизита</label>
-        <input @bind="CurrentProperty.Name" @bind:event="oninput" type="text" class="form-control" id="exampleInputName" aria-describedby="nameHelp" />
+        <input disabled="@(CurrentProperty.Id <= 0)" @bind="CurrentProperty.Name" @bind:event="oninput" type="text" class="form-control" id="exampleInputName" aria-describedby="nameHelp" />
         <div id="nameHelp" class="form-text">Заголовок поля в форме и комментарий к классу/class.</div>
     </div>
     <div class="mb-3">
         <label for="exampleInputSystemCode" class="form-label">Кодовое имя</label>
-        <input @bind="CurrentProperty.SystemCodeName" @bind:event="oninput" type="text" class="form-control" id="exampleInputSystemCode" aria-describedby="systemCodeHelp" />
+        <input disabled="@(CurrentProperty.Id <= 0)" @bind="CurrentProperty.SystemCodeName" @bind:event="oninput" type="text" class="form-control" id="exampleInputSystemCode" aria-describedby="systemCodeHelp" />
         <div id="systemCodeHelp" class="form-text">Системное имя типа данных C#.</div>
     </div>
     <div class="mb-3">
         <label for="exampleInputType" class="form-label">Тип данных поля/реквизита</label>
-        <select @bind:event="oninput" @bind="CurrentProperty.SelectedTypeTemplate" class="form-select" id="exampleInputType" aria-describedby="typeHelp">
+        <select disabled="@(CurrentProperty.Id <= 0)" @bind:event="oninput" @bind="CurrentProperty.SelectedTypeTemplate" class="form-select" id="exampleInputType" aria-describedby="typeHelp">
             <OptionsForTypePropertySelectComponent DocumentsTypesOfProject="DocumentsTypesOfProject" EnumsTypesOfProject="EnumsTypesOfProject" />
         </select>
         <div id="typeHelp" class="form-text">Тип данных поля/реквизита</div>
@@ -89,6 +89,9 @@
     {
         get
         {
+            if (CurrentProperty.OriginalProperty is null)
+                return false;
+
             return CurrentProperty.Description != CurrentProperty.OriginalProperty.Description
             || CurrentProperty.Name != CurrentProperty.OriginalProperty.Name
             || CurrentProperty.SystemCodeName != CurrentProperty.OriginalProperty.SystemCodeName
