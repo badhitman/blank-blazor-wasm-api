@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json;
 using SharedLib;
 using SharedLib.Models;
 
@@ -16,11 +17,12 @@ namespace ServerLib
         readonly IDesignerDocumensTable _documens_dt;
         readonly IProjectsTable _projects_dt;
         readonly ILogChangeTable _logs_dt;
+        readonly IDesignerEnumsTable _enums_dt;
 
         /// <summary>
         /// Конструткор
         /// </summary>
-        public DesignerDocumentsPropertiesMainBodyService(ISessionService set_session_service, IDesignerSharedService shared_service, IDesignerDocumensPropertiesMainBodyTable documens_main_body_dt, IDesignerDocumensTable set_documens_dt, IProjectsTable set_projects_dt, ILogChangeTable logs_dt)
+        public DesignerDocumentsPropertiesMainBodyService(ISessionService set_session_service, IDesignerSharedService shared_service, IDesignerDocumensPropertiesMainBodyTable documens_main_body_dt, IDesignerDocumensTable set_documens_dt, IProjectsTable set_projects_dt, ILogChangeTable logs_dt, IDesignerEnumsTable enums_dt)
         {
             _session_service = set_session_service;
             _shared_service = shared_service;
@@ -28,6 +30,7 @@ namespace ServerLib
             _documens_dt = set_documens_dt;
             _projects_dt = set_projects_dt;
             _logs_dt = logs_dt;
+            _enums_dt = enums_dt;
         }
 
         /// <inheritdoc/>
@@ -72,6 +75,8 @@ namespace ServerLib
             return res;
         }
 
+
+
         /// <inheritdoc/>
         public async Task<GetPropertiesSimpleRealTypeResponseModel> AddPropertyAsync(PropertySimpleRealTypeModel property_object)
         {
@@ -94,6 +99,19 @@ namespace ServerLib
             try
             {
                 await _documens_properties_main_body_dt.AddPropertyAsync(property_new, true);
+                LogChangeModelDB log = new()
+                {
+                    AuthorId = _session_service.SessionMarker.Id,
+                    OwnerType = ContextesChangeLogEnum.Document,
+                    OwnerId = property_new.DocumentOwnerId,
+                    Name = "Поле тела документа добавлено",
+                    Description = $"[code:{property_new.SystemCodeName}] [name:{property_new.Name}] [type:{property_new.PropertyType}]"
+                };
+                if (property_new.PropertyLink is not null)
+                {
+                    await ReadInfoAboutPropertyAsync(property_new.PropertyLink, log);
+                }
+                await _logs_dt.AddLogAsync(log);
             }
             catch (Exception ex)
             {
@@ -109,15 +127,44 @@ namespace ServerLib
                 return res;
             }
 
+            await ControlSortingAsync(res, property_new.DocumentOwnerId);
+
+            return res;
+        }
+
+        async Task ReadInfoAboutPropertyAsync(DocumentPropertyLinkModelDB link, LogChangeModelDB log)
+        {
+            if (link.TypedEnumId > 0)
+            {
+                EnumDesignModelDB? enum_db = await _enums_dt.GetEnumAsync(link.TypedEnumId.Value, true);
+                log.Description += $" // перечисление: #{enum_db.Id} [code:{enum_db.SystemCodeName}] [name:{enum_db.Name}]";
+            }
+            else if (link.TypedDocumentId > 0)
+            {
+                DocumentDesignModelDB? doc_db = await _documens_dt.GetDocumentAsync(link.TypedDocumentId.Value, true);
+                log.Description += $" // документ: #{doc_db.Id} [code:{doc_db.SystemCodeName}] [name:{doc_db.Name}]";
+            }
+            else
+            {
+                log.Description += $" // ОШИБКА! Не удалось определить вещественный тип поля -> {JsonConvert.SerializeObject(link)}";
+            }
+        }
+
+        /// <summary>
+        /// Контроль сортировки полей документа
+        /// </summary>
+        /// <param name="res">Контрольный объект</param>
+        /// <param name="document_owner_id">Документ-владелец</param>
+        async Task ControlSortingAsync(GetPropertiesSimpleRealTypeResponseModel res, int document_owner_id)
+        {
             uint index_num = 0;
             bool need_reorder = false;
             foreach (SimplePropertyRealTypeModel r in res.DataRows)
             {
                 need_reorder = r.SortIndex == index_num;
                 if (need_reorder)
-                {
                     break;
-                }
+
                 index_num++;
             }
             if (need_reorder)
@@ -131,13 +178,14 @@ namespace ServerLib
                 try
                 {
                     await _documens_properties_main_body_dt.UpdatePropertiesRangeAsync(res.DataRows, true);
+
                     await _logs_dt.AddLogAsync(new LogChangeModelDB()
                     {
                         AuthorId = _session_service.SessionMarker.Id,
                         OwnerType = ContextesChangeLogEnum.Document,
-                        OwnerId = property_new.DocumentOwnerId,
-                        Name = "Поле тела документа добавлено",
-                        Description = $"[code:{property_new.SystemCodeName}] [name:{property_new.Name}] [type:{property_new.PropertyType}]"
+                        OwnerId = document_owner_id,
+                        Name = "Пересортировка полей",
+                        Description = "Обнаружена пересортица! Установлен новый порядок."
                     });
                 }
                 catch (Exception ex)
@@ -146,8 +194,6 @@ namespace ServerLib
                     res.Message = ex.Message;
                 }
             }
-
-            return res;
         }
 
         /// <inheritdoc/>
@@ -175,7 +221,24 @@ namespace ServerLib
             upd_items[1].SortIndex--;
 
             await _documens_properties_main_body_dt.UpdatePropertiesRangeAsync(upd_items, true);
+
+            LogChangeModelDB log = new()
+            {
+                AuthorId = _session_service.SessionMarker.Id,
+                OwnerType = ContextesChangeLogEnum.Document,
+                OwnerId = check.Property.DocumentOwnerId,
+                Name = "Поле тела документа сдвинуто выше",
+                Description = $"[code:{check.Property.SystemCodeName}] [name:{check.Property.Name}] [type:{check.Property.PropertyType}]"
+            };
+            if (check.Property.PropertyLink is not null)
+            {
+                await ReadInfoAboutPropertyAsync(check.Property.PropertyLink, log);
+            }
+            await _logs_dt.AddLogAsync(log);
             res.DataRows = await _documens_properties_main_body_dt.GetPropertiesAsync(check.Property.DocumentOwnerId);
+
+            await ControlSortingAsync(res, check.Property.DocumentOwnerId);
+
             return res;
         }
 
@@ -204,6 +267,21 @@ namespace ServerLib
             upd_items[1].SortIndex--;
 
             await _documens_properties_main_body_dt.UpdatePropertiesRangeAsync(upd_items, true);
+
+            LogChangeModelDB log = new()
+            {
+                AuthorId = _session_service.SessionMarker.Id,
+                OwnerType = ContextesChangeLogEnum.Document,
+                OwnerId = check.Property.DocumentOwnerId,
+                Name = "Поле тела документа сдвинуто выше",
+                Description = $"[code:{check.Property.SystemCodeName}] [name:{check.Property.Name}] [type:{check.Property.PropertyType}]"
+            };
+            if (check.Property.PropertyLink is not null)
+            {
+                await ReadInfoAboutPropertyAsync(check.Property.PropertyLink, log);
+            }
+            await _logs_dt.AddLogAsync(log);
+
             res.DataRows = await _documens_properties_main_body_dt.GetPropertiesAsync(check.Property.DocumentOwnerId);
             return res;
         }
@@ -326,6 +404,21 @@ namespace ServerLib
                 res.Message = ex.Message;
                 return res;
             }
+
+            LogChangeModelDB log = new()
+            {
+                AuthorId = _session_service.SessionMarker.Id,
+                OwnerType = ContextesChangeLogEnum.Document,
+                OwnerId = property_db.DocumentOwnerId,
+                Name = "Поле тела документа обновлено",
+                Description = $"[code:{property_db.SystemCodeName}] [name:{property_db.Name}] [type:{property_db.PropertyType}]"
+            };
+            if (property_db.PropertyLink is not null)
+            {
+                await ReadInfoAboutPropertyAsync(property_db.PropertyLink, log);
+            }
+            await _logs_dt.AddLogAsync(log);
+
             res.DataRows = await _documens_properties_main_body_dt.GetPropertiesAsync(property_db.DocumentOwnerId);
             res.Message = "Изменения записаны.";
             return res;
@@ -343,6 +436,21 @@ namespace ServerLib
             }
             check.Property.IsDeleted = !check.Property.IsDeleted;
             await _documens_properties_main_body_dt.UpdatePropertyAsync(check.Property, true);
+
+            LogChangeModelDB log = new()
+            {
+                AuthorId = _session_service.SessionMarker.Id,
+                OwnerType = ContextesChangeLogEnum.Document,
+                OwnerId = check.Property.DocumentOwnerId,
+                Name = "Поле тела документа",
+                Description = check.Property.IsDeleted ? "Помечено как удалённое" : "Пометка удаления снята"
+            };
+            if (check.Property.PropertyLink is not null)
+            {
+                await ReadInfoAboutPropertyAsync(check.Property.PropertyLink, log);
+            }
+            await _logs_dt.AddLogAsync(log);
+
             res.DataRows = await _documens_properties_main_body_dt.GetPropertiesAsync(check.Property.DocumentOwnerId);
             return res;
         }
@@ -364,6 +472,21 @@ namespace ServerLib
                 return res;
             }
             await _documens_properties_main_body_dt.RemovePropertyAsync(check.Property, true);
+
+            LogChangeModelDB log = new()
+            {
+                AuthorId = _session_service.SessionMarker.Id,
+                OwnerType = ContextesChangeLogEnum.Document,
+                OwnerId = check.Property.DocumentOwnerId,
+                Name = "Поле тела документа удалено",
+                Description = "Окончателоьное (безвозвратное) удаление"
+            };
+            if (check.Property.PropertyLink is not null)
+            {
+                await ReadInfoAboutPropertyAsync(check.Property.PropertyLink, log);
+            }
+            await _logs_dt.AddLogAsync(log);
+
             res.DataRows = await _documens_properties_main_body_dt.GetPropertiesAsync(check.Property.DocumentOwnerId);
             return res;
         }

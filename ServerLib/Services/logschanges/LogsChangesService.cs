@@ -28,7 +28,7 @@ namespace ServerLib
         }
 
         /// <inheritdoc/>
-        public async Task<LogsPaginationResponseModel> GetLogsAsync(LogPaginationByAuthorAndOwnersTypesRequestModel request)
+        public async Task<LogsPaginationResponseModel> GetLogsByAuthorAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request)
         {
             LogsPaginationResponseModel res = new() { IsSuccess = _session_service.SessionMarker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed };
             if (!res.IsSuccess)
@@ -37,14 +37,26 @@ namespace ServerLib
                 return res;
             }
 
-            if (request.AuthorId == 0 || _session_service.SessionMarker.AccessLevelUser < AccessLevelsUsersEnum.Manager)
-                request.AuthorId = _session_service.SessionMarker.Id;
+            if (request.FilterId <= 0 || _session_service.SessionMarker.AccessLevelUser < AccessLevelsUsersEnum.Manager)
+                request.FilterId = _session_service.SessionMarker.Id;
 
-            return await _logs_dt.GetLogsAsync(request);
+            return await _logs_dt.GetLogsByAuthorAndOwnerTypeAsync(request);
         }
 
         /// <inheritdoc/>
-        public async Task<LogsPaginationResponseModel> GetLogsAsync(LogPaginationByProjectAndOwnersTypesRequestModel request)
+        public async Task<LogsPaginationResponseModel> GetLogsByDocumentAsync(LogsPaginationRequestModel request)
+        {
+            return await _logs_dt.GetLogsByDocumentAsync(request);
+        }
+
+        /// <inheritdoc/>
+        public async Task<LogsPaginationResponseModel> GetLogsByEnumAsync(LogsPaginationRequestModel request)
+        {
+            return await _logs_dt.GetLogsByEnumAsync(request);
+        }
+
+        /// <inheritdoc/>
+        public async Task<LogsPaginationResponseModel> GetLogsByProjectAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request)
         {
             LogsPaginationResponseModel res = new() { IsSuccess = _session_service.SessionMarker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed };
             if (!res.IsSuccess)
@@ -53,14 +65,14 @@ namespace ServerLib
                 return res;
             }
 
-            res.IsSuccess = request.ProjectId > 0;
+            res.IsSuccess = request.FilterId > 0;
             if (!res.IsSuccess)
             {
                 res.Message = "Идентификатор проекта должен быть больше нуля!";
                 return res;
             }
 
-            ProjectModelDB? project_db = await _projects_dt.GetProjectAsync(request.ProjectId, true);
+            ProjectModelDB? project_db = await _projects_dt.GetProjectAsync(request.FilterId, true);
 
             res.IsSuccess = project_db is not null;
             if (!res.IsSuccess)
@@ -76,7 +88,7 @@ namespace ServerLib
                 return res;
             }
 
-            return await _logs_dt.GetLogsAsync(request);
+            return await _logs_dt.GetLogsByProjectAndOwnerTypeAsync(request);
         }
     }
 }

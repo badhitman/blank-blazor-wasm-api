@@ -16,13 +16,13 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
-        public Task<LogsPaginationResponseModel> GetLogsAsync(LogPaginationByAuthorAndOwnersTypesRequestModel request);
+        public Task<LogsPaginationResponseModel> GetLogsByAuthorAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request);
 
         /// <summary>
         /// Получить логи по проекту и типам владельцов изменений
         /// </summary>
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
-        public Task<LogsPaginationResponseModel> GetLogsAsync(LogPaginationByProjectAndOwnersTypesRequestModel request);
+        public Task<LogsPaginationResponseModel> GetLogsByProjectAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request);
     }
 }

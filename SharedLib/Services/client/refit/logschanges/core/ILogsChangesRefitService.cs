@@ -18,15 +18,15 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
-        [Get($"/api/logschanges/{nameof(GettLogsModesEnum.ByAuthorAndOwnersTypes)}")]
-        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsAsync(LogPaginationByAuthorAndOwnersTypesRequestModel request);
+        [Get($"/api/logschanges/{nameof(GettLogsModesEnum.ByAuthorAndOwnerType)}")]
+        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByAuthorAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request);
 
         /// <summary>
         /// Получить логи по проекту и типам владельцов изменений
         /// </summary>
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
-        [Get($"/api/logschanges/{nameof(GettLogsModesEnum.ByProjectAndOwnersTypes)}")]
-        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsAsync(LogPaginationByProjectAndOwnersTypesRequestModel request);        
+        [Get($"/api/logschanges/{nameof(GettLogsModesEnum.ByProjectAndOwnerType)}")]
+        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByProjectAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request);        
     }
 }

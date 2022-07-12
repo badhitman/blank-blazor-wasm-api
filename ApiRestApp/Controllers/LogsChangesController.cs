@@ -25,25 +25,48 @@ namespace ApiRestApp.Controllers
         }
 
         /// <summary>
-        /// Получить логи по автору и типам владельцов изменений
+        /// Получить логи по автору и типу владельца изменений
         /// </summary>
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>        
-        [HttpGet($"{nameof(GettLogsModesEnum.ByAuthorAndOwnersTypes)}")]
-        public async Task<LogsPaginationResponseModel> Get([FromQuery] LogPaginationByAuthorAndOwnersTypesRequestModel request)
+        [HttpGet($"{nameof(GettLogsModesEnum.ByAuthorAndOwnerType)}")]
+        public async Task<LogsPaginationResponseModel> GetByAuthorAndOwnerType([FromQuery] LogsPaginationByOwnerTypeRequestModel request)
         {
-            return await _logs_service.GetLogsAsync(request);
+            return await _logs_service.GetLogsByAuthorAndOwnerTypeAsync(request);
         }
 
         /// <summary>
-        /// Получить логи по проекту и типам владельцов изменений
+        /// Получить логи по проекту и типу владельца изменений
         /// </summary>
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
-        [HttpGet($"{nameof(GettLogsModesEnum.ByProjectAndOwnersTypes)}")]
-        public async Task<LogsPaginationResponseModel> Get([FromQuery] LogPaginationByProjectAndOwnersTypesRequestModel request)
+        [HttpGet($"{nameof(GettLogsModesEnum.ByProjectAndOwnerType)}")]
+        public async Task<LogsPaginationResponseModel> GetByProjectAndOwnerType([FromQuery] LogsPaginationByOwnerTypeRequestModel request)
         {
-            return await _logs_service.GetLogsAsync(request);
+            return await _logs_service.GetLogsByProjectAndOwnerTypeAsync(request);
+        }
+
+        /// <summary>
+        /// Получить логи по перечислению
+        /// </summary>
+        /// <param name="request">Запрос логов</param>
+        /// <returns>Порция логов</returns>
+        [HttpGet($"{nameof(GettLogsModesEnum.ByEnum)}")]
+        public async Task<LogsPaginationResponseModel> GetByEnum([FromQuery] LogsPaginationRequestModel request)
+        {
+            return await _logs_service.GetLogsByEnumAsync(request);
+        }
+
+
+        /// <summary>
+        /// Получить логи по документу
+        /// </summary>
+        /// <param name="request">Запрос логов</param>
+        /// <returns>Порция логов</returns>
+        [HttpGet($"{nameof(GettLogsModesEnum.ByDocument)}")]
+        public async Task<LogsPaginationResponseModel> GetByDocument([FromQuery] LogsPaginationRequestModel request)
+        {
+            return await _logs_service.GetLogsByDocumentAsync(request);
         }
     }
 }

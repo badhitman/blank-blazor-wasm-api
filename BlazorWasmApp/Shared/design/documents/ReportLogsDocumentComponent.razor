@@ -4,21 +4,21 @@
 @using SharedLib.Models
 
 @inject SessionMarkerLiteModel sessionMarker
-@inject ILogger<ReportLogsProjectComponent> logger
+@inject ILogger<ReportLogsDocumentComponent> logger
 @inject ILogsChangesRestService _logs_refit_service
 
 @inherits BlazorBusyComponentBaseModel
 
 <h3>
     Отчёт изменений
-    <small class="text-muted">Активность работ над проектом</small>
+    <small class="text-muted">Активность работ над документом</small>
 </h3>
 
 <DataTableSilentComponent DataProvider="logsDataTable" ButtonAction="SetPageNum" PageNum="@(rest.Pagination.PageNum)" PageSize="@(rest.Pagination.PageSize)" TotalRowsCount="@(rest.Pagination.TotalRowsCount)" />
 
 @code {
     [Parameter]
-    public int? ProjectId { get; set; }
+    public int? DocumentId { get; set; }
 
     private ModalWindowComponent Modal { get; set; }
     private string ModalBodyText { get; set; } = string.Empty;
@@ -31,18 +31,18 @@
 
     protected override async void OnInitialized()
     {
-        if (ProjectId.GetValueOrDefault(0) == 0)
+        if (DocumentId.GetValueOrDefault(0) == 0)
         {
             return;
         }
-        await ReloadLogs(ProjectId.Value);
+        await ReloadLogs(DocumentId.Value);
     }
 
-    public async Task ReloadLogs(int project_id)
+    public async Task ReloadLogs(int document_id)
     {
-        if (project_id <= 0)
+        if (document_id <= 0)
         {
-            ModalBodyText = "Идентификатор пользовательского проекта не может быть 0";
+            ModalBodyText = "Идентификатор документа не может быть 0";
             logger.LogError(ModalBodyText);
             Modal.Open("Ошибка!");
             return;
@@ -50,12 +50,13 @@
 
         IsBusyProgress = true;
 
-        rest = await _logs_refit_service.GetLogsByProjectAndOwnerTypeAsync(new LogsPaginationByOwnerTypeRequestModel()
-            {
-                FilterId = project_id,
-                PageNum = PageNum,
-                PageSize = 10
-            });
+        //rest = await _logs_refit_service.GetLogsAsync(new LogPaginationByOwnersTypesRequestModel()
+        //    {
+        //        FilterId = document_id,
+        //        PageNum = PageNum,
+        //        PageSize = 10,
+        //        OwnerType = ContextesChangeLogEnum.Document
+        //    });
 
         IsBusyProgress = false;
         StateHasChanged();
@@ -64,6 +65,6 @@
     public void SetPageNum(int page_num)
     {
         PageNum = page_num;
-        ReloadLogs(ProjectId.Value);
+        ReloadLogs(DocumentId.Value);
     }
 }

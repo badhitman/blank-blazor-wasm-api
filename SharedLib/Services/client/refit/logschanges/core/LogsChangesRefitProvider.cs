@@ -24,15 +24,15 @@ namespace SharedLib.Services
         }
 
         /// <inheritdoc/>
-        public async Task<ApiResponse<LogsPaginationResponseModel>> GetLogsAsync(LogPaginationByAuthorAndOwnersTypesRequestModel request)
+        public async Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByAuthorAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request)
         {
-            return await _api.GetLogsAsync(request);
+            return await _api.GetLogsByAuthorAndOwnerTypeAsync(request);
         }
 
         /// <inheritdoc/>
-        public async Task<ApiResponse<LogsPaginationResponseModel>> GetLogsAsync(LogPaginationByProjectAndOwnersTypesRequestModel request)
+        public async Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByProjectAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request)
         {
-            return await _api.GetLogsAsync(request);
+            return await _api.GetLogsByProjectAndOwnerTypeAsync(request);
         }
     }
 }

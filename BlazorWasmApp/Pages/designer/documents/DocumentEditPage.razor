@@ -103,6 +103,9 @@
             <TabComponent Title="Таблица" Tooltip="Табличная часть документа." IsDisabled="@(Id.GetValueOrDefault(0) == 0)">
                 <DocumentPropertiesComponent Id="Id.GetValueOrDefault(0)" AreaProperty="AreasPropertiesEnum.Table" />
             </TabComponent>
+            <TabComponent Title="Логи" Tooltip="Изменения документа." IsDisabled="@(Id.GetValueOrDefault(0) == 0)">
+                <ReportLogsDocumentComponent DocumentId="@Id" />
+            </TabComponent>
         </TabSetComponent>
     </div>
 </div>

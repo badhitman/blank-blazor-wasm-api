@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using SharedLib.Services;
 using Microsoft.Extensions.Logging;
 using Refit;
 using SharedLib.Models;
@@ -18,8 +17,6 @@ namespace SharedLib.Services
         /// <summary>
         /// Конструктор
         /// </summary>
-        /// <param name="set_users_projects_service"></param>
-        /// <param name="set_logger"></param>
         public LogsChangesRefitService(ILogsChangesRefitService set_logs_service, ILogger<LogsChangesRefitService> set_logger)
         {
             _logs_service = set_logs_service;
@@ -27,13 +24,13 @@ namespace SharedLib.Services
         }
 
         /// <inheritdoc/>
-        public async Task<LogsPaginationResponseModel> GetLogsAsync(LogPaginationByAuthorAndOwnersTypesRequestModel request)
+        public async Task<LogsPaginationResponseModel> GetLogsByAuthorAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request)
         {
-            LogsPaginationResponseModel result = new LogsPaginationResponseModel();
+            LogsPaginationResponseModel result = new();
 
             try
             {
-                ApiResponse<LogsPaginationResponseModel> rest = await _logs_service.GetLogsAsync(request);
+                ApiResponse<LogsPaginationResponseModel> rest = await _logs_service.GetLogsByAuthorAndOwnerTypeAsync(request);
 
                 if (rest.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -49,7 +46,7 @@ namespace SharedLib.Services
             catch (Exception ex)
             {
                 result.IsSuccess = false;
-                result.Message = $"Exception {nameof(_logs_service.GetLogsAsync)}";
+                result.Message = $"Exception {nameof(_logs_service.GetLogsByAuthorAndOwnerTypeAsync)}";
                 _logger.LogError(ex, result.Message);
             }
 
@@ -57,13 +54,13 @@ namespace SharedLib.Services
         }
 
         /// <inheritdoc/>
-        public async Task<LogsPaginationResponseModel> GetLogsAsync(LogPaginationByProjectAndOwnersTypesRequestModel request)
+        public async Task<LogsPaginationResponseModel> GetLogsByProjectAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request)
         {
-            LogsPaginationResponseModel result = new LogsPaginationResponseModel();
+            LogsPaginationResponseModel result = new();
 
             try
             {
-                ApiResponse<LogsPaginationResponseModel> rest = await _logs_service.GetLogsAsync(request);
+                ApiResponse<LogsPaginationResponseModel> rest = await _logs_service.GetLogsByProjectAndOwnerTypeAsync(request);
 
                 if (rest.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -79,7 +76,7 @@ namespace SharedLib.Services
             catch (Exception ex)
             {
                 result.IsSuccess = false;
-                result.Message = $"Exception {nameof(_logs_service.GetLogsAsync)}";
+                result.Message = $"Exception {nameof(_logs_service.GetLogsByProjectAndOwnerTypeAsync)}";
                 _logger.LogError(ex, result.Message);
             }
 

@@ -7,10 +7,10 @@ namespace SharedLib.Models
     /// <summary>
     /// Запрос (с пагинацией) логов изменений по типу владельца изменений
     /// </summary>
-    public abstract class LogPaginationByOwnersTypesRequestModel : PaginationRequestModel
+    public class LogsPaginationByOwnerTypeRequestModel : LogsPaginationRequestModel
     {
         /// <summary>
-        /// Типы владельцев изменений
+        /// Тип владельца изменения
         /// </summary>
         public ContextesChangeLogEnum? OwnerType { get; set; }
     }
