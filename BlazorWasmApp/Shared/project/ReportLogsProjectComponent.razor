@@ -23,7 +23,7 @@
     private ModalWindowComponent Modal { get; set; }
     private string ModalBodyText { get; set; } = string.Empty;
 
-    LogsPaginationResponseModel rest = new LogsPaginationResponseModel() { Logs = Enumerable.Empty<LogChangeModelDB>(), Pagination = new PaginationResponseModel() { } };
+    LogsPaginationResponseModel rest = new LogsPaginationResponseModel() { Logs = Enumerable.Empty<LogViewModel>(), Pagination = new PaginationResponseModel() { } };
 
     LogsTableProvider logsDataTable => new LogsTableProvider(rest);
 

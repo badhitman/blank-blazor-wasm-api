@@ -49,7 +49,11 @@ namespace DbTablesLib
         /// <inheritdoc/>
         public async Task<LogsPaginationResponseModel> GetLogsByAuthorAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request)
         {
-            IQueryable<LogChangeModelDB>? query = _db_context.ChangeLogs.Where(x => x.OwnerId == request.FilterId).AsQueryable();
+            IQueryable<LogChangeModelDB>? query = _db_context.ChangeLogs
+                .OrderBy(x => x.CreatedAt)
+                .Include(x => x.Author).ThenInclude(x => x.Metadata)
+                .Where(x => x.OwnerId == request.FilterId)
+                .AsQueryable();
 
             if (request.OwnerType.HasValue)
                 query = query.Where(x => request.OwnerType == x.OwnerType);
@@ -89,7 +93,7 @@ namespace DbTablesLib
             }
 
             query = query.Skip((res.Pagination.PageNum - 1) * res.Pagination.PageSize).Take(res.Pagination.PageSize);
-            res.Logs = await query.ToArrayAsync();
+            res.Logs = await query.Select(x => new LogViewModel() { Id = x.Id, Author = x.Author.Metadata.Email, CreatedAt = x.CreatedAt, Name = x.Name, Description = x.Description }).ToArrayAsync();
 
             return res;
         }
@@ -98,7 +102,9 @@ namespace DbTablesLib
         public async Task<LogsPaginationResponseModel> GetLogsByDocumentAsync(LogsPaginationRequestModel request)
         {
             IQueryable<LogChangeModelDB>? query = _db_context.ChangeLogs
-                .Where(x => x.OwnerType == ContextesChangeLogEnum.Document && _db_context.DesignDocuments.Any(y => y.ProjectId == request.FilterId && y.Id == x.OwnerId))
+                .OrderBy(x => x.CreatedAt)
+                .Include(x => x.Author).ThenInclude(x => x.Metadata)
+                .Where(x => x.OwnerType == ContextesChangeLogEnum.Document && request.FilterId == x.OwnerId)
                 .AsQueryable();
 
             LogsPaginationResponseModel res = new()
@@ -135,7 +141,7 @@ namespace DbTablesLib
             }
 
             query = query.Skip((res.Pagination.PageNum - 1) * res.Pagination.PageSize).Take(res.Pagination.PageSize);
-            res.Logs = await query.ToArrayAsync();
+            res.Logs = await query.Select(x => new LogViewModel() { Id = x.Id, Author = x.Author.Metadata.Email, CreatedAt = x.CreatedAt, Name = x.Name, Description = x.Description }).ToArrayAsync();
 
             return res;
         }
@@ -144,7 +150,9 @@ namespace DbTablesLib
         public async Task<LogsPaginationResponseModel> GetLogsByEnumAsync(LogsPaginationRequestModel request)
         {
             IQueryable<LogChangeModelDB>? query = _db_context.ChangeLogs
-                .Where(x => x.OwnerType == ContextesChangeLogEnum.Enum && _db_context.DesignEnums.Any(y => y.ProjectId == request.FilterId && y.Id == x.OwnerId))
+                .OrderBy(x => x.CreatedAt)
+                .Include(x => x.Author).ThenInclude(x => x.Metadata)
+                .Where(x => x.OwnerType == ContextesChangeLogEnum.Enum && request.FilterId == x.OwnerId)
                 .AsQueryable();
 
             LogsPaginationResponseModel res = new()
@@ -182,7 +190,7 @@ namespace DbTablesLib
             }
 
             query = query.Skip((res.Pagination.PageNum - 1) * res.Pagination.PageSize).Take(res.Pagination.PageSize);
-            res.Logs = await query.ToArrayAsync();
+            res.Logs = await query.Select(x => new LogViewModel() { Id = x.Id, Author = x.Author.Metadata.Email, CreatedAt = x.CreatedAt, Name = x.Name, Description = x.Description }).ToArrayAsync();
 
             return res;
         }
@@ -191,6 +199,8 @@ namespace DbTablesLib
         public async Task<LogsPaginationResponseModel> GetLogsByProjectAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request)
         {
             IQueryable<LogChangeModelDB>? query = _db_context.ChangeLogs
+                .OrderBy(x=>x.CreatedAt)
+                .Include(x => x.Author).ThenInclude(x => x.Metadata)
                 .Where(x => (x.OwnerType == ContextesChangeLogEnum.Project && x.OwnerId == request.FilterId) || (x.OwnerType == ContextesChangeLogEnum.Enum && _db_context.DesignEnums.Any(y => y.ProjectId == request.FilterId && y.Id == x.OwnerId)) || (x.OwnerType == ContextesChangeLogEnum.Document && _db_context.DesignDocuments.Any(y => y.ProjectId == request.FilterId && y.Id == x.OwnerId)))
                 .AsQueryable();
 
@@ -216,7 +226,6 @@ namespace DbTablesLib
                 res.Pagination.PageNum = 1;
             }
 
-
             switch (res.Pagination.SortBy)
             {
                 case nameof(LogChangeModelDB.Name):
@@ -232,7 +241,7 @@ namespace DbTablesLib
             }
 
             query = query.Skip((res.Pagination.PageNum - 1) * res.Pagination.PageSize).Take(res.Pagination.PageSize);
-            res.Logs = await query.ToArrayAsync();
+            res.Logs = await query.Select(x => new LogViewModel() { Id = x.Id, Author = x.Author.Metadata.Email, CreatedAt = x.CreatedAt, Name = x.Name, Description = x.Description }).ToArrayAsync();
 
             return res;
         }

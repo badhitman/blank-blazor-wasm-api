@@ -14,7 +14,7 @@ namespace SharedLib.Services
     public interface ILogsChangesRefitService
     {
         /// <summary>
-        /// Получить логи по автору и типам владельцов изменений
+        /// Получить логи по автору и типу владельца изменений
         /// </summary>
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
@@ -22,11 +22,27 @@ namespace SharedLib.Services
         public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByAuthorAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request);
 
         /// <summary>
-        /// Получить логи по проекту и типам владельцов изменений
+        /// Получить логи по проекту и типу владельца изменений
         /// </summary>
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
         [Get($"/api/logschanges/{nameof(GettLogsModesEnum.ByProjectAndOwnerType)}")]
-        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByProjectAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request);        
+        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByProjectAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request);
+
+        /// <summary>
+        /// Получить логи по документу
+        /// </summary>
+        /// <param name="request">Запрос логов</param>
+        /// <returns>Порция логов</returns>
+        [Get($"/api/logschanges/{nameof(GettLogsModesEnum.ByDocument)}")]
+        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByDocumentAsync(LogsPaginationRequestModel request);
+
+        /// <summary>
+        /// Получить логи по перечислению
+        /// </summary>
+        /// <param name="request">Запрос логов</param>
+        /// <returns>Порция логов</returns>
+        [Get($"/api/logschanges/{nameof(GettLogsModesEnum.ByEnum)}")]
+        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByEnumAsync(LogsPaginationRequestModel request);
     }
 }

@@ -13,17 +13,31 @@ namespace SharedLib.Services
     public interface ILogsChangesRefitProvider
     {
         /// <summary>
-        /// Получить логи по автору и типам владельцов изменений
+        /// Получить логи по автору и типу владельца изменений
         /// </summary>
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
         public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByAuthorAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request);
 
         /// <summary>
-        /// Получить логи по проекту и типам владельцов изменений
+        /// Получить логи по проекту и типу владельца изменений
         /// </summary>
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
         public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByProjectAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request);
+
+        /// <summary>
+        /// Получить логи по перечислению
+        /// </summary>
+        /// <param name="request">Запрос логов</param>
+        /// <returns>Порция логов</returns>
+        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByEnumAsync(LogsPaginationRequestModel request);
+
+        /// <summary>
+        /// Получить логи по докуиенту
+        /// </summary>
+        /// <param name="request">Запрос логов</param>
+        /// <returns>Порция логов</returns>
+        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByDocumentAsync(LogsPaginationRequestModel request);
     }
 }

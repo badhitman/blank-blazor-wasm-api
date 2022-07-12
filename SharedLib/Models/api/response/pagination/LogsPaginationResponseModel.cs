@@ -12,6 +12,6 @@ namespace SharedLib.Models
         /// <summary>
         /// Логи
         /// </summary>
-        public IEnumerable<LogChangeModelDB> Logs { get; set; } = Enumerable.Empty<LogChangeModelDB>();
+        public IEnumerable<LogViewModel> Logs { get; set; } = Enumerable.Empty<LogViewModel>();
     }
 }

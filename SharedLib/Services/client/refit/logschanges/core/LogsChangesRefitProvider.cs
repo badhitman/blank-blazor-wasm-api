@@ -34,5 +34,17 @@ namespace SharedLib.Services
         {
             return await _api.GetLogsByProjectAndOwnerTypeAsync(request);
         }
+
+        /// <inheritdoc/>
+        public async Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByEnumAsync(LogsPaginationRequestModel request)
+        {
+            return await _api.GetLogsByEnumAsync(request);
+        }
+
+        /// <inheritdoc/>
+        public async Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByDocumentAsync(LogsPaginationRequestModel request)
+        {
+            return await _api.GetLogsByDocumentAsync(request);
+        }
     }
 }

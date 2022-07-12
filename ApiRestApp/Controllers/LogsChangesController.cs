@@ -57,7 +57,6 @@ namespace ApiRestApp.Controllers
             return await _logs_service.GetLogsByEnumAsync(request);
         }
 
-
         /// <summary>
         /// Получить логи по документу
         /// </summary>

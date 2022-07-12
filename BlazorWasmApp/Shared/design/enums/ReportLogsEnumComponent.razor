@@ -4,21 +4,21 @@
 @using SharedLib.Models
 
 @inject SessionMarkerLiteModel sessionMarker
-@inject ILogger<ReportLogsDocumentComponent> logger
+@inject ILogger<ReportLogsEnumComponent> logger
 @inject ILogsChangesRestService _logs_refit_service
 
 @inherits BlazorBusyComponentBaseModel
 
 <h3>
     Отчёт изменений
-    <small class="text-muted">Активность работ над документом</small>
+    <small class="text-muted">Активность работ над перечислением</small>
 </h3>
 
 <DataTableSilentComponent DataProvider="logsDataTable" ButtonAction="SetPageNum" PageNum="@(rest.Pagination.PageNum)" PageSize="@(rest.Pagination.PageSize)" TotalRowsCount="@(rest.Pagination.TotalRowsCount)" />
 
 @code {
     [Parameter]
-    public int? DocumentId { get; set; }
+    public int? EnumId { get; set; }
 
     private ModalWindowComponent Modal { get; set; }
     private string ModalBodyText { get; set; } = string.Empty;
@@ -31,18 +31,18 @@
 
     protected override async void OnInitialized()
     {
-        if (DocumentId.GetValueOrDefault(0) == 0)
+        if (EnumId.GetValueOrDefault(0) == 0)
         {
             return;
         }
-        await ReloadLogs(DocumentId.Value);
+        await ReloadLogs(EnumId.Value);
     }
 
     public async Task ReloadLogs(int document_id)
     {
         if (document_id <= 0)
         {
-            ModalBodyText = "Идентификатор документа не может быть 0";
+            ModalBodyText = "Идентификатор перечисления не может быть 0";
             logger.LogError(ModalBodyText);
             Modal.Open("Ошибка!");
             return;
@@ -50,7 +50,7 @@
 
         IsBusyProgress = true;
 
-        rest = await _logs_refit_service.GetLogsByDocumentAsync(new LogsPaginationRequestModel()
+        rest = await _logs_refit_service.GetLogsByEnumAsync(new LogsPaginationRequestModel()
             {
                 FilterId = document_id,
                 PageNum = PageNum,
@@ -64,6 +64,6 @@
     public void SetPageNum(int page_num)
     {
         PageNum = page_num;
-        ReloadLogs(DocumentId.Value);
+        ReloadLogs(EnumId.Value);
     }
 }

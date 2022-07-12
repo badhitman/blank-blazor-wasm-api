@@ -177,7 +177,7 @@ namespace DbLayerLib
                 {
                     Id = ++log_change_index_id,
                     OwnerType = ContextesChangeLogEnum.Enum,
-                    OwnerId = x.Id,
+                    OwnerId = x.OwnerEnumId,
                     Name = $"Добавлен элемент перечисления (demo HasData)",
                     Description = $"[name:{x.Name}] [descr:{x.Description}] [is_del:{x.IsDeleted}] [index:{x.SortIndex}]"
                 };

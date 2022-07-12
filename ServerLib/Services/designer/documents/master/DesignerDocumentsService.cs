@@ -32,7 +32,7 @@ namespace ServerLib
             UserProjectResponseModel check = await _shared_service.CheckLiteAsync();
 
 
-            GetSimpleResponsePaginationModel res = new GetSimpleResponsePaginationModel() { IsSuccess = check.IsSuccess };
+            GetSimpleResponsePaginationModel res = new() { IsSuccess = check.IsSuccess };
             if (!res.IsSuccess)
             {
                 res.Message = check.Message;
@@ -56,7 +56,7 @@ namespace ServerLib
         public async Task<DocumentDesignResponseModel> GetDocumentAsync(int id)
         {
             UserProjectResponseModel check = await _shared_service.CheckLiteAsync();
-            DocumentDesignResponseModel res = new DocumentDesignResponseModel() { IsSuccess = check.IsSuccess };
+            DocumentDesignResponseModel res = new() { IsSuccess = check.IsSuccess };
             if (!res.IsSuccess)
             {
                 res.Message = res.Message;
@@ -67,7 +67,7 @@ namespace ServerLib
             res.IsSuccess = document_db != null;
             if (!res.IsSuccess)
             {
-                res.Message = "Объект перечисления не найден";
+                res.Message = "Документ не найден";
                 return res;
             }
 

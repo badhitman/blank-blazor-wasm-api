@@ -142,6 +142,9 @@
                         </tbody>
                     </table>
                 </TabComponent>
+                <TabComponent Title="Логи" Tooltip="Изменения перечисления." IsDisabled="@(Id.GetValueOrDefault(0) == 0)">
+                    <ReportLogsEnumComponent EnumId="@Id" />
+                </TabComponent>
             </TabSetComponent>
         }
     </div>
@@ -248,7 +251,7 @@
         }
         newEnumItemElement.Name = string.Empty;
         newEnumItemElement.Description = string.Empty;
-        enumObject.EnumItems = rest.EnumItems.ToList();        
+        enumObject.EnumItems = rest.EnumItems.ToList();
         StateHasChanged();
     }
 
