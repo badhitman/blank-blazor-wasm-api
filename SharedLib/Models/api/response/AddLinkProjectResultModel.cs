@@ -7,7 +7,7 @@ namespace SharedLib.Models
     /// <summary>
     /// Результат операции добавления ссылки пользователя на проект
     /// </summary>
-    public class AddLinkProjectResultModel: ResponseBaseModel
+    public class AddLinkProjectResultModel : ResponseBaseModel
     {
         /// <summary>
         /// созданная ссылка
