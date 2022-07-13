@@ -126,15 +126,15 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task RemoveAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync("\t\t\tawait _crud_accessor.RemoveAsync(new int[] { id });");
+            await writer.WriteLineAsync("\t\t\tawait _crud_accessor.RemoveRangeAsync(new int[] { id });");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task RemoveAsync(IEnumerable<int> ids)");
+            await writer.WriteLineAsync($"\t\tpublic async Task RemoveRangeAsync(IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.RemoveAsync(ids);");
+            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.RemoveRangeAsync(ids);");
             await writer.WriteLineAsync("\t\t}");
 
             await WriteEnd(writer);
@@ -284,12 +284,12 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task RemoveAsync(int id, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync("\t\t\tawait RemoveAsync(new int[] { id }, auto_save);");
+            await writer.WriteLineAsync("\t\t\tawait RemoveRangeAsync(new int[] { id }, auto_save);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task RemoveAsync(IEnumerable<int> ids, bool auto_save = true)");
+            await writer.WriteLineAsync($"\t\tpublic async Task RemoveRangeAsync(IEnumerable<int> ids, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync($"\t\t\t{db_set_name}.RemoveRange({db_set_name}.Where(x => ids.Contains(x.Id)));");
@@ -368,7 +368,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\t/// Удалить перечень{(is_body_document ? "" : " строк табличной части")} документов: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"ids\">Идентификаторы объектов</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task RemoveAsync(IEnumerable<int> ids);");
+            await writer.WriteLineAsync($"\t\tpublic Task RemoveRangeAsync(IEnumerable<int> ids);");
 
             await WriteEnd(writer);
         }
@@ -458,7 +458,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"ids\">Идентификаторы объектов</param>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"auto_save\">Автоматически/сразу сохранить изменения в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task RemoveAsync(IEnumerable<int> ids, bool auto_save = true);");
+            await writer.WriteLineAsync($"\t\tpublic Task RemoveRangeAsync(IEnumerable<int> ids, bool auto_save = true);");
             await WriteEnd(writer);
         }
 
