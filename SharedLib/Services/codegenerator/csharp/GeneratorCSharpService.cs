@@ -417,7 +417,7 @@ namespace SharedLib.Services
             string obj_db_param_mane;
             foreach (DocumentFitModel doc_obj in docs.Where(x => !x.IsDeleted))
             {
-                #region тело документа
+                #region модели ответов rest/api
 
                 response_type_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "response_models", $"{response_type_name}.cs"));
@@ -427,7 +427,6 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\tpublic partial class {response_type_name} : ResponseBaseModel");
                 await writer.WriteLineAsync("\t{");
                 await writer.WriteLineAsync($"\t\tpublic {doc_obj.SystemCodeName} {doc_obj.SystemCodeName}{GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
-                //await writer.WriteLineAsync("\t}");
                 await WriteEnd(writer);
 
 
@@ -439,9 +438,22 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\tpublic partial class {response_type_name} : ResponseBaseModel");
                 await writer.WriteLineAsync("\t{");
                 await writer.WriteLineAsync($"\t\tpublic IEnumerable<{doc_obj.SystemCodeName}> {doc_obj.SystemCodeName}{GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
-                //await writer.WriteLineAsync("\t}");
                 await WriteEnd(writer);
 
+
+                response_type_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
+                enumEntry = archive.CreateEntry(Path.Combine(dir, "response_models", $"{response_type_name}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.SystemCodeName} : Pagination response model");
+
+                await writer.WriteLineAsync($"\tpublic partial class {response_type_name} : FindResponseModel");
+                await writer.WriteLineAsync("\t{");
+                await writer.WriteLineAsync($"\t\tpublic IEnumerable<{doc_obj.SystemCodeName}> {doc_obj.SystemCodeName}{GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
+                await WriteEnd(writer);
+
+                #endregion
+
+                #region тело документа
 
                 crud_type_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.DATABASE_TABLE_ACESSOR_PREFIX}";
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "crud_interfaces", $"{crud_type_name}.cs"));
