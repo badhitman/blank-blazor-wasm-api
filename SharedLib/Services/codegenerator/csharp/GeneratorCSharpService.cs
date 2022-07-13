@@ -96,7 +96,7 @@ namespace SharedLib.Services
 
             if (!is_body_document)
             {
-                await writer.WriteLineAsync("\t\t/// <inheritdoc/>");//Document10_Model_TableModel_ResponsePaginationModel
+                await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
                 await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(int document_owner_id, PaginationRequestModel pagination_request)");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
@@ -342,6 +342,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_obj_name}");
                 await writer.WriteLineAsync("\t\t/// </summary>");
                 await writer.WriteLineAsync($"\t\t/// <param name=\"document_owner_id\">Идентификатор документа - владельца строк</param>");
+                await writer.WriteLineAsync($"\t\t/// <param name=\"pagination_request\">Пагинация запроса</param>");
                 await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(int document_owner_id, PaginationRequestModel pagination_request);");
                 await writer.WriteLineAsync();
             }
@@ -568,7 +569,7 @@ namespace SharedLib.Services
                 service_type_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.DATABASE_SERVICE_ACESSOR_PREFIX}";
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "service_interfaces", $"{service_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name, new string[] { "SharedLib.Models" });
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name);
 
                 await writer.WriteLineAsync($"\tpublic partial interface {service_type_name}");
                 await writer.WriteLineAsync("\t{");
