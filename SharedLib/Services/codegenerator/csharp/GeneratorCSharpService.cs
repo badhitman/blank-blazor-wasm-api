@@ -422,7 +422,7 @@ namespace SharedLib.Services
                 response_type_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "response_models", $"{response_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.SystemCodeName} : Response model");
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.SystemCodeName} : Response model (single object)");
 
                 await writer.WriteLineAsync($"\tpublic partial class {response_type_name} : ResponseBaseModel");
                 await writer.WriteLineAsync("\t{");
@@ -433,7 +433,7 @@ namespace SharedLib.Services
                 response_type_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "response_models", $"{response_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.SystemCodeName} : Response model");
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.SystemCodeName} : Response model (collection objects)");
 
                 await writer.WriteLineAsync($"\tpublic partial class {response_type_name} : ResponseBaseModel");
                 await writer.WriteLineAsync("\t{");
@@ -444,7 +444,7 @@ namespace SharedLib.Services
                 response_type_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "response_models", $"{response_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.SystemCodeName} : Pagination response model");
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.SystemCodeName} : Response model (paginations collection of objects)");
 
                 await writer.WriteLineAsync($"\tpublic partial class {response_type_name} : FindResponseModel");
                 await writer.WriteLineAsync("\t{");
