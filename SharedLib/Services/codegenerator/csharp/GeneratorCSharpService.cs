@@ -315,8 +315,8 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_obj_name}");
                 await writer.WriteLineAsync("\t\t/// </summary>");
                 await writer.WriteLineAsync($"\t\t/// <param name=\"document_owner_id\">Идентификатор документа - владельца строк</param>");
-                await writer.WriteLineAsync($"\t\tpublic Task<IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}>> SelectAsync(int document_owner_id);");
-                await writer.WriteLineAsync();
+                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(int document_owner_id, PaginationRequestModel pagination_request = null);");
+                await writer.WriteLineAsync();//Document148_Model_ResponsePaginationModel
             }
 
             await writer.WriteLineAsync("\t\t/// <summary>");
@@ -541,7 +541,7 @@ namespace SharedLib.Services
                 service_type_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.DATABASE_SERVICE_ACESSOR_PREFIX}";
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "service_interfaces", $"{service_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name, new string[] { "SharedLib.Models" });
 
                 await writer.WriteLineAsync($"\tpublic partial interface {service_type_name}");
                 await writer.WriteLineAsync("\t{");
