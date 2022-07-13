@@ -177,7 +177,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddAsync({type_name} {obj_db_param_mane}, bool auto_save = true)");
+            await writer.WriteLineAsync($"\t\tpublic async Task AddAsync({type_name} {obj_db_param_mane}, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync($"\t\t\tawait _db_context.AddAsync({obj_db_param_mane});");
