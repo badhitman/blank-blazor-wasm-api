@@ -624,7 +624,7 @@ namespace SharedLib.Services
                 response_type_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "response_models", $"{response_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.SystemCodeName} : Response model (collection objects)", new string[] { "SharedLib.Models" });
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX} : Response model (collection objects)", new string[] { "SharedLib.Models" });
 
                 await writer.WriteLineAsync($"\tpublic partial class {response_type_name} : ResponseBaseModel");
                 await writer.WriteLineAsync("\t{");
