@@ -612,7 +612,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t/// <summary>");
                 await writer.WriteLineAsync($"\t\t/// Результат запроса [{doc_obj.SystemCodeName}] (полезная нагрузка)");
                 await writer.WriteLineAsync("\t\t/// </summary>");
-                await writer.WriteLineAsync($"\t\tpublic {doc_obj.SystemCodeName} {GlobalStaticConstants.RESULT_PROPERTY_NAME} {{ get; set; }}");
+                await writer.WriteLineAsync($"\t\tpublic {doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX} {GlobalStaticConstants.RESULT_PROPERTY_NAME} {{ get; set; }}");
                 await WriteEnd(writer);
 
 
