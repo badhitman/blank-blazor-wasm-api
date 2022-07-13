@@ -584,7 +584,7 @@ namespace SharedLib.Services
 
 
 
-                service_type_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.DATABASE_SERVICE_ACESSOR_PREFIX}";
+                service_type_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.SERVICE_ACESSOR_PREFIX}";
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "service_interfaces", $"{service_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name, new string[] { "SharedLib.Models" });
@@ -697,7 +697,7 @@ namespace SharedLib.Services
 
 
 
-                service_type_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.DATABASE_SERVICE_ACESSOR_PREFIX}";
+                service_type_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.SERVICE_ACESSOR_PREFIX}";
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "service_interfaces", $"{service_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name, new string[] { "SharedLib.Models" });
