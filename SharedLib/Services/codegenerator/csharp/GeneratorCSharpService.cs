@@ -592,12 +592,57 @@ namespace SharedLib.Services
                 if (!doc_obj.PropertiesGrid.Any(x => !x.IsDeleted && x.PropertyTypeMetadata?.IsDeleted != true))
                     continue;
 
+                #region модели ответов rest/api
+
+                response_type_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
+                enumEntry = archive.CreateEntry(Path.Combine(dir, "response_models", $"{response_type_name}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.SystemCodeName} : Response model (single object)", new string[] { "SharedLib.Models" });
+
+                await writer.WriteLineAsync($"\tpublic partial class {response_type_name} : ResponseBaseModel");
+                await writer.WriteLineAsync("\t{");
+                await writer.WriteLineAsync("\t\t/// <summary>");
+                await writer.WriteLineAsync($"\t\t/// Результат запроса [{doc_obj.SystemCodeName}] (полезная нагрузка)");
+                await writer.WriteLineAsync("\t\t/// </summary>");
+                await writer.WriteLineAsync($"\t\tpublic {doc_obj.SystemCodeName} {doc_obj.SystemCodeName}{GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
+                await WriteEnd(writer);
+
+
+                response_type_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
+                enumEntry = archive.CreateEntry(Path.Combine(dir, "response_models", $"{response_type_name}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.SystemCodeName} : Response model (collection objects)", new string[] { "SharedLib.Models" });
+
+                await writer.WriteLineAsync($"\tpublic partial class {response_type_name} : ResponseBaseModel");
+                await writer.WriteLineAsync("\t{");
+                await writer.WriteLineAsync("\t\t/// <summary>");
+                await writer.WriteLineAsync($"\t\t/// Результат запроса [{doc_obj.SystemCodeName}] (полезная нагрузка)");
+                await writer.WriteLineAsync("\t\t/// </summary>");
+                await writer.WriteLineAsync($"\t\tpublic IEnumerable<{doc_obj.SystemCodeName}> {doc_obj.SystemCodeName}{GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
+                await WriteEnd(writer);
+
+
+                response_type_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
+                enumEntry = archive.CreateEntry(Path.Combine(dir, "response_models", $"{response_type_name}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.SystemCodeName} : Response model (paginations collection of objects)", new string[] { "SharedLib.Models" });
+                
+                await writer.WriteLineAsync($"\tpublic partial class {response_type_name} : FindResponseModel");
+                await writer.WriteLineAsync("\t{");
+                await writer.WriteLineAsync("\t\t/// <summary>");
+                await writer.WriteLineAsync($"\t\t/// Результат запроса [{doc_obj.SystemCodeName}] (полезная нагрузка)");
+                await writer.WriteLineAsync("\t\t/// </summary>");
+                await writer.WriteLineAsync($"\t\tpublic IEnumerable<{doc_obj.SystemCodeName}> DataRows {{ get; set; }}");
+                await WriteEnd(writer);
+
+                #endregion
+
                 #region табличная часть документа
 
                 crud_type_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.DATABASE_TABLE_ACESSOR_PREFIX}";
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "crud_interfaces", $"{crud_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Табличная часть документа: {doc_obj.Name}");
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Табличная часть документа: {doc_obj.Name}", new string[] { "SharedLib.Models" });
 
                 await writer.WriteLineAsync($"\tpublic partial interface {crud_type_name} : SharedLib.ISavingChanges");
                 await writer.WriteLineAsync("\t{");
