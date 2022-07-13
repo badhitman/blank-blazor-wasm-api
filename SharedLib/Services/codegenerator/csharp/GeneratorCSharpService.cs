@@ -201,18 +201,18 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t\t\t}");
             await writer.WriteLineAsync("\t\t\t};");
 
-            await writer.WriteLineAsync($"\t\t\tswitch (res.Pagination.SortBy)");
+            await writer.WriteLineAsync($"\t\t\tswitch (result.Pagination.SortBy)");
             await writer.WriteLineAsync("\t\t\t{");
             await writer.WriteLineAsync("\t\t\t\tdefault:");
-            await writer.WriteLineAsync("\t\t\t\t\tquery = res.Pagination.SortingDirection == VerticalDirectionsEnum.Up");
+            await writer.WriteLineAsync("\t\t\t\t\tquery = result.Pagination.SortingDirection == VerticalDirectionsEnum.Up");
             await writer.WriteLineAsync("\t\t\t\t\t\t? query.OrderByDescending(x => x.Id)");
             await writer.WriteLineAsync("\t\t\t\t\t\t: query.OrderBy(x => x.Id);");
             await writer.WriteLineAsync("\t\t\t\t\tbreak;");
             await writer.WriteLineAsync("\t\t\t}");
 
-            await writer.WriteLineAsync($"\t\t\tquery = query.Skip((res.Pagination.PageNum - 1) * res.Pagination.PageSize).Take(res.Pagination.PageSize);");
-            await writer.WriteLineAsync("\t\t\tpagination_request.DataRows = await query.ToArrayAsync();");
-            await writer.WriteLineAsync("\t\t\ttpagination_request res;");
+            await writer.WriteLineAsync($"\t\t\tquery = query.Skip((result.Pagination.PageNum - 1) * result.Pagination.PageSize).Take(result.Pagination.PageSize);");
+            await writer.WriteLineAsync("\t\t\tresult.DataRows = await query.ToArrayAsync();");
+            await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
@@ -624,7 +624,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t/// <summary>");
                 await writer.WriteLineAsync($"\t\t/// Результат запроса [{doc_obj.SystemCodeName}] (полезная нагрузка)");
                 await writer.WriteLineAsync("\t\t/// </summary>");
-                await writer.WriteLineAsync($"\t\tpublic IEnumerable<{doc_obj.SystemCodeName}> DataRows {{ get; set; }}");
+                await writer.WriteLineAsync($"\t\tpublic IEnumerable<{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}> DataRows {{ get; set; }}");
                 await WriteEnd(writer);
 
                 #endregion
