@@ -587,7 +587,7 @@ namespace SharedLib.Services
                 service_type_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.DATABASE_SERVICE_ACESSOR_PREFIX}";
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "service_interfaces", $"{service_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name, new string[] { "SharedLib.Models" });
 
                 await writer.WriteLineAsync($"\tpublic partial interface {service_type_name}");
                 await writer.WriteLineAsync("\t{");
@@ -598,7 +598,7 @@ namespace SharedLib.Services
                 service_type_name = service_type_name[1..];
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "service_implementations", $"{service_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, null);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, null, new string[] { "SharedLib.Models" });
 
                 await writer.WriteLineAsync($"\tpublic partial class {service_type_name} : I{service_type_name}");
                 await writer.WriteLineAsync("\t{");
