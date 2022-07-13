@@ -134,7 +134,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task RemoveAsync(IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\t_crud_accessor.RemoveAsync(ids);");
+            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.RemoveAsync(ids);");
             await writer.WriteLineAsync("\t\t}");
 
             await WriteEnd(writer);
@@ -571,7 +571,7 @@ namespace SharedLib.Services
                 service_type_name = service_type_name[1..];
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "service_implementations", $"{service_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, null,new string[] { "SharedLib.Models" });
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, null);
 
                 await writer.WriteLineAsync($"\tpublic partial class {service_type_name} : I{service_type_name}");
                 await writer.WriteLineAsync("\t{");
@@ -626,7 +626,7 @@ namespace SharedLib.Services
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "response_models", $"{response_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.SystemCodeName} : Response model (paginations collection of objects)", new string[] { "SharedLib.Models" });
-                
+
                 await writer.WriteLineAsync($"\tpublic partial class {response_type_name} : FindResponseModel");
                 await writer.WriteLineAsync("\t{");
                 await writer.WriteLineAsync("\t\t/// <summary>");
@@ -684,7 +684,7 @@ namespace SharedLib.Services
                 service_type_name = service_type_name[1..];
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "service_implementations", $"{service_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, null, new string[] { "SharedLib.Models" });
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, null);
 
                 await writer.WriteLineAsync($"\tpublic partial class {service_type_name} : I{service_type_name}");
                 await writer.WriteLineAsync("\t{");
