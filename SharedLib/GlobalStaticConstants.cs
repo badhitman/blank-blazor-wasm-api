@@ -132,5 +132,5 @@ public static class GlobalStaticConstants
 
     public const string MULTI_REPONSE_MODEL_PREFIX = "_ResponseListModel";
     public const string PAGINATION_REPONSE_MODEL_PREFIX = "_ResponsePaginationModel";
-    public const string RESPONSE_PROPERTY_NAME_PREFIX = "_ResponseProperty";
+    public const string RESULT_PROPERTY_NAME = "Result";
 }
