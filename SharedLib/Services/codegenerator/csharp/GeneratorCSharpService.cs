@@ -163,22 +163,26 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task AddAsync({type_name} {obj_db_param_mane}, bool auto_save = true)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddAsync({type_name} {obj_db_param_mane}, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new ResponseBaseModel();");
             await writer.WriteLineAsync($"\t\t\tawait _db_context.AddAsync({obj_db_param_mane});");
             await writer.WriteLineAsync("\t\t\tif (auto_save)");
             await writer.WriteLineAsync("\t\t\t\tawait SaveChangesAsync();");
+            await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task AddRangeAsync(IEnumerable<{type_name}> {obj_db_param_mane}_range, bool auto_save = true)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name}> {obj_db_param_mane}_range, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new ResponseBaseModel();");
             await writer.WriteLineAsync($"\t\t\tawait _db_context.AddRangeAsync({obj_db_param_mane}_range);");
             await writer.WriteLineAsync("\t\t\tif (auto_save)");
             await writer.WriteLineAsync("\t\t\t\tawait SaveChangesAsync();");
+            await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
@@ -260,53 +264,63 @@ namespace SharedLib.Services
             }
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task UpdateAsync({type_name} {obj_db_param_mane}, bool auto_save = true)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateAsync({type_name} {obj_db_param_mane}, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new ResponseBaseModel();");
             await writer.WriteLineAsync($"\t\t\t_db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Update({obj_db_param_mane});");
             await writer.WriteLineAsync("\t\t\tif (auto_save)");
             await writer.WriteLineAsync("\t\t\t\tawait SaveChangesAsync();");
+            await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task UpdateRangeAsync(IEnumerable<{type_name}> {obj_db_param_mane}_range, bool auto_save = true)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name}> {obj_db_param_mane}_range, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new ResponseBaseModel();");
             await writer.WriteLineAsync($"\t\t\t_db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.UpdateRange({obj_db_param_mane}_range);");
             await writer.WriteLineAsync("\t\t\tif (auto_save)");
             await writer.WriteLineAsync("\t\t\t\tawait SaveChangesAsync();");
+            await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task IsDeleteMarkerToggleAsync(int id, bool auto_save = true)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> IsDeleteMarkerToggleAsync(int id, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new ResponseBaseModel();");
             string db_set_name = $"_db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}";
             await writer.WriteLineAsync($"\t\t\t{type_name} db_{type_name}_object = await {db_set_name}.FindAsync(id);");
             await writer.WriteLineAsync($"\t\t\tdb_{type_name}_object.IsDeleted = !db_{type_name}_object.IsDeleted;");
             await writer.WriteLineAsync($"\t\t\t{db_set_name}.Update(db_{type_name}_object);");
             await writer.WriteLineAsync("\t\t\tif (auto_save)");
             await writer.WriteLineAsync("\t\t\t\tawait SaveChangesAsync();");
+            await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task RemoveAsync(int id, bool auto_save = true)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveAsync(int id, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new ResponseBaseModel();");
             await writer.WriteLineAsync("\t\t\tawait RemoveRangeAsync(new int[] { id }, auto_save);");
+            await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task RemoveRangeAsync(IEnumerable<int> ids, bool auto_save = true)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveRangeAsync(IEnumerable<int> ids, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new ResponseBaseModel();");
             await writer.WriteLineAsync($"\t\t\t{db_set_name}.RemoveRange({db_set_name}.Where(x => ids.Contains(x.Id)));");
             await writer.WriteLineAsync("\t\t\tif (auto_save)");
             await writer.WriteLineAsync("\t\t\t\tawait SaveChangesAsync();");
+            await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
 
             await WriteEnd(writer);
@@ -318,13 +332,13 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\t/// Создать новый объект{(is_body_document ? "" : " строки (табличной части)")} документа (запись БД): {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"{obj_db_param_mane}\">Объект добавления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task AddAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} {obj_db_param_mane});");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> AddAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} {obj_db_param_mane});");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Создать перечень новых объектов{(is_body_document ? "" : " строк табличной части")} документа: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"{obj_db_param_mane}_range\">Объекты добавления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task AddRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> {obj_db_param_mane}_range);");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> {obj_db_param_mane}_range);");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <summary>");
@@ -355,13 +369,13 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\t/// Обновить объект{(is_body_document ? "" : " строки табличной части")} документа: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"{obj_db_param_mane}\">Объект обновления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task UpdateAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} {obj_db_param_mane});");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> UpdateAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} {obj_db_param_mane});");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Обновить перечень объектов{(is_body_document ? "/документов" : " строк табличной части документа")}: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"{obj_db_param_mane}_range\">Объекты обновления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task UpdateRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> {obj_db_param_mane}_range);");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> {obj_db_param_mane}_range);");
             await writer.WriteLineAsync();
 
 
@@ -369,19 +383,19 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\t/// Инверсия признака удаления{(is_body_document ? "" : " строки табличной части")} документа: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"id\">Идентификатор объекта</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task IsDeleteMarkerToggleAsync(int id);");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> IsDeleteMarkerToggleAsync(int id);");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Удалить {(is_body_document ? "документ" : "строку табличной части")}: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"id\">Идентификатор объекта</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task RemoveAsync(int id);");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> RemoveAsync(int id);");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Удалить перечень{(is_body_document ? "" : " строк табличной части")} документов: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"ids\">Идентификаторы объектов</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task RemoveRangeAsync(IEnumerable<int> ids);");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> RemoveRangeAsync(IEnumerable<int> ids);");
 
             await WriteEnd(writer);
         }
