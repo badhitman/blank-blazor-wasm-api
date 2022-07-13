@@ -88,9 +88,8 @@ namespace SharedLib.Services
 
             if (!is_body_document)
             {
-                //string fk_owner_property_name = $"{type_name[..(type_name.Length - GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX.Length)]}OwnerId";
-                await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-                await writer.WriteLineAsync($"\t\tpublic async Task<IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}>> SelectAsync(int document_owner_id, PaginationRequestModel pagination_request = null)");
+                await writer.WriteLineAsync("\t\t/// <inheritdoc/>");//Document10_Model_TableModel_ResponsePaginationModel
+                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(int document_owner_id, PaginationRequestModel pagination_request = null)");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
                 await writer.WriteLineAsync($"\t\t\treturn await _crud_accessor.SelectAsync(document_owner_id);");
@@ -665,7 +664,7 @@ namespace SharedLib.Services
                 service_type_name = service_type_name[1..];
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "service_implementations", $"{service_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, null);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, null, new string[] { "SharedLib.Models" });
 
                 await writer.WriteLineAsync($"\tpublic partial class {service_type_name} : I{service_type_name}");
                 await writer.WriteLineAsync("\t{");
