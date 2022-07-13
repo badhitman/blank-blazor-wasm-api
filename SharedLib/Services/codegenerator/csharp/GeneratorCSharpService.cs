@@ -437,7 +437,7 @@ namespace SharedLib.Services
 
                 await writer.WriteLineAsync($"\tpublic partial class {response_type_name} : ResponseBaseModel");
                 await writer.WriteLineAsync("\t{");
-                await writer.WriteLineAsync($"\t\tpublic IEnumerable<{doc_obj.SystemCodeName}> {doc_obj.SystemCodeName}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX} {{ get; set; }}");
+                await writer.WriteLineAsync($"\t\tpublic IEnumerable<{doc_obj.SystemCodeName}> {doc_obj.SystemCodeName}{GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
                 await writer.WriteLineAsync("\t}");
 
 
