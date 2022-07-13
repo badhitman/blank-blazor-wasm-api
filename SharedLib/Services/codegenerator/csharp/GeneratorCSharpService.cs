@@ -91,7 +91,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> SelectAsync(IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync("\t\t\treturn new {type_name_gen}()");
+            await writer.WriteLineAsync($"\t\t\treturn new {type_name_gen}()");
             await writer.WriteLineAsync("\t\t\t{");
             await writer.WriteLineAsync($"\t\t\t\t{GlobalStaticConstants.RESULT_PROPERTY_NAME} = await _crud_accessor.SelectAsync(ids)");
             await writer.WriteLineAsync("\t\t\t};");
