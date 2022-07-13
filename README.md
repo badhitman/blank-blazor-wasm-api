@@ -19,3 +19,4 @@
 
 swagger ui
 ![swagger ui](./img/swagger-ui.png)
+![swagger models](./img/swagger-models.png)
