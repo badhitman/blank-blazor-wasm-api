@@ -81,9 +81,8 @@ namespace SharedLib.Services
 
             await writer.WriteLineAsync($"\t\t\treturn new {type_name_gen}()");
             await writer.WriteLineAsync("\t\t\t{");
-
-            await writer.WriteLineAsync("\t\t\t}");
             await writer.WriteLineAsync($"\t\t\t\t{GlobalStaticConstants.RESULT_PROPERTY_NAME} = await _crud_accessor.FirstAsync(id)");
+            await writer.WriteLineAsync("\t\t\t}");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
