@@ -218,7 +218,7 @@ namespace SharedLib.Services
             {
                 string fk_owner_property_name = $"{type_name[..(type_name.Length - GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX.Length)]}OwnerId";
                 await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-                await writer.WriteLineAsync($"\t\tpublic async Task<IEnumerable<{type_name}>> SelectAsync(int document_owner_id, PaginationRequestModel pagination_request)");
+                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(int document_owner_id, PaginationRequestModel pagination_request)");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
                 //await writer.WriteLineAsync($"\t\t\treturn await _db_context.{type_name}{GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Where(x => x.{fk_owner_property_name} == document_owner_id).ToArrayAsync();");
