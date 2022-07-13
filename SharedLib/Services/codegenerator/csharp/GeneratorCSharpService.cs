@@ -428,6 +428,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t{");
                 await writer.WriteLineAsync($"\t\tpublic {doc_obj.SystemCodeName} {doc_obj.SystemCodeName}{GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
                 await writer.WriteLineAsync("\t}");
+                await WriteEnd(writer);
 
 
                 response_type_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
@@ -439,6 +440,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t{");
                 await writer.WriteLineAsync($"\t\tpublic IEnumerable<{doc_obj.SystemCodeName}> {doc_obj.SystemCodeName}{GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
                 await writer.WriteLineAsync("\t}");
+                await WriteEnd(writer);
 
 
                 crud_type_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.DATABASE_TABLE_ACESSOR_PREFIX}";
