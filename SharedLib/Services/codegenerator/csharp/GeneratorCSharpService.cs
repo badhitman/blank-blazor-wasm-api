@@ -188,14 +188,6 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<IEnumerable<{type_name}>> SelectAsync(IEnumerable<int> ids)");
-            await writer.WriteLineAsync("\t\t{");
-            await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\treturn await _db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Where(x => ids.Contains(x.Id)).ToArrayAsync();");
-            await writer.WriteLineAsync("\t\t}");
-            await writer.WriteLineAsync();
-
-            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel pagination_request)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
@@ -207,7 +199,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t\t\t{");
             await writer.WriteLineAsync("\t\t\t\t\tTotalRowsCount = await query.CountAsync()");
             await writer.WriteLineAsync("\t\t\t\t}");
-            await writer.WriteLineAsync("\t\t\t}");
+            await writer.WriteLineAsync("\t\t\t};");
 
             await writer.WriteLineAsync($"\t\t\tswitch (res.Pagination.SortBy)");
             await writer.WriteLineAsync("\t\t\t{");
@@ -538,7 +530,7 @@ namespace SharedLib.Services
                 crud_type_name = crud_type_name[1..];
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "crud_implementations", $"{crud_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, null, new string[] { "DbcLib", "Microsoft.EntityFrameworkCore" });
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, null, new string[] { "DbcLib", "Microsoft.EntityFrameworkCore", "SharedLib.Models" });
 
                 await writer.WriteLineAsync($"\tpublic partial class {crud_type_name} : I{crud_type_name}");
                 await writer.WriteLineAsync("\t{");
