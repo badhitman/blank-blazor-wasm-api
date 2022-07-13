@@ -54,6 +54,8 @@ namespace SharedLib.Services
 
         static async Task WriteDocumentServicesInterfaceImplementation(StreamWriter writer, string obj_db_param_mane, string type_name, string doc_obj_name, bool is_body_document)
         {
+            string type_name_gen;
+
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");//_TableModel
             await writer.WriteLineAsync($"\t\tpublic async Task AddAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} {obj_db_param_mane})");
             await writer.WriteLineAsync("\t\t{");
@@ -70,11 +72,18 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
+            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}?> FirstAsync(int id)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}?> FirstAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\treturn await _crud_accessor.FirstAsync(id);");
+            //await writer.WriteLineAsync($"\t\t\treturn await _crud_accessor.FirstAsync(id);");
+
+            await writer.WriteLineAsync($"\t\t\treturn new {type_name_gen}()");
+            await writer.WriteLineAsync("\t\t\t{");
+
+            await writer.WriteLineAsync("\t\t\t}");
+
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
@@ -319,7 +328,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\t/// Прочитать {(is_body_document ? "документ" : "строку табличной части документа")}: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"id\">Идентификатор объекта</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}?> FirstAsync(int id);");
+            await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}?> FirstAsync(int id);");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Получить (набор){(is_body_document ? "" : " строк табличной части")} документов: {doc_obj_name}");
@@ -335,7 +344,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t/// </summary>");
                 await writer.WriteLineAsync($"\t\t/// <param name=\"document_owner_id\">Идентификатор документа - владельца строк</param>");
                 await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(int document_owner_id, PaginationRequestModel pagination_request);");
-                await writer.WriteLineAsync();//Document148_Model_ResponsePaginationModel
+                await writer.WriteLineAsync();
             }
 
             await writer.WriteLineAsync("\t\t/// <summary>");
@@ -489,7 +498,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t/// <summary>");
                 await writer.WriteLineAsync($"\t\t/// Результат запроса [{doc_obj.SystemCodeName}] (полезная нагрузка)");
                 await writer.WriteLineAsync("\t\t/// </summary>");
-                await writer.WriteLineAsync($"\t\tpublic {doc_obj.SystemCodeName} {doc_obj.SystemCodeName}{GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
+                await writer.WriteLineAsync($"\t\tpublic {doc_obj.SystemCodeName} {GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
                 await WriteEnd(writer);
 
 
@@ -503,7 +512,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t/// <summary>");
                 await writer.WriteLineAsync($"\t\t/// Результат запроса [{doc_obj.SystemCodeName}] (полезная нагрузка)");
                 await writer.WriteLineAsync("\t\t/// </summary>");
-                await writer.WriteLineAsync($"\t\tpublic IEnumerable<{doc_obj.SystemCodeName}> {doc_obj.SystemCodeName}{GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
+                await writer.WriteLineAsync($"\t\tpublic IEnumerable<{doc_obj.SystemCodeName}> {GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
                 await WriteEnd(writer);
 
 
@@ -604,7 +613,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t/// <summary>");
                 await writer.WriteLineAsync($"\t\t/// Результат запроса [{doc_obj.SystemCodeName}] (полезная нагрузка)");
                 await writer.WriteLineAsync("\t\t/// </summary>");
-                await writer.WriteLineAsync($"\t\tpublic {doc_obj.SystemCodeName} {doc_obj.SystemCodeName}{GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
+                await writer.WriteLineAsync($"\t\tpublic {doc_obj.SystemCodeName} {GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
                 await WriteEnd(writer);
 
 
@@ -618,7 +627,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t/// <summary>");
                 await writer.WriteLineAsync($"\t\t/// Результат запроса [{doc_obj.SystemCodeName}] (полезная нагрузка)");
                 await writer.WriteLineAsync("\t\t/// </summary>");
-                await writer.WriteLineAsync($"\t\tpublic IEnumerable<{doc_obj.SystemCodeName}> {doc_obj.SystemCodeName}{GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
+                await writer.WriteLineAsync($"\t\tpublic IEnumerable<{doc_obj.SystemCodeName}> {GlobalStaticConstants.RESPONSE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
                 await WriteEnd(writer);
 
 
