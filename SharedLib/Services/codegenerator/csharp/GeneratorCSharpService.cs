@@ -170,18 +170,18 @@ namespace SharedLib.Services
         static async Task WriteDocumentControllers(StreamWriter writer, string service_instance, string type_name, string doc_obj_name, bool is_body_document)
         {
             await writer.WriteLineAsync("\t\t[HttpPost($\"{nameof(RouteMethodsPrefixesEnum.AddSingle)}\")]");
-            await writer.WriteLineAsync($"\t\tpublic async Task AddAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} object_rest)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} object_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\tawait {service_instance}.AddAsync(object_rest);");
+            await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.AddAsync(object_rest);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t[HttpPost($\"{nameof(RouteMethodsPrefixesEnum.AddRange)}\")]");
-            await writer.WriteLineAsync($"\t\tpublic async Task AddRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> objects_range_rest)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> objects_range_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\tawait {service_instance}.AddRangeAsync(objects_range_rest);");
+            await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.AddRangeAsync(objects_range_rest);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
@@ -189,7 +189,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> FirstAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\tawait {service_instance}.FirstAsync(id);");
+            await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.FirstAsync(id);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
