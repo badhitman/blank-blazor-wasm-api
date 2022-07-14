@@ -460,7 +460,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t/// </summary>");
                 await writer.WriteLineAsync($"\t\t/// <param name=\"document_owner_id\">Идентификатор документа - владельца строк</param>");
                 await writer.WriteLineAsync($"\t\t/// <param name=\"pagination_request\">Пагинация запроса</param>");
-                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(int document_owner_id, PaginationRequestModel pagination_request);");
+                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request);");
                 await writer.WriteLineAsync();
             }
 
