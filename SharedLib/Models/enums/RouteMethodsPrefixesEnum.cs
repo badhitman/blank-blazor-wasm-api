@@ -2,10 +2,11 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-namespace SharedLib.Models.enums
+namespace SharedLib.Models
 {
     /// <summary>
     /// Префиксы маршрутов контроллеров (+ Refit)
+    /// используется для генератора кода в контроллерах и службах refit
     /// </summary>
     public enum RouteMethodsPrefixesEnum
     {
