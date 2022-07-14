@@ -88,6 +88,69 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
+                         
+            if (!is_body_document)
+            {
+                await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangeByOwnerId)}/{{id}}\")]");
+                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync([FromRoute] int document_owner_id, [FromRoute] PaginationRequestModel pagination_request)");
+                await writer.WriteLineAsync("\t\t{");
+                await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+                await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.SelectAsync(document_owner_id, pagination_request);");
+                await writer.WriteLineAsync("\t\t}");
+                await writer.WriteLineAsync();
+            }
+
+            /*
+            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} {obj_db_param_mane})");
+            await writer.WriteLineAsync("\t\t{");
+            await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
+            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.UpdateAsync({obj_db_param_mane});");
+            await writer.WriteLineAsync("\t\t\treturn result;");
+            await writer.WriteLineAsync("\t\t}");
+            await writer.WriteLineAsync();
+
+            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> {obj_db_param_mane}_range)");
+            await writer.WriteLineAsync("\t\t{");
+            await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
+            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.UpdateRangeAsync({obj_db_param_mane}_range);");
+            await writer.WriteLineAsync("\t\t\treturn result;");
+            await writer.WriteLineAsync("\t\t}");
+            await writer.WriteLineAsync();
+
+            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> IsDeleteMarkerToggleAsync(int id)");
+            await writer.WriteLineAsync("\t\t{");
+            await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
+            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.IsDeleteMarkerToggleAsync(id);");
+            await writer.WriteLineAsync("\t\t\treturn result;");
+            await writer.WriteLineAsync("\t\t}");
+            await writer.WriteLineAsync();
+
+            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveAsync(int id)");
+            await writer.WriteLineAsync("\t\t{");
+            await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
+            await writer.WriteLineAsync("\t\t\tawait _crud_accessor.RemoveRangeAsync(new int[] { id });");
+            await writer.WriteLineAsync("\t\t\treturn result;");
+            await writer.WriteLineAsync("\t\t}");
+            await writer.WriteLineAsync();
+
+            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveRangeAsync(IEnumerable<int> ids)");
+            await writer.WriteLineAsync("\t\t{");
+            await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
+            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.RemoveRangeAsync(ids);");
+            await writer.WriteLineAsync("\t\t\treturn result;");
+            await writer.WriteLineAsync("\t\t}");
+             */
+
             await WriteEnd(writer);
         }
 
@@ -175,7 +238,6 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
-            string db_set_name = $"_db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}";
             await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.IsDeleteMarkerToggleAsync(id);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
