@@ -166,16 +166,24 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
-        static async Task WriteDocumentCrudInterfaceImplementation(StreamWriter writer, string obj_db_param_mane, string type_name, string doc_obj_name, bool is_body_document)
+
+        static async Task WriteDocumentControllers(StreamWriter writer, string service_instance, string type_name, string doc_obj_name, bool is_body_document)
         {
-            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync("\t\tpublic async Task<int> SaveChangesAsync(Dictionary<string, string?>? cashe_upd = null)");
+            await writer.WriteLineAsync("\t\t[HttpGet(\"{nameof(RouteMethodsPrefixesEnum.AddSingle)}/{{id}}\")]");
+            await writer.WriteLineAsync($"\t\tpublic async Task AddAsync({type_name} obj)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\treturn await _db_context.SaveChangesAsync();");
+            await writer.WriteLineAsync($"\t\t\tawait {service_instance}.AddAsync(obj);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
+
+            await WriteEnd(writer);
+        }
+
+
+        static async Task WriteDocumentCrudInterfaceImplementation(StreamWriter writer, string obj_db_param_mane, string type_name, string doc_obj_name, bool is_body_document)
+        {
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task AddAsync({type_name} {obj_db_param_mane}, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
@@ -322,6 +330,14 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t\tif (auto_save)");
             await writer.WriteLineAsync("\t\t\t\tawait SaveChangesAsync();");
             await writer.WriteLineAsync("\t\t}");
+
+            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
+            await writer.WriteLineAsync("\t\tpublic async Task<int> SaveChangesAsync(Dictionary<string, string?>? cashe_upd = null)");
+            await writer.WriteLineAsync("\t\t{");
+            await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+            await writer.WriteLineAsync($"\t\t\treturn await _db_context.SaveChangesAsync();");
+            await writer.WriteLineAsync("\t\t}");
+            await writer.WriteLineAsync();
 
             await WriteEnd(writer);
         }
@@ -631,18 +647,14 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t{");
                 await writer.WriteLineAsync($"\t\treadonly {service_type_name} {service_instance};");
                 await writer.WriteLineAsync();
-                await writer.WriteLineAsync($"\t\tpublic {service_type_name}({service_type_name} set_{service_instance})");
+                await writer.WriteLineAsync($"\t\tpublic {controller_name}({service_type_name} set_{service_instance})");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync($"\t\t\t{service_instance} = set_{service_instance};");
                 await writer.WriteLineAsync("\t\t}");
+                await writer.WriteLineAsync();
 
-
-
-
-
-
-                await WriteEnd(writer);
-
+                await WriteDocumentControllers(writer, service_instance, doc_obj.SystemCodeName, doc_obj.Name, true);
+                
                 #endregion
 
                 if (!doc_obj.PropertiesGrid.Any(x => !x.IsDeleted && x.PropertyTypeMetadata?.IsDeleted != true))
@@ -771,17 +783,12 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t{");
                 await writer.WriteLineAsync($"\t\treadonly {service_type_name} {service_instance};");
                 await writer.WriteLineAsync();
-                await writer.WriteLineAsync($"\t\tpublic {service_type_name}({service_type_name} set_{service_instance})");
+                await writer.WriteLineAsync($"\t\tpublic {controller_name}({service_type_name} set_{service_instance})");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync($"\t\t\t{service_instance} = set_{service_instance};");
                 await writer.WriteLineAsync("\t\t}");
 
-
-
-
-
-
-                await WriteEnd(writer);
+                await WriteDocumentControllers(writer, service_instance, doc_obj.SystemCodeName, doc_obj.Name, true);
 
                 #endregion
 
