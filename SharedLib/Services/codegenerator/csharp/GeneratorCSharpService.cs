@@ -622,16 +622,16 @@ namespace SharedLib.Services
 
                 service_instance = $"_{service_type_name}".ToLower();
                 controller_name = $"{doc_obj.SystemCodeName}Controller";
-                enumEntry = archive.CreateEntry(Path.Combine("controllers", $"{controller_name}.cs"));
+                enumEntry = archive.CreateEntry(Path.Combine("gen_controllers", $"{controller_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name, new string[] { "SharedLib.Models" });
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name, new string[] { "Microsoft.AspNetCore.Mvc" });
                 await writer.WriteLineAsync("\t[Route(\"api/[controller]\")]");
                 await writer.WriteLineAsync("\t[ApiController]");
-                await writer.WriteLineAsync($"\tpublic class {controller_name} : ControllerBase");
+                await writer.WriteLineAsync($"\tpublic partial class {controller_name} : ControllerBase");
                 await writer.WriteLineAsync("\t{");
                 await writer.WriteLineAsync($"\t\treadonly {service_type_name} {service_instance};");
                 await writer.WriteLineAsync();
-                await writer.WriteLineAsync($"\t\tpublic partial {service_type_name}({service_type_name} set_{service_instance})");
+                await writer.WriteLineAsync($"\t\tpublic {service_type_name}({service_type_name} set_{service_instance})");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync($"\t\t\t{service_instance} = set_{service_instance};");
                 await writer.WriteLineAsync("\t\t}");
@@ -762,16 +762,16 @@ namespace SharedLib.Services
 
                 service_instance = $"_{service_type_name}".ToLower();
                 controller_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}Controller";
-                enumEntry = archive.CreateEntry(Path.Combine("controllers", $"{controller_name}.cs"));
+                enumEntry = archive.CreateEntry(Path.Combine("gen_controllers", $"{controller_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.Name} (табличная часть)", new string[] { "SharedLib.Models" });
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.Name} (табличная часть)", new string[] { "Microsoft.AspNetCore.Mvc" });
                 await writer.WriteLineAsync("\t[Route(\"api/[controller]\")]");
                 await writer.WriteLineAsync("\t[ApiController]");
-                await writer.WriteLineAsync($"\tpublic class {controller_name} : ControllerBase");
+                await writer.WriteLineAsync($"\tpublic partial class {controller_name} : ControllerBase");
                 await writer.WriteLineAsync("\t{");
                 await writer.WriteLineAsync($"\t\treadonly {service_type_name} {service_instance};");
                 await writer.WriteLineAsync();
-                await writer.WriteLineAsync($"\t\tpublic partial {service_type_name}({service_type_name} set_{service_instance})");
+                await writer.WriteLineAsync($"\t\tpublic {service_type_name}({service_type_name} set_{service_instance})");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync($"\t\t\t{service_instance} = set_{service_instance};");
                 await writer.WriteLineAsync("\t\t}");
