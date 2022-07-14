@@ -202,6 +202,14 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
+            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
+            await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel request)");
+            await writer.WriteLineAsync("\t\t{");
+            await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+            await writer.WriteLineAsync($"\t\t\treturn await _crud_accessor.SelectAsync(request);");
+            await writer.WriteLineAsync("\t\t}");
+            await writer.WriteLineAsync();
+
             if (!is_body_document)
             {
                 await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
@@ -451,6 +459,13 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"ids\">Идентификаторы объектов</param>");
             await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}> SelectAsync(IEnumerable<int> ids);");
+            await writer.WriteLineAsync();
+
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_obj_name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"request\">Пагинация запроса</param>");
+            await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel request);");
             await writer.WriteLineAsync();
 
             if (!is_body_document)
