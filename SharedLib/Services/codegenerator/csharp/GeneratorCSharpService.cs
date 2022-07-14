@@ -335,11 +335,11 @@ namespace SharedLib.Services
             {
                 string fk_owner_property_name = $"{type_name[..(type_name.Length - GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX.Length)]}OwnerId";
                 await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(int document_owner_id, PaginationRequestModel pagination_request)");
+                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
                 //await writer.WriteLineAsync($"\t\t\treturn await _db_context.{type_name}{GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Where(x => x.{fk_owner_property_name} == document_owner_id).ToArrayAsync();");
-                await writer.WriteLineAsync($"\t\t\tIQueryable<{type_name}>? query = _db_context.{type_name}{GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Where(x => x.{fk_owner_property_name} == document_owner_id).AsQueryable();");
+                await writer.WriteLineAsync($"\t\t\tIQueryable<{type_name}>? query = _db_context.{type_name}{GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Where(x => x.{fk_owner_property_name} == request.FilterId).AsQueryable();");
                 await writer.WriteLineAsync($"\t\t\t{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX} result = new()");
                 await writer.WriteLineAsync("\t\t\t{");
                 await writer.WriteLineAsync("\t\t\t\tPagination = new PaginationResponseModel(pagination_request)");
@@ -545,7 +545,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t/// </summary>");
                 await writer.WriteLineAsync($"\t\t/// <param name=\"document_owner_id\">Идентификатор документа - владельца строк</param>");
                 await writer.WriteLineAsync($"\t\t/// <param name=\"pagination_request\">Запрос-пагинатор</param>");
-                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(int document_owner_id, PaginationRequestModel pagination_request);");
+                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel pagination_request);");
                 await writer.WriteLineAsync();
             }
 
