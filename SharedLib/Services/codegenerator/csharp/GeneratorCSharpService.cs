@@ -498,13 +498,15 @@ namespace SharedLib.Services
             string crud_type_name;
             string service_type_name;
             string response_type_name;
+            string controller_name;
+            string service_instance;
             ZipArchiveEntry enumEntry;
             StreamWriter writer;
 
             string obj_db_param_mane;
             foreach (DocumentFitModel doc_obj in docs.Where(x => !x.IsDeleted))
             {
-                #region модели ответов rest/api
+                #region модели ответов тела документа (rest/api)
 
                 response_type_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "response_models", $"{response_type_name}.cs"));
@@ -616,10 +618,37 @@ namespace SharedLib.Services
 
                 #endregion
 
+                #region контроллеры тела документа
+
+                service_instance = $"_{service_type_name}".ToLower();
+                controller_name = $"{doc_obj.SystemCodeName}Controller";
+                enumEntry = archive.CreateEntry(Path.Combine("controllers", $"{controller_name}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name, new string[] { "SharedLib.Models" });
+                await writer.WriteLineAsync("\t[Route(\"api/[controller]\")]");
+                await writer.WriteLineAsync("\t[ApiController]");
+                await writer.WriteLineAsync($"\tpublic class {controller_name} : ControllerBase");
+                await writer.WriteLineAsync("\t{");
+                await writer.WriteLineAsync($"\t\treadonly {service_type_name} {service_instance};");
+                await writer.WriteLineAsync();
+                await writer.WriteLineAsync($"\t\tpublic partial {service_type_name}({service_type_name} set_{service_instance})");
+                await writer.WriteLineAsync("\t\t{");
+                await writer.WriteLineAsync($"\t\t\t{service_instance} = set_{service_instance};");
+                await writer.WriteLineAsync("\t\t}");
+
+
+
+
+
+
+                await WriteEnd(writer);
+
+                #endregion
+
                 if (!doc_obj.PropertiesGrid.Any(x => !x.IsDeleted && x.PropertyTypeMetadata?.IsDeleted != true))
                     continue;
 
-                #region модели ответов rest/api
+                #region модели ответов табличной части документа (rest/api)
 
                 response_type_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "response_models", $"{response_type_name}.cs"));
@@ -728,6 +757,34 @@ namespace SharedLib.Services
                 await WriteDocumentServicesInterfaceImplementation(writer, obj_db_param_mane, doc_obj.SystemCodeName, doc_obj.Name, false);
 
                 #endregion
+
+                #region контроллеры табличной части документа
+
+                service_instance = $"_{service_type_name}".ToLower();
+                controller_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}Controller";
+                enumEntry = archive.CreateEntry(Path.Combine("controllers", $"{controller_name}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.Name} (табличная часть)", new string[] { "SharedLib.Models" });
+                await writer.WriteLineAsync("\t[Route(\"api/[controller]\")]");
+                await writer.WriteLineAsync("\t[ApiController]");
+                await writer.WriteLineAsync($"\tpublic class {controller_name} : ControllerBase");
+                await writer.WriteLineAsync("\t{");
+                await writer.WriteLineAsync($"\t\treadonly {service_type_name} {service_instance};");
+                await writer.WriteLineAsync();
+                await writer.WriteLineAsync($"\t\tpublic partial {service_type_name}({service_type_name} set_{service_instance})");
+                await writer.WriteLineAsync("\t\t{");
+                await writer.WriteLineAsync($"\t\t\t{service_instance} = set_{service_instance};");
+                await writer.WriteLineAsync("\t\t}");
+
+
+
+
+
+
+                await WriteEnd(writer);
+
+                #endregion
+
             }
         }
 
