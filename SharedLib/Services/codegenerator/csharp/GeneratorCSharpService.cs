@@ -169,8 +169,8 @@ namespace SharedLib.Services
 
         static async Task WriteDocumentControllers(StreamWriter writer, string service_instance, string type_name, string doc_obj_name, bool is_body_document)
         {
-            await writer.WriteLineAsync("\t\t[HttpGet(\"{nameof(RouteMethodsPrefixesEnum.AddSingle)}/{{id}}\")]");
-            await writer.WriteLineAsync($"\t\tpublic async Task AddAsync({type_name} obj)");
+            await writer.WriteLineAsync("\t\t[HttpPost($\"{nameof(RouteMethodsPrefixesEnum.AddSingle)}\")]");
+            await writer.WriteLineAsync($"\t\tpublic async Task AddAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} obj)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync($"\t\t\tawait {service_instance}.AddAsync(obj);");
