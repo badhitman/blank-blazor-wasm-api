@@ -640,7 +640,7 @@ namespace SharedLib.Services
                 controller_name = $"{doc_obj.SystemCodeName}Controller";
                 enumEntry = archive.CreateEntry(Path.Combine("gen_controllers", $"{controller_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name, new string[] { "Microsoft.AspNetCore.Mvc" });
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name, new string[] { "Microsoft.AspNetCore.Mvc", "SharedLib.Models" });
                 await writer.WriteLineAsync("\t[Route(\"api/[controller]\")]");
                 await writer.WriteLineAsync("\t[ApiController]");
                 await writer.WriteLineAsync($"\tpublic partial class {controller_name} : ControllerBase");
@@ -776,7 +776,7 @@ namespace SharedLib.Services
                 controller_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}Controller";
                 enumEntry = archive.CreateEntry(Path.Combine("gen_controllers", $"{controller_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.Name} (табличная часть)", new string[] { "Microsoft.AspNetCore.Mvc" });
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{doc_obj.Name} (табличная часть)", new string[] { "Microsoft.AspNetCore.Mvc", "SharedLib.Models" });
                 await writer.WriteLineAsync("\t[Route(\"api/[controller]\")]");
                 await writer.WriteLineAsync("\t[ApiController]");
                 await writer.WriteLineAsync($"\tpublic partial class {controller_name} : ControllerBase");
@@ -788,7 +788,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\t\t\t{service_instance} = set_{service_instance};");
                 await writer.WriteLineAsync("\t\t}");
 
-                await WriteDocumentControllers(writer, service_instance, doc_obj.SystemCodeName, doc_obj.Name, true);
+                await WriteDocumentControllers(writer, service_instance, doc_obj.SystemCodeName, doc_obj.Name, false);
 
                 #endregion
 
