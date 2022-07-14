@@ -304,13 +304,13 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel pagination_request)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel request)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync($"\t\t\tIQueryable<{type_name}>? query = _db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.AsQueryable();");
             await writer.WriteLineAsync($"\t\t\t{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX} result = new()");
             await writer.WriteLineAsync("\t\t\t{");
-            await writer.WriteLineAsync("\t\t\t\tPagination = new PaginationResponseModel(pagination_request)");
+            await writer.WriteLineAsync("\t\t\t\tPagination = new PaginationResponseModel(request)");
             await writer.WriteLineAsync("\t\t\t\t{");
             await writer.WriteLineAsync("\t\t\t\t\tTotalRowsCount = await query.CountAsync()");
             await writer.WriteLineAsync("\t\t\t\t}");
@@ -342,7 +342,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\t\t\tIQueryable<{type_name}>? query = _db_context.{type_name}{GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Where(x => x.{fk_owner_property_name} == request.FilterId).AsQueryable();");
                 await writer.WriteLineAsync($"\t\t\t{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX} result = new()");
                 await writer.WriteLineAsync("\t\t\t{");
-                await writer.WriteLineAsync("\t\t\t\tPagination = new PaginationResponseModel(pagination_request)");
+                await writer.WriteLineAsync("\t\t\t\tPagination = new PaginationResponseModel(request)");
                 await writer.WriteLineAsync("\t\t\t\t{");
                 await writer.WriteLineAsync("\t\t\t\t\tTotalRowsCount = await query.CountAsync()");
                 await writer.WriteLineAsync("\t\t\t\t}");
@@ -458,8 +458,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t/// <summary>");
                 await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_obj_name}");
                 await writer.WriteLineAsync("\t\t/// </summary>");
-                await writer.WriteLineAsync($"\t\t/// <param name=\"document_owner_id\">Идентификатор документа - владельца строк</param>");
-                await writer.WriteLineAsync($"\t\t/// <param name=\"pagination_request\">Пагинация запроса</param>");
+                await writer.WriteLineAsync($"\t\t/// <param name=\"request\">Пагинация запроса</param>");
                 await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request);");
                 await writer.WriteLineAsync();
             }
@@ -534,8 +533,8 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Получить (страницу){(is_body_document ? "" : " строк табличной части")} документов: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"pagination_request\">Запрос-пагинатор</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel pagination_request);");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"pagination\">Запрос-пагинатор</param>");
+            await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel request);");
             await writer.WriteLineAsync();
 
             if (!is_body_document)
@@ -543,9 +542,8 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t/// <summary>");
                 await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_obj_name}");
                 await writer.WriteLineAsync("\t\t/// </summary>");
-                await writer.WriteLineAsync($"\t\t/// <param name=\"document_owner_id\">Идентификатор документа - владельца строк</param>");
-                await writer.WriteLineAsync($"\t\t/// <param name=\"pagination_request\">Запрос-пагинатор</param>");
-                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel pagination_request);");
+                await writer.WriteLineAsync($"\t\t/// <param name=\"request\">Запрос-пагинатор</param>");
+                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request);");
                 await writer.WriteLineAsync();
             }
 
