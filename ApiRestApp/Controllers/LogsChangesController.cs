@@ -52,7 +52,7 @@ namespace ApiRestApp.Controllers
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
         [HttpGet($"{nameof(GettLogsModesEnum.ByEnum)}")]
-        public async Task<LogsPaginationResponseModel> GetByEnum([FromQuery] LogsPaginationRequestModel request)
+        public async Task<LogsPaginationResponseModel> GetByEnum([FromQuery] GetByIdPaginationRequestModel request)
         {
             return await _logs_service.GetLogsByEnumAsync(request);
         }
@@ -63,7 +63,7 @@ namespace ApiRestApp.Controllers
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
         [HttpGet($"{nameof(GettLogsModesEnum.ByDocument)}")]
-        public async Task<LogsPaginationResponseModel> GetByDocument([FromQuery] LogsPaginationRequestModel request)
+        public async Task<LogsPaginationResponseModel> GetByDocument([FromQuery] GetByIdPaginationRequestModel request)
         {
             return await _logs_service.GetLogsByDocumentAsync(request);
         }

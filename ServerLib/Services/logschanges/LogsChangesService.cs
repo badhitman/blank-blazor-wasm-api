@@ -50,7 +50,7 @@ namespace ServerLib
         }
 
         /// <inheritdoc/>
-        public async Task<LogsPaginationResponseModel> GetLogsByDocumentAsync(LogsPaginationRequestModel request)
+        public async Task<LogsPaginationResponseModel> GetLogsByDocumentAsync(GetByIdPaginationRequestModel request)
         {
             UserProjectResponseModel check = await _shared_service.CheckLiteAsync();
             LogsPaginationResponseModel res = new() { IsSuccess = check.IsSuccess };
@@ -79,7 +79,7 @@ namespace ServerLib
         }
 
         /// <inheritdoc/>
-        public async Task<LogsPaginationResponseModel> GetLogsByEnumAsync(LogsPaginationRequestModel request)
+        public async Task<LogsPaginationResponseModel> GetLogsByEnumAsync(GetByIdPaginationRequestModel request)
         {
             UserProjectResponseModel check = await _shared_service.CheckLiteAsync();
             LogsPaginationResponseModel res = new() { IsSuccess = check.IsSuccess };

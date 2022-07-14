@@ -99,7 +99,7 @@ namespace DbTablesLib
         }
 
         /// <inheritdoc/>
-        public async Task<LogsPaginationResponseModel> GetLogsByDocumentAsync(LogsPaginationRequestModel request)
+        public async Task<LogsPaginationResponseModel> GetLogsByDocumentAsync(GetByIdPaginationRequestModel request)
         {
             IQueryable<LogChangeModelDB>? query = _db_context.ChangeLogs
                 .OrderBy(x => x.CreatedAt)
@@ -147,7 +147,7 @@ namespace DbTablesLib
         }
 
         /// <inheritdoc/>
-        public async Task<LogsPaginationResponseModel> GetLogsByEnumAsync(LogsPaginationRequestModel request)
+        public async Task<LogsPaginationResponseModel> GetLogsByEnumAsync(GetByIdPaginationRequestModel request)
         {
             IQueryable<LogChangeModelDB>? query = _db_context.ChangeLogs
                 .OrderBy(x => x.CreatedAt)

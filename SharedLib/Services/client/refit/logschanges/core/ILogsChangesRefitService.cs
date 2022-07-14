@@ -35,7 +35,7 @@ namespace SharedLib.Services
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
         [Get($"/api/logschanges/{nameof(GettLogsModesEnum.ByDocument)}")]
-        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByDocumentAsync(LogsPaginationRequestModel request);
+        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByDocumentAsync(GetByIdPaginationRequestModel request);
 
         /// <summary>
         /// Получить логи по перечислению
@@ -43,6 +43,6 @@ namespace SharedLib.Services
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
         [Get($"/api/logschanges/{nameof(GettLogsModesEnum.ByEnum)}")]
-        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByEnumAsync(LogsPaginationRequestModel request);
+        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByEnumAsync(GetByIdPaginationRequestModel request);
     }
 }

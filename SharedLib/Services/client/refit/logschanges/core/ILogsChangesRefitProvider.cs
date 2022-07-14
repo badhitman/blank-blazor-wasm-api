@@ -31,13 +31,13 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
-        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByEnumAsync(LogsPaginationRequestModel request);
+        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByEnumAsync(GetByIdPaginationRequestModel request);
 
         /// <summary>
         /// Получить логи по докуиенту
         /// </summary>
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
-        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByDocumentAsync(LogsPaginationRequestModel request);
+        public Task<ApiResponse<LogsPaginationResponseModel>> GetLogsByDocumentAsync(GetByIdPaginationRequestModel request);
     }
 }

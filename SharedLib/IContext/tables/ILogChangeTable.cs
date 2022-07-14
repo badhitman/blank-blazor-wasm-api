@@ -44,13 +44,13 @@ namespace SharedLib
         /// </summary>
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
-        public Task<LogsPaginationResponseModel> GetLogsByDocumentAsync(LogsPaginationRequestModel request);
+        public Task<LogsPaginationResponseModel> GetLogsByDocumentAsync(GetByIdPaginationRequestModel request);
 
         /// <summary>
         /// Получить логи по перечислению
         /// </summary>
         /// <param name="request">Запрос логов</param>
         /// <returns>Порция логов</returns>
-        public Task<LogsPaginationResponseModel> GetLogsByEnumAsync(LogsPaginationRequestModel request);
+        public Task<LogsPaginationResponseModel> GetLogsByEnumAsync(GetByIdPaginationRequestModel request);
     }
 }

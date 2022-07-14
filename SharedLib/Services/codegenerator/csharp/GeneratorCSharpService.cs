@@ -91,11 +91,11 @@ namespace SharedLib.Services
                          
             if (!is_body_document)
             {
-                await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangeByOwnerId)}/{{id}}\")]");
-                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync([FromRoute] int document_owner_id, [FromRoute] PaginationRequestModel pagination_request)");
+                await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangeByOwnerId)}/{{request}}\")]");
+                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync([FromRoute] GetByIdPaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-                await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.SelectAsync(document_owner_id, pagination_request);");
+                await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.SelectAsync(request);");
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
             }
@@ -205,10 +205,10 @@ namespace SharedLib.Services
             if (!is_body_document)
             {
                 await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(int document_owner_id, PaginationRequestModel pagination_request)");
+                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-                await writer.WriteLineAsync($"\t\t\treturn await _crud_accessor.SelectAsync(document_owner_id, pagination_request);");
+                await writer.WriteLineAsync($"\t\t\treturn await _crud_accessor.SelectAsync(request);");
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
             }

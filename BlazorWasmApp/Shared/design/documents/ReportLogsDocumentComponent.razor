@@ -50,7 +50,7 @@
 
         IsBusyProgress = true;
 
-        rest = await _logs_refit_service.GetLogsByDocumentAsync(new LogsPaginationRequestModel()
+        rest = await _logs_refit_service.GetLogsByDocumentAsync(new GetByIdPaginationRequestModel()
             {
                 FilterId = document_id,
                 PageNum = PageNum,

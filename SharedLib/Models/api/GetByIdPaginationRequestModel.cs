@@ -5,9 +5,9 @@
 namespace SharedLib.Models
 {
     /// <summary>
-    /// Запрос логов
+    /// Запрос по идентификатору (с пагинацией)
     /// </summary>
-    public class LogsPaginationRequestModel : PaginationRequestModel
+    public class GetByIdPaginationRequestModel : PaginationRequestModel
     {
         /// <summary>
         /// Фильтр

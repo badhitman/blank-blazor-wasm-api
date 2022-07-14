@@ -84,7 +84,7 @@ namespace SharedLib.Services
         }
 
         /// <inheritdoc/>
-        public async Task<LogsPaginationResponseModel> GetLogsByEnumAsync(LogsPaginationRequestModel request)
+        public async Task<LogsPaginationResponseModel> GetLogsByEnumAsync(GetByIdPaginationRequestModel request)
         {
             LogsPaginationResponseModel result = new();
 
@@ -114,7 +114,7 @@ namespace SharedLib.Services
         }
 
         /// <inheritdoc/>
-        public async Task<LogsPaginationResponseModel> GetLogsByDocumentAsync(LogsPaginationRequestModel request)
+        public async Task<LogsPaginationResponseModel> GetLogsByDocumentAsync(GetByIdPaginationRequestModel request)
         {
             LogsPaginationResponseModel result = new();
 
