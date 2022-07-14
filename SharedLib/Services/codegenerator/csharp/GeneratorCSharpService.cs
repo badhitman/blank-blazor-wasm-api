@@ -71,8 +71,8 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             string type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
-            await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetSingleById)}\")]");
-            await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> FirstAsync(int id)");
+            await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetSingleById)}/{{id}}\")]");
+            await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> FirstAsync([FromRoute] int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.FirstAsync(id);");
