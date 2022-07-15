@@ -25,21 +25,21 @@ namespace SharedLib
                 .AddHttpMessageHandler<RefitHeadersDelegatingHandler>()
                 .SetHandlerLifetime(handler_lifetime);
             services.AddScoped<IProjectsRefitProvider, ProjectsRefitProvider>();
-            services.AddScoped<IProjectsRestService, ProjectsRefitService>();
+            services.AddScoped<IProjectsRestService, ProjectsRestService>();
 
             services.AddRefitClient<ILinksProjectsRefitService>()
                 .ConfigureHttpClient(c => c.BaseAddress = conf.ApiConfig.Url)
                 .AddHttpMessageHandler<RefitHeadersDelegatingHandler>()
                 .SetHandlerLifetime(handler_lifetime);
             services.AddScoped<ILinksProjectsRefitProvider, LinksProjectsRefitProvider>();
-            services.AddScoped<ILinksProjectsRestService, LinksProjectsRefitService>();
+            services.AddScoped<ILinksProjectsRestService, LinksProjectsRestService>();
 
             services.AddRefitClient<IEnumsDesignRefitService>()
                 .ConfigureHttpClient(c => c.BaseAddress = conf.ApiConfig.Url)
                 .AddHttpMessageHandler<RefitHeadersDelegatingHandler>()
                 .SetHandlerLifetime(handler_lifetime);
             services.AddScoped<IEnumsDesignRefitProvider, EnumsDesignRefitProvider>();
-            services.AddScoped<IEnumsDesignRestService, EnumsDesignRefitService>();
+            services.AddScoped<IEnumsDesignRestService, EnumsDesignRestService>();
 
             services.AddRefitClient<IDocumentsDesignRefitService>()
                 .ConfigureHttpClient(c => c.BaseAddress = conf.ApiConfig.Url)
@@ -67,7 +67,7 @@ namespace SharedLib
                 .AddHttpMessageHandler<RefitHeadersDelegatingHandler>()
                 .SetHandlerLifetime(handler_lifetime);
             services.AddScoped<ILogsChangesRefitProvider, LogsChangesRefitProvider>();
-            services.AddScoped<ILogsChangesRestService, LogsChangesRefitService>();
+            services.AddScoped<ILogsChangesRestService, LogsChangesRestService>();
         }
     }
 }

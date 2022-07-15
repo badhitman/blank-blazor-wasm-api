@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using SharedLib.Services;
 using Microsoft.Extensions.Logging;
 using Refit;
 using SharedLib.Models;
@@ -10,30 +9,28 @@ using SharedLib.Models;
 namespace SharedLib.Services
 {
     /// <inheritdoc/>
-    public class LinksProjectsRefitService : ILinksProjectsRestService
+    public class LogsChangesRestService : ILogsChangesRestService
     {
-        private readonly ILinksProjectsRefitService _links_projects_service;
-        private readonly ILogger<LinksProjectsRefitService> _logger;
+        private readonly ILogsChangesRefitService _logs_service;
+        private readonly ILogger<LogsChangesRestService> _logger;
 
         /// <summary>
         /// Конструктор
         /// </summary>
-        /// <param name="set_users_projects_service"></param>
-        /// <param name="set_logger"></param>
-        public LinksProjectsRefitService(ILinksProjectsRefitService set_users_projects_service, ILogger<LinksProjectsRefitService> set_logger)
+        public LogsChangesRestService(ILogsChangesRefitService set_logs_service, ILogger<LogsChangesRestService> set_logger)
         {
-            _links_projects_service = set_users_projects_service;
+            _logs_service = set_logs_service;
             _logger = set_logger;
         }
 
         /// <inheritdoc/>
-        public async Task<GetLinksProjectsResponseModel> GetLinksUsersByProject(int project_id)
+        public async Task<LogsPaginationResponseModel> GetLogsByAuthorAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request)
         {
-            GetLinksProjectsResponseModel result = new GetLinksProjectsResponseModel();
+            LogsPaginationResponseModel result = new();
 
             try
             {
-                ApiResponse<GetLinksProjectsResponseModel> rest = await _links_projects_service.GetLinksUsersByProject(project_id);
+                ApiResponse<LogsPaginationResponseModel> rest = await _logs_service.GetLogsByAuthorAndOwnerTypeAsync(request);
 
                 if (rest.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -49,7 +46,7 @@ namespace SharedLib.Services
             catch (Exception ex)
             {
                 result.IsSuccess = false;
-                result.Message = $"Exception {nameof(_links_projects_service.GetLinksUsersByProject)}";
+                result.Message = $"Exception {nameof(_logs_service.GetLogsByAuthorAndOwnerTypeAsync)}";
                 _logger.LogError(ex, result.Message);
             }
 
@@ -57,13 +54,13 @@ namespace SharedLib.Services
         }
 
         /// <inheritdoc/>
-        public async Task<ResponseBaseModel> DeleteToggleLinkProject(int link_id)
+        public async Task<LogsPaginationResponseModel> GetLogsByProjectAndOwnerTypeAsync(LogsPaginationByOwnerTypeRequestModel request)
         {
-            ResponseBaseModel result = new ResponseBaseModel();
+            LogsPaginationResponseModel result = new();
 
             try
             {
-                ApiResponse<ResponseBaseModel> rest = await _links_projects_service.DeleteToggleLinkProject(link_id);
+                ApiResponse<LogsPaginationResponseModel> rest = await _logs_service.GetLogsByProjectAndOwnerTypeAsync(request);
 
                 if (rest.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -79,7 +76,7 @@ namespace SharedLib.Services
             catch (Exception ex)
             {
                 result.IsSuccess = false;
-                result.Message = $"Exception {nameof(_links_projects_service.DeleteToggleLinkProject)}";
+                result.Message = $"Exception {nameof(_logs_service.GetLogsByProjectAndOwnerTypeAsync)}";
                 _logger.LogError(ex, result.Message);
             }
 
@@ -87,13 +84,13 @@ namespace SharedLib.Services
         }
 
         /// <inheritdoc/>
-        public async Task<ResponseBaseModel> UtdateLevelLinkProjectAsync(UpdateLinkProjectModel set_level_for_link)
+        public async Task<LogsPaginationResponseModel> GetLogsByEnumAsync(GetByIdPaginationRequestModel request)
         {
-            ResponseBaseModel result = new ResponseBaseModel();
+            LogsPaginationResponseModel result = new();
 
             try
             {
-                ApiResponse<ResponseBaseModel> rest = await _links_projects_service.UtdateLevelLinkProjectAsync(set_level_for_link);
+                ApiResponse<LogsPaginationResponseModel> rest = await _logs_service.GetLogsByEnumAsync(request);
 
                 if (rest.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -109,7 +106,7 @@ namespace SharedLib.Services
             catch (Exception ex)
             {
                 result.IsSuccess = false;
-                result.Message = $"Exception {nameof(_links_projects_service.UtdateLevelLinkProjectAsync)}";
+                result.Message = $"Exception {nameof(_logs_service.GetLogsByEnumAsync)}";
                 _logger.LogError(ex, result.Message);
             }
 
@@ -117,13 +114,13 @@ namespace SharedLib.Services
         }
 
         /// <inheritdoc/>
-        public async Task<AddLinkProjectResultModel> AddLinkProject(AddLinkProjectModel new_link_project)
+        public async Task<LogsPaginationResponseModel> GetLogsByDocumentAsync(GetByIdPaginationRequestModel request)
         {
-            AddLinkProjectResultModel result = new AddLinkProjectResultModel();
+            LogsPaginationResponseModel result = new();
 
             try
             {
-                ApiResponse<AddLinkProjectResultModel> rest = await _links_projects_service.AddLinkProject(new_link_project);
+                ApiResponse<LogsPaginationResponseModel> rest = await _logs_service.GetLogsByDocumentAsync(request);
 
                 if (rest.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -139,7 +136,7 @@ namespace SharedLib.Services
             catch (Exception ex)
             {
                 result.IsSuccess = false;
-                result.Message = $"Exception {nameof(_links_projects_service.AddLinkProject)}";
+                result.Message = $"Exception {nameof(_logs_service.GetLogsByDocumentAsync)}";
                 _logger.LogError(ex, result.Message);
             }
 

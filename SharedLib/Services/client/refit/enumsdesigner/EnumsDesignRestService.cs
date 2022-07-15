@@ -10,15 +10,15 @@ using SharedLib.Models;
 namespace SharedLib.Services
 {
     /// <inheritdoc/>
-    public class EnumsDesignRefitService : IEnumsDesignRestService
+    public class EnumsDesignRestService : IEnumsDesignRestService
     {
         private readonly IEnumsDesignRefitService _enums_service;
-        private readonly ILogger<EnumsDesignRefitService> _logger;
+        private readonly ILogger<EnumsDesignRestService> _logger;
 
         /// <summary>
         /// Конструктор
         /// </summary>
-        public EnumsDesignRefitService(IEnumsDesignRefitService set_enums_service, ILogger<EnumsDesignRefitService> set_logger)
+        public EnumsDesignRestService(IEnumsDesignRefitService set_enums_service, ILogger<EnumsDesignRestService> set_logger)
         {
             _enums_service = set_enums_service;
             _logger = set_logger;
