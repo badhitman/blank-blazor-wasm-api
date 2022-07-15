@@ -10,17 +10,17 @@ using SharedLib.Models;
 namespace SharedLib.Services
 {
     /// <inheritdoc/>
-    public class UsersProfilesRefitService : IUsersProfilesRestService
+    public class UsersProfilesRestService : IUsersProfilesRestService
     {
         private readonly IUsersProfilesRefitService _users_profile_service;
-        private readonly ILogger<UsersProfilesRefitService> _logger;
+        private readonly ILogger<UsersProfilesRestService> _logger;
 
         /// <summary>
         /// Конструктор
         /// </summary>
         /// <param name="set_users_profile_service"></param>
         /// <param name="set_logger"></param>
-        public UsersProfilesRefitService(IUsersProfilesRefitService set_users_profile_service, ILogger<UsersProfilesRefitService> set_logger)
+        public UsersProfilesRestService(IUsersProfilesRefitService set_users_profile_service, ILogger<UsersProfilesRestService> set_logger)
         {
             _users_profile_service = set_users_profile_service;
             _logger = set_logger;

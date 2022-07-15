@@ -10,9 +10,9 @@ using SharedLib.Models;
 namespace SharedLib.Services
 {
     /// <inheritdoc/>
-    public class UsersAuthRefitService : IUsersAuthRestService
+    public class UsersAuthRestService : IUsersAuthRestService
     {
-        private readonly ILogger<UsersAuthRefitService> _logger;
+        private readonly ILogger<UsersAuthRestService> _logger;
         private readonly IUsersAuthRefitService _users_auth_service;
         private readonly IClientSession _session_local_storage;
         private readonly SessionMarkerLiteModel _session_marker;
@@ -24,7 +24,7 @@ namespace SharedLib.Services
         /// <param name="set_session_marker"></param>
         /// <param name="set_users_auth_service"></param>
         /// <param name="set_session_local_storage"></param>
-        public UsersAuthRefitService(ILogger<UsersAuthRefitService> set_logger, SessionMarkerLiteModel set_session_marker, IUsersAuthRefitService set_users_auth_service, IClientSession set_session_local_storage)
+        public UsersAuthRestService(ILogger<UsersAuthRestService> set_logger, SessionMarkerLiteModel set_session_marker, IUsersAuthRefitService set_users_auth_service, IClientSession set_session_local_storage)
         {
             _logger = set_logger;
             _users_auth_service = set_users_auth_service;

@@ -45,14 +45,14 @@ namespace SharedLib
                 .AddHttpMessageHandler<RefitHeadersDelegatingHandler>()
                 .SetHandlerLifetime(handler_lifetime);
             services.AddScoped<IUsersAuthRefitProvider, UsersAuthRefitProvider>();
-            services.AddScoped<IUsersAuthRestService, UsersAuthRefitService>();
+            services.AddScoped<IUsersAuthRestService, UsersAuthRestService>();
 
             services.AddRefitClient<IUsersProfilesRefitService>()
                 .ConfigureHttpClient(c => c.BaseAddress = conf.ApiConfig.Url)
                 .AddHttpMessageHandler<RefitHeadersDelegatingHandler>()
                 .SetHandlerLifetime(handler_lifetime);
             services.AddScoped<IUsersProfilesRefitProvider, UsersProfilesRefitProvider>();
-            services.AddScoped<IUsersProfilesRestService, UsersProfilesRefitService>();
+            services.AddScoped<IUsersProfilesRestService, UsersProfilesRestService>();
         }
     }
 }
