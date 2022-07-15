@@ -74,7 +74,7 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
-        static async Task WriteDocumentControllers(StreamWriter writer, string service_instance, string type_name, string doc_obj_name, bool is_body_document)
+        static async Task WriteDocumentControllers(StreamWriter writer, string service_instance, string type_name, bool is_body_document)
         {
             string type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
             await writer.WriteLineAsync("\t\t[HttpPost($\"{nameof(RouteMethodsPrefixesEnum.AddSingle)}\")]");
@@ -111,7 +111,6 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.SelectAsync(ids);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
-
 
             if (is_body_document)
             {
@@ -154,7 +153,6 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-
             await writer.WriteLineAsync("\t\t[HttpPatch($\"{nameof(RouteMethodsPrefixesEnum.MarkAsDeleteById)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> IsDeleteMarkerToggleAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
@@ -162,7 +160,6 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.IsDeleteMarkerToggleAsync(id);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
-
 
             await writer.WriteLineAsync("\t\t[HttpDelete($\"{nameof(RouteMethodsPrefixesEnum.RemoveSingleById)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveAsync(int id)");
@@ -172,13 +169,107 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-
             await writer.WriteLineAsync("\t\t[HttpDelete($\"{nameof(RouteMethodsPrefixesEnum.RemoveRangeByIds)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveRangeAsync(IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.RemoveRangeAsync(ids);");
             await writer.WriteLineAsync("\t\t}");
+
+            await WriteEnd(writer);
+        }
+
+        static async Task WriteRestServiceInterface(StreamWriter writer, string type_name, string rest_service_name, bool is_body_document, bool is_refit, bool add_attr)
+        {
+            string type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            
+            if(add_attr)
+            {
+                await writer.WriteLineAsync($"[Post(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.AddSingle)}}\")]");
+            }
+            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> AddAsync({type_name_gen} object_rest);");
+            await writer.WriteLineAsync();
+
+            if (add_attr)
+            {
+                await writer.WriteLineAsync($"[Post(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.AddRange)}}\")]");
+            }
+            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> AddRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest);");
+            await writer.WriteLineAsync();
+
+            if (add_attr)
+            {
+                await writer.WriteLineAsync($"$[Get(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetSingleById)}}/{{{{id}}}}\")]");
+            }
+            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
+            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> FirstAsync([FromRoute] int id);");
+            await writer.WriteLineAsync();
+
+            if (add_attr)
+            {
+                await writer.WriteLineAsync($"[Get(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetRangeByIds)}}/{{{{ids}}}}\")]");
+            }
+            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
+            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> SelectAsync([FromRoute] IEnumerable<int> ids);");
+            await writer.WriteLineAsync();
+
+            if (is_body_document)
+            {
+                if (add_attr)
+                {
+                    await writer.WriteLineAsync($"[Get(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetRangePagination)}}\")]");
+                }
+                type_name_gen = $"{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
+                await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> SelectAsync([FromQuery] PaginationRequestModel request);");
+                await writer.WriteLineAsync();
+            }
+            else
+            {
+                if (add_attr)
+                {
+                    await writer.WriteLineAsync($"[Get(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetRangeByOwnerId)}}\")]");
+                }
+                type_name_gen = $"{type_name}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
+                await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> SelectAsync([FromQuery] GetByIdPaginationRequestModel request);");
+                await writer.WriteLineAsync();
+            }
+
+            if (add_attr)
+            {
+                await writer.WriteLineAsync($"[Put(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.UpdateSingle)}}\")]");
+            }
+            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> UpdateAsync({type_name_gen} object_rest_upd);");
+            await writer.WriteLineAsync();
+
+            if (add_attr)
+            {
+                await writer.WriteLineAsync($"[Put(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.UpdateRange)}}\")]");
+            }
+            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> UpdateRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest_upd);");
+            await writer.WriteLineAsync();
+
+            if (add_attr)
+            {
+                await writer.WriteLineAsync($"[Patch(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.MarkAsDeleteById)}}\")]");
+            }
+            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> IsDeleteMarkerToggleAsync(int id);");
+            await writer.WriteLineAsync();
+
+            if (add_attr)
+            {
+                await writer.WriteLineAsync($"[Delete(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.RemoveSingleById)}}\")]");
+            }
+            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> RemoveAsync(int id);");
+            await writer.WriteLineAsync();
+
+            if (add_attr)
+            {
+                await writer.WriteLineAsync($"[Delete(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.RemoveRangeByIds)}}\")]");
+            }
+            await writer.WriteLineAsync($"\t\tpublic async Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> RemoveRangeAsync(IEnumerable<int> ids);");
 
             await WriteEnd(writer);
         }
@@ -645,6 +736,7 @@ namespace SharedLib.Services
             string response_type_name;
             string controller_name;
             string service_instance;
+            string rest_service_name;
             ZipArchiveEntry enumEntry;
             StreamWriter writer;
 
@@ -783,7 +875,36 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\t\t\t{service_instance} = set{service_instance};");
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
-                await WriteDocumentControllers(writer, service_instance, doc_obj.SystemCodeName, doc_obj.Name, true);
+                await WriteDocumentControllers(writer, service_instance, doc_obj.SystemCodeName, true);
+
+                #endregion
+
+                #region refit
+
+                rest_service_name = $"I{doc_obj.SystemCodeName}RestService";
+                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), $"{rest_service_name}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"REST служба работы с API -> {project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
+                await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
+                await writer.WriteLineAsync("\t{");
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, rest_service_name, true, false, false);
+
+                rest_service_name = $"I{doc_obj.SystemCodeName}RefitService";
+                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Refit коннектор к API/{project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
+                await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
+                await writer.WriteLineAsync("\t{");
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, rest_service_name, true, true, false);
+
+                rest_service_name = $"I{doc_obj.SystemCodeName}RefitProvider";
+                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Refit коннектор к API/{project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
+                await writer.WriteLineAsync("\t[Headers(\"Content-Type: application/json\")]");
+                await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
+                await writer.WriteLineAsync("\t{");
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, rest_service_name, true, true, true);
 
                 #endregion
 
@@ -920,7 +1041,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\t\t\t{service_instance} = set_{service_instance};");
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
-                await WriteDocumentControllers(writer, service_instance, doc_obj.SystemCodeName, doc_obj.Name, false);
+                await WriteDocumentControllers(writer, service_instance, doc_obj.SystemCodeName, false);
 
                 #endregion
 
