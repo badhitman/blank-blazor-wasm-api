@@ -31,6 +31,11 @@ namespace SharedLib.Models
         GetRangeByIds,
 
         /// <summary>
+        /// Получить коллекию элементов (с пагинацией)
+        /// </summary>
+        GetRangePagination,
+
+        /// <summary>
         /// Получить коллекцию элементов по идентификатору ведущего объекта-владельца
         /// </summary>
         GetRangeByOwnerId,
