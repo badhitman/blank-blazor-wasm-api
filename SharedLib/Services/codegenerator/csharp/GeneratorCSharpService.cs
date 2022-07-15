@@ -29,13 +29,17 @@ namespace SharedLib.Services
                 }
                 await writer.WriteLineAsync();
             }
-            await writer.WriteLineAsync($"namespace {name_space}");
-            await writer.WriteLineAsync("{");
+            bool ns_is_empty = string.IsNullOrWhiteSpace(name_space);
+            if (!ns_is_empty)
+            {
+                await writer.WriteLineAsync($"namespace {name_space}");
+                await writer.WriteLineAsync("{");
+            }
             if (type_name is not null)
-                await writer.WriteLineAsync("\t/// <summary>");
+                await writer.WriteLineAsync($"{(ns_is_empty ? "" : "\t")}/// <summary>");
             await writer.WriteLineAsync($"\t/// {(type_name is null ? "<inheritdoc/>" : type_name)}");
             if (type_name is not null)
-                await writer.WriteLineAsync("\t/// </summary>");
+                await writer.WriteLineAsync($"{(ns_is_empty ? "" : "\t")}/// </summary>");
         }
 
         static async Task WriteEnd(StreamWriter writer)
@@ -58,7 +62,7 @@ namespace SharedLib.Services
         {
             ZipArchiveEntry readmeEntry = archive.CreateEntry("services_di.cs");
             using StreamWriter writer = new(readmeEntry.Open(), Encoding.UTF8);
-            await WriteHead(writer, project_info.Name, project_info.NameSpace, "di services");
+            await WriteHead(writer, project_info.Name, null, "di services", new string[] { project_info.NameSpace });
             await writer.WriteLineAsync("\tpublic static class ServicesExtensionDesignerDI");
             await writer.WriteLineAsync("\t{");
             await writer.WriteLineAsync("\t\tpublic static void BuildDesignerServicesDI(this IServiceCollection services)");
