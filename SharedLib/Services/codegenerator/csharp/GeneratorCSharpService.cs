@@ -88,8 +88,18 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-                         
-            if (!is_body_document)
+
+            if (is_body_document)
+            {
+                await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangeByOwnerId)}/{{request}}\")]");
+                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync([FromRoute] GetByIdPaginationRequestModel request)");
+                await writer.WriteLineAsync("\t\t{");
+                await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+                await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.SelectAsync(request);");
+                await writer.WriteLineAsync("\t\t}");
+                await writer.WriteLineAsync();
+            }
+            else
             {
                 await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangeByOwnerId)}/{{request}}\")]");
                 await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync([FromRoute] GetByIdPaginationRequestModel request)");
@@ -202,15 +212,17 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel request)");
-            await writer.WriteLineAsync("\t\t{");
-            await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\treturn await _crud_accessor.SelectAsync(request);");
-            await writer.WriteLineAsync("\t\t}");
-            await writer.WriteLineAsync();
-
-            if (!is_body_document)
+            if (is_body_document)
+            {
+                await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
+                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel request)");
+                await writer.WriteLineAsync("\t\t{");
+                await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+                await writer.WriteLineAsync($"\t\t\treturn await _crud_accessor.SelectAsync(request);");
+                await writer.WriteLineAsync("\t\t}");
+                await writer.WriteLineAsync();
+            }
+            else
             {
                 await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
                 await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request)");
@@ -311,42 +323,43 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel request)");
-            await writer.WriteLineAsync("\t\t{");
-            await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\tIQueryable<{type_name}>? query = _db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.AsQueryable();");
-            await writer.WriteLineAsync($"\t\t\t{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX} result = new()");
-            await writer.WriteLineAsync("\t\t\t{");
-            await writer.WriteLineAsync("\t\t\t\tPagination = new PaginationResponseModel(request)");
-            await writer.WriteLineAsync("\t\t\t\t{");
-            await writer.WriteLineAsync("\t\t\t\t\tTotalRowsCount = await query.CountAsync()");
-            await writer.WriteLineAsync("\t\t\t\t}");
-            await writer.WriteLineAsync("\t\t\t};");
+            if (is_body_document)
+            {
+                await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
+                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel request)");
+                await writer.WriteLineAsync("\t\t{");
+                await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
+                await writer.WriteLineAsync($"\t\t\tIQueryable<{type_name}>? query = _db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.AsQueryable();");
+                await writer.WriteLineAsync($"\t\t\t{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX} result = new()");
+                await writer.WriteLineAsync("\t\t\t{");
+                await writer.WriteLineAsync("\t\t\t\tPagination = new PaginationResponseModel(request)");
+                await writer.WriteLineAsync("\t\t\t\t{");
+                await writer.WriteLineAsync("\t\t\t\t\tTotalRowsCount = await query.CountAsync()");
+                await writer.WriteLineAsync("\t\t\t\t}");
+                await writer.WriteLineAsync("\t\t\t};");
 
-            await writer.WriteLineAsync($"\t\t\tswitch (result.Pagination.SortBy)");
-            await writer.WriteLineAsync("\t\t\t{");
-            await writer.WriteLineAsync("\t\t\t\tdefault:");
-            await writer.WriteLineAsync("\t\t\t\t\tquery = result.Pagination.SortingDirection == VerticalDirectionsEnum.Up");
-            await writer.WriteLineAsync("\t\t\t\t\t\t? query.OrderByDescending(x => x.Id)");
-            await writer.WriteLineAsync("\t\t\t\t\t\t: query.OrderBy(x => x.Id);");
-            await writer.WriteLineAsync("\t\t\t\t\tbreak;");
-            await writer.WriteLineAsync("\t\t\t}");
+                await writer.WriteLineAsync($"\t\t\tswitch (result.Pagination.SortBy)");
+                await writer.WriteLineAsync("\t\t\t{");
+                await writer.WriteLineAsync("\t\t\t\tdefault:");
+                await writer.WriteLineAsync("\t\t\t\t\tquery = result.Pagination.SortingDirection == VerticalDirectionsEnum.Up");
+                await writer.WriteLineAsync("\t\t\t\t\t\t? query.OrderByDescending(x => x.Id)");
+                await writer.WriteLineAsync("\t\t\t\t\t\t: query.OrderBy(x => x.Id);");
+                await writer.WriteLineAsync("\t\t\t\t\tbreak;");
+                await writer.WriteLineAsync("\t\t\t}");
 
-            await writer.WriteLineAsync($"\t\t\tquery = query.Skip((result.Pagination.PageNum - 1) * result.Pagination.PageSize).Take(result.Pagination.PageSize);");
-            await writer.WriteLineAsync("\t\t\tresult.DataRows = await query.ToArrayAsync();");
-            await writer.WriteLineAsync("\t\t\treturn result;");
-            await writer.WriteLineAsync("\t\t}");
-            await writer.WriteLineAsync();
-
-            if (!is_body_document)
+                await writer.WriteLineAsync($"\t\t\tquery = query.Skip((result.Pagination.PageNum - 1) * result.Pagination.PageSize).Take(result.Pagination.PageSize);");
+                await writer.WriteLineAsync("\t\t\tresult.DataRows = await query.ToArrayAsync();");
+                await writer.WriteLineAsync("\t\t\treturn result;");
+                await writer.WriteLineAsync("\t\t}");
+                await writer.WriteLineAsync();
+            }
+            else
             {
                 string fk_owner_property_name = $"{type_name[..(type_name.Length - GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX.Length)]}OwnerId";
                 await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
                 await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-                //await writer.WriteLineAsync($"\t\t\treturn await _db_context.{type_name}{GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Where(x => x.{fk_owner_property_name} == document_owner_id).ToArrayAsync();");
                 await writer.WriteLineAsync($"\t\t\tIQueryable<{type_name}>? query = _db_context.{type_name}{GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Where(x => x.{fk_owner_property_name} == request.FilterId).AsQueryable();");
                 await writer.WriteLineAsync($"\t\t\t{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX} result = new()");
                 await writer.WriteLineAsync("\t\t\t{");
@@ -461,14 +474,16 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}> SelectAsync(IEnumerable<int> ids);");
             await writer.WriteLineAsync();
 
-            await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_obj_name}");
-            await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"request\">Пагинация запроса</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel request);");
-            await writer.WriteLineAsync();
-
-            if (!is_body_document)
+            if (is_body_document)
+            {
+                await writer.WriteLineAsync("\t\t/// <summary>");
+                await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_obj_name}");
+                await writer.WriteLineAsync("\t\t/// </summary>");
+                await writer.WriteLineAsync($"\t\t/// <param name=\"request\">Пагинация запроса</param>");
+                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel request);");
+                await writer.WriteLineAsync();
+            }
+            else
             {
                 await writer.WriteLineAsync("\t\t/// <summary>");
                 await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_obj_name}");
@@ -545,20 +560,22 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic Task<IEnumerable<{type_name}>> SelectAsync(IEnumerable<int> ids);");
             await writer.WriteLineAsync();
 
-            await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Получить (страницу){(is_body_document ? "" : " строк табличной части")} документов: {doc_obj_name}");
-            await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"pagination\">Запрос-пагинатор</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel request);");
-            await writer.WriteLineAsync();
-
-            if (!is_body_document)
+            if (is_body_document)
+            {
+                await writer.WriteLineAsync("\t\t/// <summary>");
+                await writer.WriteLineAsync($"\t\t/// Получить (страницу){(is_body_document ? "" : " строк табличной части")} документов: {doc_obj_name}");
+                await writer.WriteLineAsync("\t\t/// </summary>");
+                await writer.WriteLineAsync($"\t\t/// <param name=\"pagination_request\">Запрос-пагинатор</param>");
+                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel pagination_request);");
+                await writer.WriteLineAsync();
+            }
+            else
             {
                 await writer.WriteLineAsync("\t\t/// <summary>");
                 await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_obj_name}");
                 await writer.WriteLineAsync("\t\t/// </summary>");
-                await writer.WriteLineAsync($"\t\t/// <param name=\"request\">Запрос-пагинатор</param>");
-                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request);");
+                await writer.WriteLineAsync($"\t\t/// <param name=\"pagination_request\">Запрос-пагинатор</param>");
+                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel pagination_request);");
                 await writer.WriteLineAsync();
             }
 
@@ -746,7 +763,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
                 await WriteDocumentControllers(writer, service_instance, doc_obj.SystemCodeName, doc_obj.Name, true);
-                
+
                 #endregion
 
                 if (!doc_obj.PropertiesGrid.Any(x => !x.IsDeleted && x.PropertyTypeMetadata?.IsDeleted != true))
