@@ -168,7 +168,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.RemoveRangeAsync(new int[] {{ id }});");
+            await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.RemoveAsync(id);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
