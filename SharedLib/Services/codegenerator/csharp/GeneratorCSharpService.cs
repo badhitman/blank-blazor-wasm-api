@@ -879,7 +879,7 @@ namespace SharedLib.Services
 
                 #endregion
 
-                #region refit
+                #region refit (тело документа)
 
                 rest_service_name = $"I{doc_obj.SystemCodeName}RestService";
                 enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), $"{rest_service_name}.cs"));
@@ -1045,6 +1045,34 @@ namespace SharedLib.Services
 
                 #endregion
 
+                #region refit табличная часть
+
+                rest_service_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}RestService";
+                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), $"{rest_service_name}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"REST служба работы с API -> {project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
+                await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
+                await writer.WriteLineAsync("\t{");
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, rest_service_name, true, false, false);
+
+                rest_service_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}RefitProvider";
+                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Refit коннектор к API/{project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
+                await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
+                await writer.WriteLineAsync("\t{");
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, rest_service_name, true, true, false);
+
+                rest_service_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}RefitService";
+                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Refit коннектор к API/{project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
+                await writer.WriteLineAsync("\t[Headers(\"Content-Type: application/json\")]");
+                await writer.WriteLineAsync($"\tpublic interface {rest_service_name}RefitService");
+                await writer.WriteLineAsync("\t{");
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, rest_service_name, true, true, true);
+
+                #endregion
             }
         }
 
