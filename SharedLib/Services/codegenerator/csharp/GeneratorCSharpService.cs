@@ -916,9 +916,9 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t[ApiController]");
                 await writer.WriteLineAsync($"\tpublic partial class {controller_name} : ControllerBase");
                 await writer.WriteLineAsync("\t{");
-                await writer.WriteLineAsync($"\t\treadonly {service_type_name} {service_instance};");
+                await writer.WriteLineAsync($"\t\treadonly I{service_type_name} {service_instance};");
                 await writer.WriteLineAsync();
-                await writer.WriteLineAsync($"\t\tpublic {controller_name}({service_type_name} set_{service_instance})");
+                await writer.WriteLineAsync($"\t\tpublic {controller_name}(I{service_type_name} set_{service_instance})");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync($"\t\t\t{service_instance} = set_{service_instance};");
                 await writer.WriteLineAsync("\t\t}");
