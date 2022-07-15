@@ -71,7 +71,6 @@ namespace SharedLib.Services
             {
                 await writer.WriteLineAsync($"\t\t\tservices.AddScoped<{kvp.Key}, {kvp.Value}>();");
             }
-            await writer.WriteLineAsync("\t\t}");
             await WriteEnd(writer);
         }
 
@@ -778,11 +777,11 @@ namespace SharedLib.Services
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name, new string[] { "Microsoft.AspNetCore.Mvc", "SharedLib.Models" });
                 await writer.WriteLineAsync("\t[Route(\"api/[controller]\")]");
                 await writer.WriteLineAsync("\t[ApiController]");
-                await writer.WriteLineAsync($"\tpublic partial class {controller_name} : ControllerBase");
+                await writer.WriteLineAsync($"\tpublic partial class I{controller_name} : ControllerBase");
                 await writer.WriteLineAsync("\t{");
                 await writer.WriteLineAsync($"\t\treadonly {service_type_name} {service_instance};");
                 await writer.WriteLineAsync();
-                await writer.WriteLineAsync($"\t\tpublic {controller_name}({service_type_name} set{service_instance})");
+                await writer.WriteLineAsync($"\t\tpublic {controller_name}(I{service_type_name} set{service_instance})");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync($"\t\t\t{service_instance} = set{service_instance};");
                 await writer.WriteLineAsync("\t\t}");
