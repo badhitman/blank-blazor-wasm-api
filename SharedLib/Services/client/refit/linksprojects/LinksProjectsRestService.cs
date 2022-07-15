@@ -29,7 +29,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetLinksProjectsResponseModel> GetLinksUsersByProject(int project_id)
         {
-            GetLinksProjectsResponseModel result = new GetLinksProjectsResponseModel();
+            GetLinksProjectsResponseModel result = new();
 
             try
             {
@@ -59,7 +59,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<ResponseBaseModel> DeleteToggleLinkProject(int link_id)
         {
-            ResponseBaseModel result = new ResponseBaseModel();
+            ResponseBaseModel result = new();
 
             try
             {
@@ -89,7 +89,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<ResponseBaseModel> UtdateLevelLinkProjectAsync(UpdateLinkProjectModel set_level_for_link)
         {
-            ResponseBaseModel result = new ResponseBaseModel();
+            ResponseBaseModel result = new();
 
             try
             {
@@ -119,7 +119,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<AddLinkProjectResultModel> AddLinkProject(AddLinkProjectModel new_link_project)
         {
-            AddLinkProjectResultModel result = new AddLinkProjectResultModel();
+            AddLinkProjectResultModel result = new();
 
             try
             {

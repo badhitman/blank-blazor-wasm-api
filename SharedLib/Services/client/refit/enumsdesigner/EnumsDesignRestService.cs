@@ -27,7 +27,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetSimpleResponsePaginationModel> GetMyProjectsEnumsAsync(PaginationRequestModel pagination)
         {
-            GetSimpleResponsePaginationModel result = new GetSimpleResponsePaginationModel();
+            GetSimpleResponsePaginationModel result = new();
 
             try
             {
@@ -57,7 +57,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<EnumDesignResponseModel> GetEnumAsync(int id)
         {
-            EnumDesignResponseModel result = new EnumDesignResponseModel();
+            EnumDesignResponseModel result = new();
 
             try
             {
@@ -87,7 +87,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<IdResponseOwnedModel> AddEnumAsync(NameDescriptionSimpleRealTypeModel enum_object)
         {
-            IdResponseOwnedModel result = new IdResponseOwnedModel();
+            IdResponseOwnedModel result = new();
 
             try
             {
@@ -117,7 +117,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<ResponseBaseCurrentProjectModel> UpdateEnumAsync(IdNameDescriptionSimpleRealTypeModel enum_obj)
         {
-            ResponseBaseCurrentProjectModel result = new ResponseBaseCurrentProjectModel();
+            ResponseBaseCurrentProjectModel result = new();
 
             try
             {
@@ -147,7 +147,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<ResponseBaseModel> SetToggleDeleteEnumAsync(int id)
         {
-            ResponseBaseModel result = new ResponseBaseModel();
+            ResponseBaseModel result = new();
 
             try
             {
@@ -177,7 +177,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<ResponseBaseModel> ConfirmDeleteEnumAsync(ConfirmActionByNameModel confirm_delete)
         {
-            ResponseBaseModel result = new ResponseBaseModel();
+            ResponseBaseModel result = new();
 
             try
             {
@@ -207,7 +207,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetEnumItemsResponseModel> EnumItemUpdateAsync(IdNameDescriptionSimpleModel action)
         {
-            GetEnumItemsResponseModel result = new GetEnumItemsResponseModel();
+            GetEnumItemsResponseModel result = new();
 
             try
             {
@@ -237,7 +237,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetEnumItemsResponseModel> CreateEnumItemElementAsync(EnumItemActionRequestModel action)
         {
-            GetEnumItemsResponseModel result = new GetEnumItemsResponseModel();
+            GetEnumItemsResponseModel result = new();
 
             try
             {
@@ -267,7 +267,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetEnumItemsResponseModel> MoveUpAsync(int id)
         {
-            GetEnumItemsResponseModel result = new GetEnumItemsResponseModel();
+            GetEnumItemsResponseModel result = new();
 
             try
             {
@@ -297,7 +297,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetEnumItemsResponseModel> MoveDownAsync(int id)
         {
-            GetEnumItemsResponseModel result = new GetEnumItemsResponseModel();
+            GetEnumItemsResponseModel result = new();
 
             try
             {
@@ -327,7 +327,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetEnumItemsResponseModel> DeleteMarkToggleAsync(int id)
         {
-            GetEnumItemsResponseModel result = new GetEnumItemsResponseModel();
+            GetEnumItemsResponseModel result = new();
 
             try
             {
@@ -357,7 +357,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetEnumItemsResponseModel> TrashElementAsync(int id)
         {
-            GetEnumItemsResponseModel result = new GetEnumItemsResponseModel();
+            GetEnumItemsResponseModel result = new();
 
             try
             {

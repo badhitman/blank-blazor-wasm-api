@@ -27,7 +27,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetDocumentDataResponseModel> GetPropertiesAsync(int document_id)
         {
-            GetDocumentDataResponseModel result = new GetDocumentDataResponseModel();
+            GetDocumentDataResponseModel result = new();
 
             try
             {
@@ -57,7 +57,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetPropertiesSimpleRealTypeResponseModel> AddPropertyAsync(PropertySimpleRealTypeModel property_for_document_object)
         {
-            GetPropertiesSimpleRealTypeResponseModel result = new GetPropertiesSimpleRealTypeResponseModel();
+            GetPropertiesSimpleRealTypeResponseModel result = new();
 
             try
             {
@@ -87,7 +87,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetPropertiesSimpleRealTypeResponseModel> SetToggleDeletePropertyAsync(int id)
         {
-            GetPropertiesSimpleRealTypeResponseModel result = new GetPropertiesSimpleRealTypeResponseModel();
+            GetPropertiesSimpleRealTypeResponseModel result = new();
 
             try
             {
@@ -117,7 +117,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetPropertiesSimpleRealTypeResponseModel> UpdatePropertyAsync(PropertyOfDocumentModel property_for_document_obj)
         {
-            GetPropertiesSimpleRealTypeResponseModel result = new GetPropertiesSimpleRealTypeResponseModel();
+            GetPropertiesSimpleRealTypeResponseModel result = new();
 
             try
             {
@@ -147,7 +147,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetPropertiesSimpleRealTypeResponseModel> MoveUpAsync(int id)
         {
-            GetPropertiesSimpleRealTypeResponseModel result = new GetPropertiesSimpleRealTypeResponseModel();
+            GetPropertiesSimpleRealTypeResponseModel result = new();
 
             try
             {
@@ -177,7 +177,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetPropertiesSimpleRealTypeResponseModel> MoveDownAsync(int id)
         {
-            GetPropertiesSimpleRealTypeResponseModel result = new GetPropertiesSimpleRealTypeResponseModel();
+            GetPropertiesSimpleRealTypeResponseModel result = new();
 
             try
             {
@@ -207,7 +207,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetPropertiesSimpleRealTypeResponseModel> TrashPropertyAsync(int id)
         {
-            GetPropertiesSimpleRealTypeResponseModel result = new GetPropertiesSimpleRealTypeResponseModel();
+            GetPropertiesSimpleRealTypeResponseModel result = new();
 
             try
             {

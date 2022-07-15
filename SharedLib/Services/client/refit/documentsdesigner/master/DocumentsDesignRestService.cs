@@ -27,7 +27,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetSimpleResponsePaginationModel> GetDocumentsFromMyCurrentProjectAsync(PaginationRequestModel pagination)
         {
-            GetSimpleResponsePaginationModel result = new GetSimpleResponsePaginationModel();
+            GetSimpleResponsePaginationModel result = new();
 
             try
             {
@@ -57,7 +57,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<DocumentDesignResponseModel> GetDocumentAsync(int id)
         {
-            DocumentDesignResponseModel result = new DocumentDesignResponseModel();
+            DocumentDesignResponseModel result = new();
 
             try
             {
@@ -87,7 +87,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<IdResponseOwnedModel> AddDocumentAsync(NameDescriptionSimpleRealTypeModel document_object)
         {
-            IdResponseOwnedModel result = new IdResponseOwnedModel();
+            IdResponseOwnedModel result = new();
 
             try
             {
@@ -117,7 +117,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<ResponseBaseCurrentProjectModel> UpdateDocumentAsync(IdNameDescriptionSimpleRealTypeModel document_obj)
         {
-            ResponseBaseCurrentProjectModel result = new ResponseBaseCurrentProjectModel();
+            ResponseBaseCurrentProjectModel result = new();
 
             try
             {
@@ -147,7 +147,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<ResponseBaseModel> SetToggleDeleteDocumentAsync(int id)
         {
-            ResponseBaseModel result = new ResponseBaseModel();
+            ResponseBaseModel result = new();
 
             try
             {
