@@ -897,7 +897,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t{");
                 await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, rest_service_name, true, true, false);
 
-                rest_service_name = $"I{doc_obj.SystemCodeName}";
+                rest_service_name = $"I{doc_obj.SystemCodeName}RefitService";
                 enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Refit коннектор к API/{project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
