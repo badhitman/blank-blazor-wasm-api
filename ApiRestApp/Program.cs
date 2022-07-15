@@ -125,7 +125,11 @@ builder.Services.AddSwaggerGen(options =>
 
 // NLog: Setup NLog for Dependency injection
 builder.Logging.ClearProviders();
+#if DEBUG
 builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+#else
+builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Information);
+#endif
 builder.Host.UseNLog();
 builder.Services.AddControllersWithViews();
 
