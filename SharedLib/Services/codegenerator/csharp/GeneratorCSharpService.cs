@@ -884,7 +884,7 @@ namespace SharedLib.Services
                 rest_service_name = $"I{doc_obj.SystemCodeName}RestService";
                 enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), $"{rest_service_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"REST служба работы с API -> {project_info.Name}", new string[] { "Refit", "SharedLib.Models", "Microsoft.AspNetCore.Mvc" });
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"REST служба работы с API -> {project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
                 await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, rest_service_name, true, false, false);
