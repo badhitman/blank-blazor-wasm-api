@@ -136,56 +136,49 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync();
             }
 
-            /*
-            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} {obj_db_param_mane})");
+            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            await writer.WriteLineAsync("\t\t[HttpPut($\"{nameof(RouteMethodsPrefixesEnum.UpdateSingle)}\")]");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateAsync({type_name_gen} object_rest_upd)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
-            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.UpdateAsync({obj_db_param_mane});");
-            await writer.WriteLineAsync("\t\t\treturn result;");
+            await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.UpdateAsync(object_rest_upd);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> {obj_db_param_mane}_range)");
+            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            await writer.WriteLineAsync("\t\t[HttpPut($\"{nameof(RouteMethodsPrefixesEnum.UpdateRange)}\")]");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest_upd)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
-            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.UpdateRangeAsync({obj_db_param_mane}_range);");
-            await writer.WriteLineAsync("\t\t\treturn result;");
+            await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.UpdateRangeAsync(objects_range_rest_upd);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
+
+            await writer.WriteLineAsync("\t\t[HttpPatch($\"{nameof(RouteMethodsPrefixesEnum.MarkAsDeleteById)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> IsDeleteMarkerToggleAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
-            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.IsDeleteMarkerToggleAsync(id);");
-            await writer.WriteLineAsync("\t\t\treturn result;");
+            await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.IsDeleteMarkerToggleAsync(id);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
+
+            await writer.WriteLineAsync("\t\t[HttpDelete($\"{nameof(RouteMethodsPrefixesEnum.RemoveSingleById)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
-            await writer.WriteLineAsync("\t\t\tawait _crud_accessor.RemoveRangeAsync(new int[] { id });");
-            await writer.WriteLineAsync("\t\t\treturn result;");
+            await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.RemoveRangeAsync(new int[] {{ id }});");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
+
+            await writer.WriteLineAsync("\t\t[HttpDelete($\"{nameof(RouteMethodsPrefixesEnum.RemoveRangeByIds)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveRangeAsync(IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
-            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.RemoveRangeAsync(ids);");
-            await writer.WriteLineAsync("\t\t\treturn result;");
+            await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.RemoveRangeAsync(ids);");
             await writer.WriteLineAsync("\t\t}");
-             */
 
             await WriteEnd(writer);
         }
