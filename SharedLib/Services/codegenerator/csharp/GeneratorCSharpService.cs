@@ -13,6 +13,8 @@ namespace SharedLib.Services
     /// <inheritdoc/>
     public class GeneratorCSharpService : IGeneratorCSharpService
     {
+        static Dictionary<string, string> services_di = new Dictionary<string, string>();
+
         static async Task WriteHead(StreamWriter writer, string project_name, string name_space, string? type_name, IEnumerable<string>? using_ns = null)
         {
             await writer.WriteLineAsync("////////////////////////////////////////////////");
@@ -50,6 +52,24 @@ namespace SharedLib.Services
             ZipArchiveEntry readmeEntry = archive.CreateEntry("dump.json");
             using StreamWriter writer = new(readmeEntry.Open(), Encoding.UTF8);
             await writer.WriteLineAsync(json_raw);
+        }
+
+        static async Task GenServicesDI(ZipArchive archive, NameSpacedModel project_info)
+        {
+            ZipArchiveEntry readmeEntry = archive.CreateEntry("services_di.cs");
+            using StreamWriter writer = new(readmeEntry.Open(), Encoding.UTF8);
+            await WriteHead(writer, project_info.Name, project_info.NameSpace, "di services");
+            await writer.WriteLineAsync("\tpublic static class ServicesExtensionDesignerDI");
+            await writer.WriteLineAsync("\t{");
+            await writer.WriteLineAsync("\t\tpublic static void BuildDesignerServicesDI(this IServiceCollection services)");
+            await writer.WriteLineAsync("\t\t{");
+            foreach (KeyValuePair<string, string> kvp in services_di)
+            {
+                await writer.WriteLineAsync($"\t\t\tservices.AddScoped<{kvp.Key}, {kvp.Value}>();");
+            }
+            //await writer.WriteLineAsync("\t\t}");
+            //await writer.WriteLineAsync("\t}");
+            await WriteEnd(writer);
         }
 
         static async Task WriteDocumentControllers(StreamWriter writer, string service_instance, string type_name, string doc_obj_name, bool is_body_document)
@@ -680,6 +700,7 @@ namespace SharedLib.Services
                 #region тело документа
 
                 crud_type_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.DATABASE_TABLE_ACESSOR_PREFIX}";
+                services_di.Add(crud_type_name, crud_type_name[1..]);
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "crud_interfaces", $"{crud_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name, new string[] { "SharedLib.Models" });
@@ -713,6 +734,7 @@ namespace SharedLib.Services
 
 
                 service_type_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.SERVICE_ACESSOR_PREFIX}";
+                services_di.Add(service_type_name, service_type_name[1..]);
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "service_interfaces", $"{service_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name, new string[] { "SharedLib.Models" });
@@ -817,6 +839,7 @@ namespace SharedLib.Services
                 #region табличная часть документа
 
                 crud_type_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.DATABASE_TABLE_ACESSOR_PREFIX}";
+                services_di.Add(crud_type_name, crud_type_name[1..]);
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "crud_interfaces", $"{crud_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Табличная часть документа: {doc_obj.Name}", new string[] { "SharedLib.Models" });
@@ -848,6 +871,7 @@ namespace SharedLib.Services
 
 
                 service_type_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.SERVICE_ACESSOR_PREFIX}";
+                services_di.Add(service_type_name, service_type_name[1..]);
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "service_interfaces", $"{service_type_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name, new string[] { "SharedLib.Models" });
@@ -943,7 +967,7 @@ namespace SharedLib.Services
         }
 
         /// <inheritdoc/>
-        public async Task DocumentsGen(IEnumerable<DocumentFitModel> docs, ZipArchive archive, string dir, NameSpacedModel project_info)
+        public async Task DocumentsShemaGen(IEnumerable<DocumentFitModel> docs, ZipArchive archive, string dir, NameSpacedModel project_info)
         {
             ZipArchiveEntry enumEntry;
             StreamWriter writer;
@@ -1121,16 +1145,16 @@ namespace SharedLib.Services
                 $"Перечислений: {dump.Enums.Count()} (элементов всего: {dump.Enums.Sum(x => x.EnumItems.Count())})",
                 $"Документов: {dump.Documents.Count()} (полей всего: {dump.Documents.Sum(x => x.PropertiesBody.Count()) + dump.Documents.Sum(x => x.PropertiesGrid.Count())})"
             };
-
+            services_di = new Dictionary<string, string>();
             using MemoryStream zipToOpen = new();
             using (ZipArchive archive = new(zipToOpen, ZipArchiveMode.Create))
             {
                 await ReadmeGen(archive, conf.ProjectInfo, stat);
                 await EnumsGen(dump.Enums, archive, conf.EnumDirectoryPath, conf.ProjectInfo);
-                await DocumentsGen(dump.Documents, archive, conf.DocumentsMastersDbDirectoryPath, conf.ProjectInfo);
+                await DocumentsShemaGen(dump.Documents, archive, conf.DocumentsMastersDbDirectoryPath, conf.ProjectInfo);
                 await DbContextGen(dump.Documents, archive, conf.ProjectInfo);
                 await DbTableAccessGen(dump.Documents, archive, conf.AccessDbDirectoryPath, conf.ProjectInfo);
-
+                await GenServicesDI(archive, conf.ProjectInfo);
                 string json_raw = JsonConvert.SerializeObject(dump, Formatting.Indented);
                 await GenerateJsonDump(archive, json_raw);
             }

@@ -35,13 +35,13 @@ namespace SharedLib.Services
         public Task EnumsGen(IEnumerable<EnumFitModel> enums, ZipArchive archive, string dir, NameSpacedModel project_info);
 
         /// <summary>
-        /// Генерация документов
+        /// Генерация документов (типов/классов/моделей)
         /// </summary>
         /// <param name="docs">Данные документов для записи</param>
         /// <param name="archive">Объект архива для записи данных</param>
         /// <param name="dir">Путь (папка) для размещения файлов документов</param>
         /// <param name="project_info">Информация о проекте</param>
-        public Task DocumentsGen(IEnumerable<DocumentFitModel> docs, ZipArchive archive, string dir, NameSpacedModel project_info);
+        public Task DocumentsShemaGen(IEnumerable<DocumentFitModel> docs, ZipArchive archive, string dir, NameSpacedModel project_info);
 
         /// <summary>
         /// Генерация контекста
