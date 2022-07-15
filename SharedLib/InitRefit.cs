@@ -46,21 +46,21 @@ namespace SharedLib
                 .AddHttpMessageHandler<RefitHeadersDelegatingHandler>()
                 .SetHandlerLifetime(handler_lifetime);
             services.AddScoped<IDocumentsDesignRefitProvider, DocumentsDesignRefitProvider>();
-            services.AddScoped<IDocumentsDesignRestService, DocumentsDesignRefitService>();
+            services.AddScoped<IDocumentsDesignRestService, DocumentsDesignRestService>();
             //
             services.AddRefitClient<IDocumentsPropertiesMainBodyDesignRefitService>()
                 .ConfigureHttpClient(c => c.BaseAddress = conf.ApiConfig.Url)
                 .AddHttpMessageHandler<RefitHeadersDelegatingHandler>()
                 .SetHandlerLifetime(handler_lifetime);
             services.AddScoped<IDocumentsPropertiesMainBodyDesignRefitProvider, DocumentsPropertiesMainBodyDesignRefitProvider>();
-            services.AddScoped<IDocumentsPropertiesMainBodyDesignRestService, DocumentsPropertiesMainBodyDesignRefitService>();
+            services.AddScoped<IDocumentsPropertiesMainBodyDesignRestService, DocumentsPropertiesMainBodyDesignRestService>();
             //
             services.AddRefitClient<IDocumentsPropertiesMainGridDesignRefitService>()
                 .ConfigureHttpClient(c => c.BaseAddress = conf.ApiConfig.Url)
                 .AddHttpMessageHandler<RefitHeadersDelegatingHandler>()
                 .SetHandlerLifetime(handler_lifetime);
             services.AddScoped<IDocumentsPropertiesMainGridDesignRefitProvider, DocumentsPropertiesMainGridDesignRefitProvider>();
-            services.AddScoped<IDocumentsPropertiesMainGridDesignRestService, DocumentsPropertiesMainGridDesignRefitService>();
+            services.AddScoped<IDocumentsPropertiesMainGridDesignRestService, DocumentsPropertiesMainGridDesignRestService>();
 
             services.AddRefitClient<ILogsChangesRefitService>()
                 .ConfigureHttpClient(c => c.BaseAddress = conf.ApiConfig.Url)
