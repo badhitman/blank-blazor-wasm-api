@@ -203,7 +203,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"$[Get(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetSingleById)}}/{{{{id}}}}\")]");
             }
             type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
-            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> FirstAsync([FromRoute] int id);");
+            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> FirstAsync(int id);");
             await writer.WriteLineAsync();
 
             if (add_attr)
@@ -211,7 +211,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"[Get(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetRangeByIds)}}/{{{{ids}}}}\")]");
             }
             type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
-            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> SelectAsync([FromRoute] IEnumerable<int> ids);");
+            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> SelectAsync(IEnumerable<int> ids);");
             await writer.WriteLineAsync();
 
             if (is_body_document)
@@ -221,7 +221,7 @@ namespace SharedLib.Services
                     await writer.WriteLineAsync($"[Get(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetRangePagination)}}\")]");
                 }
                 type_name_gen = $"{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
-                await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> SelectAsync([FromQuery] PaginationRequestModel request);");
+                await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> SelectAsync(PaginationRequestModel request);");
                 await writer.WriteLineAsync();
             }
             else
@@ -231,7 +231,7 @@ namespace SharedLib.Services
                     await writer.WriteLineAsync($"[Get(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetRangeByOwnerId)}}\")]");
                 }
                 type_name_gen = $"{type_name}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
-                await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> SelectAsync([FromQuery] GetByIdPaginationRequestModel request);");
+                await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> SelectAsync(GetByIdPaginationRequestModel request);");
                 await writer.WriteLineAsync();
             }
 
@@ -269,7 +269,7 @@ namespace SharedLib.Services
             {
                 await writer.WriteLineAsync($"[Delete(\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.RemoveRangeByIds)}}\")]");
             }
-            await writer.WriteLineAsync($"\t\tpublic async Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> RemoveRangeAsync(IEnumerable<int> ids);");
+            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> RemoveRangeAsync(IEnumerable<int> ids);");
 
             await WriteEnd(writer);
         }
@@ -884,7 +884,7 @@ namespace SharedLib.Services
                 rest_service_name = $"I{doc_obj.SystemCodeName}RestService";
                 enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), $"{rest_service_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"REST служба работы с API -> {project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, $"REST служба работы с API -> {project_info.Name}", new string[] { "Refit", "SharedLib.Models", "Microsoft.AspNetCore.Mvc" });
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
                 await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, rest_service_name, true, false, false);
