@@ -35,7 +35,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public SessionReadResponseModel GetUserSession()
         {
-            SessionReadResponseModel result = new SessionReadResponseModel();
+            SessionReadResponseModel result = new();
 
             try
             {
@@ -65,7 +65,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<AuthUserResponseModel> LoginUserAsync(UserAuthorizationModel user)
         {
-            AuthUserResponseModel result = new AuthUserResponseModel();
+            AuthUserResponseModel result = new();
             await _session_local_storage.RemoveSessionAsync();
             try
             {
@@ -101,7 +101,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<ResponseBaseModel> LogOutUserAsync()
         {
-            ResponseBaseModel result = new ResponseBaseModel();
+            ResponseBaseModel result = new();
 
             try
             {
@@ -133,7 +133,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<AuthUserResponseModel> RegistrationNewUserAsync(UserRegistrationModel user)
         {
-            AuthUserResponseModel result = new AuthUserResponseModel();
+            AuthUserResponseModel result = new();
 
             try
             {
@@ -176,7 +176,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<ResponseBaseModel> RestoreUserAsync(UserRestoreModel user)
         {
-            ResponseBaseModel result = new ResponseBaseModel();
+            ResponseBaseModel result = new();
 
             try
             {
