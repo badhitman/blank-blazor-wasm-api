@@ -91,8 +91,8 @@ namespace SharedLib.Services
 
             if (is_body_document)
             {
-                await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangePagination)}{{request}}\")]");
-                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync([FromRoute] PaginationRequestModel request)");
+                await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangePagination)}\")]");
+                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync([FromQuery] PaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
                 await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.SelectAsync(request);");
@@ -101,8 +101,8 @@ namespace SharedLib.Services
             }
             else
             {
-                await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangeByOwnerId)}{{request}}\")]");
-                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync([FromRoute] GetByIdPaginationRequestModel request)");
+                await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangeByOwnerId)}\")]");
+                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync([FromQuery] GetByIdPaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
                 await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.SelectAsync(request);");
