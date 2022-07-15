@@ -62,7 +62,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<FindUsersProfilesResponseModel> FindUsersProfilesAsync(FindUsersProfilesRequestModel filter)
         {
-            FindUsersProfilesResponseModel result = new FindUsersProfilesResponseModel();
+            FindUsersProfilesResponseModel result = new();
 
             try
             {
@@ -92,7 +92,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<UpdateUserProfileResponseModel> UpdateUserProfileAsync(UserLiteModel user)
         {
-            UpdateUserProfileResponseModel result = new UpdateUserProfileResponseModel();
+            UpdateUserProfileResponseModel result = new();
 
             try
             {
@@ -122,7 +122,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<UpdateUserProfileResponseModel> ChangeUserProfileAsync(UserProfileAreasEnum area, ChangeUserProfileOptionsModel user_options)
         {
-            UpdateUserProfileResponseModel result = new UpdateUserProfileResponseModel();
+            UpdateUserProfileResponseModel result = new();
 
             try
             {
