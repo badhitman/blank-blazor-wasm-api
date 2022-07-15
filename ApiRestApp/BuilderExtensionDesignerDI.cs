@@ -7,7 +7,7 @@ using ServerLib;
 
 namespace SharedLib
 {
-    public static partial class BuilderExtensionDesignerDI
+    public static class BuilderExtensionDesignerDI
     {
         public static void BuildDesigner(this IServiceCollection services)
         {
