@@ -67,8 +67,7 @@ namespace SharedLib.Services
             {
                 await writer.WriteLineAsync($"\t\t\tservices.AddScoped<{kvp.Key}, {kvp.Value}>();");
             }
-            //await writer.WriteLineAsync("\t\t}");
-            //await writer.WriteLineAsync("\t}");
+            await writer.WriteLineAsync("\t\t}");
             await WriteEnd(writer);
         }
 
