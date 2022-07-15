@@ -1737,7 +1737,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Controllers\gen\" />
+	  <Folder Include="gen\" />
 	  <Folder Include="wwwroot\lib\" />
 	</ItemGroup>
 
