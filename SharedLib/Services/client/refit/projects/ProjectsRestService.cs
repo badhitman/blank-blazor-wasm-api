@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using SharedLib.Services;
 using Microsoft.Extensions.Logging;
 using Refit;
 using SharedLib.Models;
@@ -29,7 +28,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<GetUsersProjectsResponsePaginationModel> GetMyProjectsAsync(PaginationRequestModel pagination)
         {
-            GetUsersProjectsResponsePaginationModel result = new GetUsersProjectsResponsePaginationModel();
+            GetUsersProjectsResponsePaginationModel result = new();
 
             try
             {
@@ -59,7 +58,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<UserProjectResponseModel> GetProjectAsync(int id)
         {
-            UserProjectResponseModel result = new UserProjectResponseModel();
+            UserProjectResponseModel result = new();
 
             try
             {
@@ -89,7 +88,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<ResponseBaseModel> SetCurrentProjectForUserAsync(int project_id)
         {
-            ResponseBaseModel result = new ResponseBaseModel();
+            ResponseBaseModel result = new();
 
             try
             {
@@ -119,7 +118,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<IdResponseModel> AddProjectAsync(NameDescriptionSimpleModel project)
         {
-            IdResponseModel result = new IdResponseModel();
+            IdResponseModel result = new();
 
             try
             {
@@ -149,7 +148,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<ResponseBaseModel> UpdateProjectAsync(IdNameDescriptionSimpleModel project)
         {
-            ResponseBaseModel result = new ResponseBaseModel();
+            ResponseBaseModel result = new();
 
             try
             {
@@ -180,7 +179,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<ResponseBaseModel> SetDeleteProjectAsync(int project_id)
         {
-            ResponseBaseModel result = new ResponseBaseModel();
+            ResponseBaseModel result = new();
 
             try
             {
@@ -210,7 +209,7 @@ namespace SharedLib.Services
         /// <inheritdoc/>
         public async Task<ProjectStructureResponseModel> GetStructureProject(int project_id)
         {
-            ProjectStructureResponseModel result = new ProjectStructureResponseModel();
+            ProjectStructureResponseModel result = new();
 
             try
             {
