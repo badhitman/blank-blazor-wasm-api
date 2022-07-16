@@ -53,7 +53,6 @@ namespace SharedLib.Services
             return await _api.UpdateProjectAsync(project);
         }
 
-
         /// <inheritdoc/>
         public async Task<ApiResponse<ResponseBaseModel>> SetDeleteProjectAsync(int project_id)
         {
