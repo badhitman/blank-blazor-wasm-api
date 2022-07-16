@@ -762,7 +762,6 @@ namespace SharedLib.Services
             ZipArchiveEntry enumEntry;
             StreamWriter writer;
 
-            //string obj_db_param_mane;
             foreach (DocumentFitModel doc_obj in docs.Where(x => !x.IsDeleted))
             {
                 #region модели ответов тела документа (rest/api)
