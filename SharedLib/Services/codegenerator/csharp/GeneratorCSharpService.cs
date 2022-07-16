@@ -283,26 +283,26 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
-        static async Task WriteDocumentServicesInterfaceImplementation(StreamWriter writer, string obj_db_param_mane, string type_name, string doc_obj_name, bool is_body_document)
+        static async Task WriteDocumentServicesInterfaceImplementation(StreamWriter writer, string type_name, string doc_obj_name, bool is_body_document)
         {
             string type_name_gen;
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");//_TableModel
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} {obj_db_param_mane})");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} obj_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
-            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.AddAsync({obj_db_param_mane});");
+            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.AddAsync(obj_rest);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> {obj_db_param_mane}_range)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> obj_range_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
-            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.AddRangeAsync({obj_db_param_mane}_range);");
+            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.AddRangeAsync(obj_range_rest);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
@@ -353,21 +353,21 @@ namespace SharedLib.Services
             }
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} {obj_db_param_mane})");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} obj_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
-            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.UpdateAsync({obj_db_param_mane});");
+            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.UpdateAsync(obj_rest);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> {obj_db_param_mane}_range)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> obj_range_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
-            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.UpdateRangeAsync({obj_db_param_mane}_range);");
+            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.UpdateRangeAsync(obj_range_rest);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
@@ -404,23 +404,23 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
-        static async Task WriteDocumentCrudInterfaceImplementation(StreamWriter writer, string obj_db_param_mane, string type_name, string doc_obj_name, bool is_body_document)
+        static async Task WriteDocumentCrudInterfaceImplementation(StreamWriter writer, string type_name, string doc_obj_name, bool is_body_document)
         {
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task AddAsync({type_name} {obj_db_param_mane}, bool auto_save = true)");
+            await writer.WriteLineAsync($"\t\tpublic async Task AddAsync({type_name} obj_rest, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\tawait _db_context.AddAsync({obj_db_param_mane});");
+            await writer.WriteLineAsync($"\t\t\tawait _db_context.AddAsync(obj_rest);");
             await writer.WriteLineAsync("\t\t\tif (auto_save)");
             await writer.WriteLineAsync("\t\t\t\tawait SaveChangesAsync();");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task AddRangeAsync(IEnumerable<{type_name}> {obj_db_param_mane}_range, bool auto_save = true)");
+            await writer.WriteLineAsync($"\t\tpublic async Task AddRangeAsync(IEnumerable<{type_name}> obj_range_rest, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\tawait _db_context.AddRangeAsync({obj_db_param_mane}_range);");
+            await writer.WriteLineAsync($"\t\t\tawait _db_context.AddRangeAsync(obj_range_rest);");
             await writer.WriteLineAsync("\t\t\tif (auto_save)");
             await writer.WriteLineAsync("\t\t\t\tawait SaveChangesAsync();");
             await writer.WriteLineAsync("\t\t}");
@@ -505,20 +505,20 @@ namespace SharedLib.Services
             }
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task UpdateAsync({type_name} {obj_db_param_mane}, bool auto_save = true)");
+            await writer.WriteLineAsync($"\t\tpublic async Task UpdateAsync({type_name} obj_rest, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\t_db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Update({obj_db_param_mane});");
+            await writer.WriteLineAsync($"\t\t\t_db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Update(obj_rest);");
             await writer.WriteLineAsync("\t\t\tif (auto_save)");
             await writer.WriteLineAsync("\t\t\t\tawait SaveChangesAsync();");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task UpdateRangeAsync(IEnumerable<{type_name}> {obj_db_param_mane}_range, bool auto_save = true)");
+            await writer.WriteLineAsync($"\t\tpublic async Task UpdateRangeAsync(IEnumerable<{type_name}> obj_range_rest, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\t_db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.UpdateRange({obj_db_param_mane}_range);");
+            await writer.WriteLineAsync($"\t\t\t_db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.UpdateRange(obj_range_rest);");
             await writer.WriteLineAsync("\t\t\tif (auto_save)");
             await writer.WriteLineAsync("\t\t\t\tawait SaveChangesAsync();");
             await writer.WriteLineAsync("\t\t}");
@@ -565,19 +565,19 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
-        static async Task WriteDocumentServicesInterface(StreamWriter writer, string obj_db_param_mane, string type_name, string doc_obj_name, bool is_body_document)
+        static async Task WriteDocumentServicesInterface(StreamWriter writer, string type_name, string doc_obj_name, bool is_body_document)
         {
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Создать новый объект{(is_body_document ? "" : " строки (табличной части)")} документа (запись БД): {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"{obj_db_param_mane}\">Объект добавления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> AddAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} {obj_db_param_mane});");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest\">Объект добавления в БД</param>");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> AddAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} obj_rest);");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Создать перечень новых объектов{(is_body_document ? "" : " строк табличной части")} документа: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"{obj_db_param_mane}_range\">Объекты добавления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> {obj_db_param_mane}_range);");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest_range\">Объекты добавления в БД</param>");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> obj_rest_range);");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <summary>");
@@ -615,14 +615,14 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Обновить объект{(is_body_document ? "" : " строки табличной части")} документа: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"{obj_db_param_mane}\">Объект обновления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> UpdateAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} {obj_db_param_mane});");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest\">Объект обновления в БД</param>");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> UpdateAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} obj_rest);");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Обновить перечень объектов{(is_body_document ? "/документов" : " строк табличной части документа")}: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"{obj_db_param_mane}_range\">Объекты обновления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> {obj_db_param_mane}_range);");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_range_rest\">Объекты обновления в БД</param>");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> obj_range_rest);");
             await writer.WriteLineAsync();
 
 
@@ -648,7 +648,7 @@ namespace SharedLib.Services
         }
 
         /// <summary>
-        /// Запись интерфейсов служб непосредственного доступа к данным (к таблицам БД)
+        /// Запись CRUD интерфейсов служб непосредственного доступа к данным (к таблицам БД)
         /// </summary>
         /// <param name="writer">Поток записи ZIP архива</param>
         /// <param name="type_name">Имя типа данных (SystemCodeName)</param>
@@ -757,7 +757,7 @@ namespace SharedLib.Services
             ZipArchiveEntry enumEntry;
             StreamWriter writer;
 
-            string obj_db_param_mane;
+            //string obj_db_param_mane;
             foreach (DocumentFitModel doc_obj in docs.Where(x => !x.IsDeleted))
             {
                 #region модели ответов тела документа (rest/api)
@@ -816,7 +816,6 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\tpublic partial interface {crud_type_name} : SharedLib.ISavingChanges");
                 await writer.WriteLineAsync("\t{");
 
-                obj_db_param_mane = $"{doc_obj.SystemCodeName}_object_db".ToLower();
                 await WriteDocumentCrudInterface(writer, doc_obj.SystemCodeName, doc_obj.Name, true);
 
                 crud_type_name = crud_type_name[1..];
@@ -837,7 +836,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
 
-                await WriteDocumentCrudInterfaceImplementation(writer, obj_db_param_mane, doc_obj.SystemCodeName, doc_obj.Name, true);
+                await WriteDocumentCrudInterfaceImplementation(writer, doc_obj.SystemCodeName, doc_obj.Name, true);
 
 
 
@@ -850,8 +849,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\tpublic partial interface {service_type_name}");
                 await writer.WriteLineAsync("\t{");
 
-                obj_db_param_mane = $"{doc_obj.SystemCodeName}_object_db".ToLower();
-                await WriteDocumentServicesInterface(writer, obj_db_param_mane, doc_obj.SystemCodeName, doc_obj.Name, true);
+                await WriteDocumentServicesInterface(writer, doc_obj.SystemCodeName, doc_obj.Name, true);
 
                 service_type_name = service_type_name[1..];
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "service_implementations", $"{service_type_name}.cs"));
@@ -870,7 +868,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t\t_crud_accessor = set_crud_accessor;");
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
-                await WriteDocumentServicesInterfaceImplementation(writer, obj_db_param_mane, doc_obj.SystemCodeName, doc_obj.Name, true);
+                await WriteDocumentServicesInterfaceImplementation(writer, doc_obj.SystemCodeName, doc_obj.Name, true);
 
                 #endregion
 
@@ -984,7 +982,6 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\tpublic partial interface {crud_type_name} : SharedLib.ISavingChanges");
                 await writer.WriteLineAsync("\t{");
 
-                obj_db_param_mane = $"{doc_obj.SystemCodeName}_object_db".ToLower();
                 await WriteDocumentCrudInterface(writer, $"{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}", doc_obj.Name, false);
 
                 crud_type_name = crud_type_name[1..];
@@ -1003,7 +1000,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t\t_db_context = set_db_context;");
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
-                await WriteDocumentCrudInterfaceImplementation(writer, obj_db_param_mane, $"{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}", doc_obj.Name, false);
+                await WriteDocumentCrudInterfaceImplementation(writer, $"{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}", doc_obj.Name, false);
 
 
 
@@ -1016,8 +1013,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\tpublic partial interface {service_type_name}");
                 await writer.WriteLineAsync("\t{");
 
-                obj_db_param_mane = $"{doc_obj.SystemCodeName}_object_db".ToLower();
-                await WriteDocumentServicesInterface(writer, obj_db_param_mane, doc_obj.SystemCodeName, doc_obj.Name, false);
+                await WriteDocumentServicesInterface(writer, doc_obj.SystemCodeName, doc_obj.Name, false);
 
                 service_type_name = service_type_name[1..];
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "service_implementations", $"{service_type_name}.cs"));
@@ -1036,7 +1032,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t\t_crud_accessor = set_crud_accessor;");
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
-                await WriteDocumentServicesInterfaceImplementation(writer, obj_db_param_mane, doc_obj.SystemCodeName, doc_obj.Name, false);
+                await WriteDocumentServicesInterfaceImplementation(writer, doc_obj.SystemCodeName, doc_obj.Name, false);
 
                 #endregion
 
