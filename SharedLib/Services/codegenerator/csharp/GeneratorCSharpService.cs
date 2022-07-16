@@ -13,8 +13,16 @@ namespace SharedLib.Services
     /// <inheritdoc/>
     public class GeneratorCSharpService : IGeneratorCSharpService
     {
-        static Dictionary<string, string> services_di = new Dictionary<string, string>();
+        static Dictionary<string, string> services_di = new();
 
+        /// <summary>
+        /// Записать вствплениее файла
+        /// </summary>
+        /// <param name="writer">Поток записи ZIP архива</param>
+        /// <param name="project_name">Имя проекта</param>
+        /// <param name="name_space">Пространсвто имён проекта</param>
+        /// <param name="type_name">Имя типа данных для комментария (если NULL, то документация наследуется: <inheritdoc/>)</param>
+        /// <param name="using_ns">Подключаемые пространства имён (using)</param>
         static async Task WriteHead(StreamWriter writer, string project_name, string name_space, string? type_name, IEnumerable<string>? using_ns = null)
         {
             await writer.WriteLineAsync("////////////////////////////////////////////////");
@@ -42,6 +50,10 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"{(ns_is_empty ? "" : "\t")}/// </summary>");
         }
 
+        /// <summary>
+        /// Запись финальной части файла и закрытие потока записи
+        /// </summary>
+        /// <param name="writer">Поток записи ZIP архива</param>
         static async Task WriteEnd(StreamWriter writer)
         {
             await writer.WriteLineAsync("\t}");
@@ -51,6 +63,11 @@ namespace SharedLib.Services
             await writer.DisposeAsync();
         }
 
+        /// <summary>
+        /// Сгенерировать дамп данных в формате JSON
+        /// </summary>
+        /// <param name="archive">Пакет сжатых файлов в формате zip-архива.</param>
+        /// <param name="json_raw">json данные для записи</param>
         static async Task GenerateJsonDump(ZipArchive archive, string json_raw)
         {
             ZipArchiveEntry readmeEntry = archive.CreateEntry("dump.json");
@@ -58,6 +75,11 @@ namespace SharedLib.Services
             await writer.WriteLineAsync(json_raw);
         }
 
+        /// <summary>
+        /// Генерация файла регистрации DI служб
+        /// </summary>
+        /// <param name="archive">Пакет сжатых файлов в формате zip-архива.</param>
+        /// <param name="project_info">Информация о проекте</param>
         static async Task GenServicesDI(ZipArchive archive, NameSpacedModel project_info)
         {
             ZipArchiveEntry readmeEntry = archive.CreateEntry("services_di.cs");
@@ -74,6 +96,13 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
+        /// <summary>
+        /// Запись контроллеров
+        /// </summary>
+        /// <param name="writer">Поток записи ZIP архива</param>
+        /// <param name="service_instance">Имя интерфейса промежуточной службы доступа к данным</param>
+        /// <param name="type_name">Имя типа данных (SystemCodeName)</param>
+        /// <param name="is_body_document">Если тело документа - true. Если табличная часть - false</param>
         static async Task WriteDocumentControllers(StreamWriter writer, string service_instance, string type_name, bool is_body_document)
         {
             string type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
@@ -283,6 +312,12 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
+        /// <summary>
+        /// Записать реализацию интерфейса промежуточной службы доступа к данным
+        /// </summary>
+        /// <param name="writer">Поток записи ZIP архива</param>
+        /// <param name="type_name">Имя типа данных (SystemCodeName)</param>
+        /// <param name="is_body_document">Если тело документа - true. Если табличная часть - false</param>
         static async Task WriteDocumentServicesInterfaceImplementation(StreamWriter writer, string type_name, bool is_body_document)
         {
             string type_name_gen;
@@ -404,6 +439,13 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
+        /// <summary>
+        /// Записать интерфейс промежуточной службы доступа к данным
+        /// </summary>
+        /// <param name="writer">Поток записи ZIP архива</param>
+        /// <param name="type_name">Имя типа данных (SystemCodeName)</param>
+        /// <param name="doc_obj_name">Наоименование документа (для документации)</param>
+        /// <param name="is_body_document">Если тело документа - true. Если табличная часть - false</param>
         static async Task WriteDocumentServicesInterface(StreamWriter writer, string type_name, string doc_obj_name, bool is_body_document)
         {
             await writer.WriteLineAsync("\t\t/// <summary>");
