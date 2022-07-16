@@ -180,7 +180,7 @@ namespace SharedLib.Services
         }
 
         /// <summary>
-        /// Запись refit интерфейсов (3 штуки)
+        /// Запись refit интерфейсов (3 вида)
         /// </summary>
         /// <param name="writer">Поток записи ZIP архива</param>
         /// <param name="type_name">Имя типа данных (SystemCodeName)</param>
@@ -283,7 +283,7 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
-        static async Task WriteDocumentServicesInterfaceImplementation(StreamWriter writer, string type_name, string doc_obj_name, bool is_body_document)
+        static async Task WriteDocumentServicesInterfaceImplementation(StreamWriter writer, string type_name, bool is_body_document)
         {
             string type_name_gen;
 
@@ -872,7 +872,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t\t_crud_accessor = set_crud_accessor;");
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
-                await WriteDocumentServicesInterfaceImplementation(writer, doc_obj.SystemCodeName, doc_obj.Name, true);
+                await WriteDocumentServicesInterfaceImplementation(writer, doc_obj.SystemCodeName, true);
 
                 #endregion
 
@@ -1036,7 +1036,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t\t_crud_accessor = set_crud_accessor;");
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
-                await WriteDocumentServicesInterfaceImplementation(writer, doc_obj.SystemCodeName, doc_obj.Name, false);
+                await WriteDocumentServicesInterfaceImplementation(writer, doc_obj.SystemCodeName, false);
 
                 #endregion
 
