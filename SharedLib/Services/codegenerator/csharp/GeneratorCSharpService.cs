@@ -404,7 +404,95 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
-        static async Task WriteDocumentCrudInterfaceImplementation(StreamWriter writer, string type_name, string doc_obj_name, bool is_body_document)
+        static async Task WriteDocumentServicesInterface(StreamWriter writer, string type_name, string doc_obj_name, bool is_body_document)
+        {
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Создать новый объект{(is_body_document ? "" : " строки (табличной части)")} документа (запись БД): {doc_obj_name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest\">Объект добавления в БД</param>");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> AddAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} obj_rest);");
+            await writer.WriteLineAsync();
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Создать перечень новых объектов{(is_body_document ? "" : " строк табличной части")} документа: {doc_obj_name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest_range\">Объекты добавления в БД</param>");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> obj_rest_range);");
+            await writer.WriteLineAsync();
+
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Прочитать {(is_body_document ? "документ" : "строку табличной части документа")}: {doc_obj_name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"id\">Идентификатор объекта</param>");
+            await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}?> FirstAsync(int id);");
+            await writer.WriteLineAsync();
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Получить (набор){(is_body_document ? "" : " строк табличной части")} документов: {doc_obj_name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"ids\">Идентификаторы объектов</param>");
+            await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}> SelectAsync(IEnumerable<int> ids);");
+            await writer.WriteLineAsync();
+
+            if (is_body_document)
+            {
+                await writer.WriteLineAsync("\t\t/// <summary>");
+                await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_obj_name}");
+                await writer.WriteLineAsync("\t\t/// </summary>");
+                await writer.WriteLineAsync($"\t\t/// <param name=\"request\">Пагинация запроса</param>");
+                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel request);");
+                await writer.WriteLineAsync();
+            }
+            else
+            {
+                await writer.WriteLineAsync("\t\t/// <summary>");
+                await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_obj_name}");
+                await writer.WriteLineAsync("\t\t/// </summary>");
+                await writer.WriteLineAsync($"\t\t/// <param name=\"request\">Пагинация запроса</param>");
+                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request);");
+                await writer.WriteLineAsync();
+            }
+
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Обновить объект{(is_body_document ? "" : " строки табличной части")} документа: {doc_obj_name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest\">Объект обновления в БД</param>");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> UpdateAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} obj_rest);");
+            await writer.WriteLineAsync();
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Обновить перечень объектов{(is_body_document ? "/документов" : " строк табличной части документа")}: {doc_obj_name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_range_rest\">Объекты обновления в БД</param>");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> obj_range_rest);");
+            await writer.WriteLineAsync();
+
+
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Инверсия признака удаления{(is_body_document ? "" : " строки табличной части")} документа: {doc_obj_name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"id\">Идентификатор объекта</param>");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> IsDeleteMarkerToggleAsync(int id);");
+            await writer.WriteLineAsync();
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Удалить {(is_body_document ? "документ" : "строку табличной части")}: {doc_obj_name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"id\">Идентификатор объекта</param>");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> RemoveAsync(int id);");
+            await writer.WriteLineAsync();
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Удалить перечень{(is_body_document ? "" : " строк табличной части")} документов: {doc_obj_name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"ids\">Идентификаторы объектов</param>");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> RemoveRangeAsync(IEnumerable<int> ids);");
+
+            await WriteEnd(writer);
+        }
+
+        /// <summary>
+        /// Запись CRUD реализаций интерфейсов служб непосредственного доступа к данным (к таблицам БД)
+        /// </summary>
+        /// <param name="writer">Поток записи ZIP архива</param>
+        /// <param name="type_name">Имя типа данных (SystemCodeName)</param>
+        /// <param name="is_body_document">Если тело документа - true. Если табличная часть - false</param>
+        static async Task WriteDocumentCrudInterfaceImplementation(StreamWriter writer, string type_name, bool is_body_document)
         {
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task AddAsync({type_name} obj_rest, bool auto_save = true)");
@@ -565,100 +653,17 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
-        static async Task WriteDocumentServicesInterface(StreamWriter writer, string type_name, string doc_obj_name, bool is_body_document)
-        {
-            await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Создать новый объект{(is_body_document ? "" : " строки (табличной части)")} документа (запись БД): {doc_obj_name}");
-            await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest\">Объект добавления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> AddAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} obj_rest);");
-            await writer.WriteLineAsync();
-            await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Создать перечень новых объектов{(is_body_document ? "" : " строк табличной части")} документа: {doc_obj_name}");
-            await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest_range\">Объекты добавления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> obj_rest_range);");
-            await writer.WriteLineAsync();
-
-            await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Прочитать {(is_body_document ? "документ" : "строку табличной части документа")}: {doc_obj_name}");
-            await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"id\">Идентификатор объекта</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}?> FirstAsync(int id);");
-            await writer.WriteLineAsync();
-            await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Получить (набор){(is_body_document ? "" : " строк табличной части")} документов: {doc_obj_name}");
-            await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"ids\">Идентификаторы объектов</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}> SelectAsync(IEnumerable<int> ids);");
-            await writer.WriteLineAsync();
-
-            if (is_body_document)
-            {
-                await writer.WriteLineAsync("\t\t/// <summary>");
-                await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_obj_name}");
-                await writer.WriteLineAsync("\t\t/// </summary>");
-                await writer.WriteLineAsync($"\t\t/// <param name=\"request\">Пагинация запроса</param>");
-                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel request);");
-                await writer.WriteLineAsync();
-            }
-            else
-            {
-                await writer.WriteLineAsync("\t\t/// <summary>");
-                await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_obj_name}");
-                await writer.WriteLineAsync("\t\t/// </summary>");
-                await writer.WriteLineAsync($"\t\t/// <param name=\"request\">Пагинация запроса</param>");
-                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request);");
-                await writer.WriteLineAsync();
-            }
-
-            await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Обновить объект{(is_body_document ? "" : " строки табличной части")} документа: {doc_obj_name}");
-            await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest\">Объект обновления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> UpdateAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} obj_rest);");
-            await writer.WriteLineAsync();
-            await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Обновить перечень объектов{(is_body_document ? "/документов" : " строк табличной части документа")}: {doc_obj_name}");
-            await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_range_rest\">Объекты обновления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> obj_range_rest);");
-            await writer.WriteLineAsync();
-
-
-            await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Инверсия признака удаления{(is_body_document ? "" : " строки табличной части")} документа: {doc_obj_name}");
-            await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"id\">Идентификатор объекта</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> IsDeleteMarkerToggleAsync(int id);");
-            await writer.WriteLineAsync();
-            await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Удалить {(is_body_document ? "документ" : "строку табличной части")}: {doc_obj_name}");
-            await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"id\">Идентификатор объекта</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> RemoveAsync(int id);");
-            await writer.WriteLineAsync();
-            await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Удалить перечень{(is_body_document ? "" : " строк табличной части")} документов: {doc_obj_name}");
-            await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"ids\">Идентификаторы объектов</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> RemoveRangeAsync(IEnumerable<int> ids);");
-
-            await WriteEnd(writer);
-        }
-
         /// <summary>
         /// Запись CRUD интерфейсов служб непосредственного доступа к данным (к таблицам БД)
         /// </summary>
         /// <param name="writer">Поток записи ZIP архива</param>
         /// <param name="type_name">Имя типа данных (SystemCodeName)</param>
-        /// <param name="doc_obj_name">Имя документа для коментариев</param>
+        /// <param name="doc_name">Имя документа для коментариев</param>
         /// <param name="is_body_document">Если тело документа - true. Если табличная часть - false</param>
-        /// <returns></returns>
-        static async Task WriteDocumentCrudInterface(StreamWriter writer, string type_name, string doc_obj_name, bool is_body_document)
+        static async Task WriteDocumentCrudInterface(StreamWriter writer, string type_name, string doc_name, bool is_body_document)
         {
             await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Создать новый объект{(is_body_document ? "" : " строки (табличной части)")} документа (запись БД): {doc_obj_name}");
+            await writer.WriteLineAsync($"\t\t/// Создать новый объект{(is_body_document ? "" : " строки (табличной части)")} документа (запись БД): {doc_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest\">Объект добавления в БД</param>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"auto_save\">Автоматически/сразу сохранить изменения в БД</param>");
@@ -666,7 +671,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Создать перечень новых объектов{(is_body_document ? "" : " строк табличной части")} документа: {doc_obj_name}");
+            await writer.WriteLineAsync($"\t\t/// Создать перечень новых объектов{(is_body_document ? "" : " строк табличной части")} документа: {doc_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest_range\">Объекты добавления в БД</param>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"auto_save\">Автоматически/сразу сохранить изменения в БД</param>");
@@ -674,14 +679,14 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Прочитать {(is_body_document ? "документ" : "строку табличной части документа")}: {doc_obj_name}");
+            await writer.WriteLineAsync($"\t\t/// Прочитать {(is_body_document ? "документ" : "строку табличной части документа")}: {doc_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"id\">Идентификатор объекта</param>");
             await writer.WriteLineAsync($"\t\tpublic Task<{type_name}?> FirstAsync(int id);");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Получить (набор){(is_body_document ? "" : " строк табличной части")} документов: {doc_obj_name}");
+            await writer.WriteLineAsync($"\t\t/// Получить (набор){(is_body_document ? "" : " строк табличной части")} документов: {doc_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"ids\">Идентификаторы объектов</param>");
             await writer.WriteLineAsync($"\t\tpublic Task<IEnumerable<{type_name}>> SelectAsync(IEnumerable<int> ids);");
@@ -690,7 +695,7 @@ namespace SharedLib.Services
             if (is_body_document)
             {
                 await writer.WriteLineAsync("\t\t/// <summary>");
-                await writer.WriteLineAsync($"\t\t/// Получить (страницу){(is_body_document ? "" : " строк табличной части")} документов: {doc_obj_name}");
+                await writer.WriteLineAsync($"\t\t/// Получить (страницу){(is_body_document ? "" : " строк табличной части")} документов: {doc_name}");
                 await writer.WriteLineAsync("\t\t/// </summary>");
                 await writer.WriteLineAsync($"\t\t/// <param name=\"pagination_request\">Запрос-пагинатор</param>");
                 await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel pagination_request);");
@@ -699,7 +704,7 @@ namespace SharedLib.Services
             else
             {
                 await writer.WriteLineAsync("\t\t/// <summary>");
-                await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_obj_name}");
+                await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_name}");
                 await writer.WriteLineAsync("\t\t/// </summary>");
                 await writer.WriteLineAsync($"\t\t/// <param name=\"pagination_request\">Запрос-пагинатор</param>");
                 await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel pagination_request);");
@@ -707,14 +712,14 @@ namespace SharedLib.Services
             }
 
             await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Обновить объект{(is_body_document ? "" : " строки табличной части")} документа: {doc_obj_name}");
+            await writer.WriteLineAsync($"\t\t/// Обновить объект{(is_body_document ? "" : " строки табличной части")} документа: {doc_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest\">Объект обновления в БД</param>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"auto_save\">Автоматически/сразу сохранить изменения в БД</param>");
             await writer.WriteLineAsync($"\t\tpublic Task UpdateAsync({type_name} obj_rest, bool auto_save = true);");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Обновить перечень объектов{(is_body_document ? "/документов" : " строк табличной части документа")}: {doc_obj_name}");
+            await writer.WriteLineAsync($"\t\t/// Обновить перечень объектов{(is_body_document ? "/документов" : " строк табличной части документа")}: {doc_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest_range\">Объекты обновления в БД</param>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"auto_save\">Автоматически/сразу сохранить изменения в БД</param>");
@@ -723,21 +728,21 @@ namespace SharedLib.Services
 
 
             await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Инверсия признака удаления{(is_body_document ? "" : " строки табличной части")} документа: {doc_obj_name}");
+            await writer.WriteLineAsync($"\t\t/// Инверсия признака удаления{(is_body_document ? "" : " строки табличной части")} документа: {doc_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"id\">Идентификатор объекта</param>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"auto_save\">Автоматически/сразу сохранить изменения в БД</param>");
             await writer.WriteLineAsync($"\t\tpublic Task IsDeleteMarkerToggleAsync(int id, bool auto_save = true);");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Удалить {(is_body_document ? "документ" : "строку табличной части")}: {doc_obj_name}");
+            await writer.WriteLineAsync($"\t\t/// Удалить {(is_body_document ? "документ" : "строку табличной части")}: {doc_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"id\">Идентификатор объекта</param>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"auto_save\">Автоматически/сразу сохранить изменения в БД</param>");
             await writer.WriteLineAsync($"\t\tpublic Task RemoveAsync(int id, bool auto_save = true);");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
-            await writer.WriteLineAsync($"\t\t/// Удалить перечень{(is_body_document ? "" : " строк табличной части")} документов: {doc_obj_name}");
+            await writer.WriteLineAsync($"\t\t/// Удалить перечень{(is_body_document ? "" : " строк табличной части")} документов: {doc_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"ids\">Идентификаторы объектов</param>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"auto_save\">Автоматически/сразу сохранить изменения в БД</param>");
@@ -836,7 +841,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
 
-                await WriteDocumentCrudInterfaceImplementation(writer, doc_obj.SystemCodeName, doc_obj.Name, true);
+                await WriteDocumentCrudInterfaceImplementation(writer, doc_obj.SystemCodeName, true);
 
 
 
@@ -1000,7 +1005,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t\t_db_context = set_db_context;");
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
-                await WriteDocumentCrudInterfaceImplementation(writer, $"{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}", doc_obj.Name, false);
+                await WriteDocumentCrudInterfaceImplementation(writer, $"{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}", false);
 
 
 
