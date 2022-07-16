@@ -179,11 +179,20 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
-        static async Task WriteRestServiceInterface(StreamWriter writer, string type_name, string rest_service_name, bool is_body_document, bool is_refit, bool add_attr)
+        /// <summary>
+        /// Запись refit интерфейсов (3 штуки)
+        /// </summary>
+        /// <param name="writer">Поток записи ZIP архива</param>
+        /// <param name="type_name">Имя типа данных (SystemCodeName)</param>
+        /// <param name="is_body_document">Если тело документа - true. Если табличная часть - false</param>
+        /// <param name="is_refit">refit ответы (ApiResponse) - true. rest/json ответы - false</param>
+        /// <param name="add_attr">Добавить заголовок запроса и refit атрибуты маршрута запросов</param>
+        /// <returns></returns>
+        static async Task WriteRestServiceInterface(StreamWriter writer, string type_name, bool is_body_document, bool is_refit, bool add_attr)
         {
             string type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
-            
-            if(add_attr)
+
+            if (add_attr)
             {
                 await writer.WriteLineAsync($"\t\t[Post($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.AddSingle)}}\")]");
             }
@@ -638,22 +647,30 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
-        static async Task WriteDocumentCrudInterface(StreamWriter writer, string obj_db_param_mane, string type_name, string doc_obj_name, bool is_body_document)
+        /// <summary>
+        /// Запись интерфейсов служб непосредственного доступа к данным (к таблицам БД)
+        /// </summary>
+        /// <param name="writer">Поток записи ZIP архива</param>
+        /// <param name="type_name">Имя типа данных (SystemCodeName)</param>
+        /// <param name="doc_obj_name">Имя документа для коментариев</param>
+        /// <param name="is_body_document">Если тело документа - true. Если табличная часть - false</param>
+        /// <returns></returns>
+        static async Task WriteDocumentCrudInterface(StreamWriter writer, string type_name, string doc_obj_name, bool is_body_document)
         {
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Создать новый объект{(is_body_document ? "" : " строки (табличной части)")} документа (запись БД): {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"{obj_db_param_mane}\">Объект добавления в БД</param>");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest\">Объект добавления в БД</param>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"auto_save\">Автоматически/сразу сохранить изменения в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task AddAsync({type_name} {obj_db_param_mane}, bool auto_save = true);");
+            await writer.WriteLineAsync($"\t\tpublic Task AddAsync({type_name} obj_rest, bool auto_save = true);");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Создать перечень новых объектов{(is_body_document ? "" : " строк табличной части")} документа: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"{obj_db_param_mane}_range\">Объекты добавления в БД</param>");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest_range\">Объекты добавления в БД</param>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"auto_save\">Автоматически/сразу сохранить изменения в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task AddRangeAsync(IEnumerable<{type_name}> {obj_db_param_mane}_range, bool auto_save = true);");
+            await writer.WriteLineAsync($"\t\tpublic Task AddRangeAsync(IEnumerable<{type_name}> obj_rest_range, bool auto_save = true);");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <summary>");
@@ -692,16 +709,16 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Обновить объект{(is_body_document ? "" : " строки табличной части")} документа: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"{obj_db_param_mane}\">Объект обновления в БД</param>");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest\">Объект обновления в БД</param>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"auto_save\">Автоматически/сразу сохранить изменения в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task UpdateAsync({type_name} {obj_db_param_mane}, bool auto_save = true);");
+            await writer.WriteLineAsync($"\t\tpublic Task UpdateAsync({type_name} obj_rest, bool auto_save = true);");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Обновить перечень объектов{(is_body_document ? "/документов" : " строк табличной части документа")}: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\t/// <param name=\"{obj_db_param_mane}_range\">Объекты обновления в БД</param>");
+            await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest_range\">Объекты обновления в БД</param>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"auto_save\">Автоматически/сразу сохранить изменения в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task UpdateRangeAsync(IEnumerable<{type_name}> {obj_db_param_mane}_range, bool auto_save = true);");
+            await writer.WriteLineAsync($"\t\tpublic Task UpdateRangeAsync(IEnumerable<{type_name}> obj_rest_range, bool auto_save = true);");
             await writer.WriteLineAsync();
 
 
@@ -800,7 +817,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t{");
 
                 obj_db_param_mane = $"{doc_obj.SystemCodeName}_object_db".ToLower();
-                await WriteDocumentCrudInterface(writer, obj_db_param_mane, doc_obj.SystemCodeName, doc_obj.Name, true);
+                await WriteDocumentCrudInterface(writer, doc_obj.SystemCodeName, doc_obj.Name, true);
 
                 crud_type_name = crud_type_name[1..];
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "crud_implementations", $"{crud_type_name}.cs"));
@@ -887,7 +904,7 @@ namespace SharedLib.Services
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, $"REST служба работы с API -> {project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
-                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, rest_service_name, true, false, false);
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, false, false);
 
                 rest_service_name = $"I{doc_obj.SystemCodeName}RefitProvider";
                 enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
@@ -895,7 +912,7 @@ namespace SharedLib.Services
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Refit коннектор к API/{project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
-                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, rest_service_name, true, true, false);
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, true, false);
 
                 rest_service_name = $"I{doc_obj.SystemCodeName}RefitService";
                 enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
@@ -904,7 +921,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t[Headers(\"Content-Type: application/json\")]");
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}RefitService");
                 await writer.WriteLineAsync("\t{");
-                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, rest_service_name, true, true, true);
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, true, true);
 
                 #endregion
 
@@ -968,7 +985,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t{");
 
                 obj_db_param_mane = $"{doc_obj.SystemCodeName}_object_db".ToLower();
-                await WriteDocumentCrudInterface(writer, obj_db_param_mane, $"{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}", doc_obj.Name, false);
+                await WriteDocumentCrudInterface(writer, $"{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}", doc_obj.Name, false);
 
                 crud_type_name = crud_type_name[1..];
                 enumEntry = archive.CreateEntry(Path.Combine(dir, "crud_implementations", $"{crud_type_name}.cs"));
@@ -1053,7 +1070,7 @@ namespace SharedLib.Services
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, $"REST служба работы с API -> {project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
-                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, rest_service_name, true, false, false);
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, false, false);
 
                 rest_service_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}RefitProvider";
                 enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
@@ -1061,7 +1078,7 @@ namespace SharedLib.Services
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Refit коннектор к API/{project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
-                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, rest_service_name, true, true, false);
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, true, false);
 
                 rest_service_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}RefitService";
                 enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
@@ -1070,7 +1087,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t[Headers(\"Content-Type: application/json\")]");
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}RefitService");
                 await writer.WriteLineAsync("\t{");
-                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, rest_service_name, true, true, true);
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, true, true);
 
                 #endregion
             }

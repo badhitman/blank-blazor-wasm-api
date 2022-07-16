@@ -52,7 +52,7 @@ namespace SharedLib.Services
         public Task DbContextGen(IEnumerable<DocumentFitModel> docs, ZipArchive archive, NameSpacedModel project_info);
 
         /// <summary>
-        /// Генерация точек доступа к таблицам БД
+        /// Генерация точек доступа к таблицам БД (серверные интерфейсы служб и их реализация. контроллеры. refit - клиентская инфраструктура сервисов)
         /// </summary>
         /// <param name="docs">Перечень документов</param>
         /// <param name="archive">Объект архива для записи данных</param>
