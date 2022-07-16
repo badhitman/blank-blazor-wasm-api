@@ -133,8 +133,8 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
-            await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangeByIds)}/{{ids}}\")]");
-            await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> SelectAsync([FromRoute] IEnumerable<int> ids)");
+            await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangeByIds)}\")]");
+            await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> SelectAsync([FromQuery] IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.SelectAsync(ids);");
@@ -246,7 +246,7 @@ namespace SharedLib.Services
 
             if (add_attr)
             {
-                await writer.WriteLineAsync($"\t\t[Get($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetRangeByIds)}}/{{{{ids}}}}\")]");
+                await writer.WriteLineAsync($"\t\t[Get($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetRangeByIds)}}\")]");
             }
             type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
             await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> SelectAsync(IEnumerable<int> ids);");
