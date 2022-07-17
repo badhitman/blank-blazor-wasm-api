@@ -1215,7 +1215,7 @@ namespace SharedLib.Services
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, $"REST служба работы с API -> {project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
-                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, false, false);
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, false, false, false);
 
                 rest_service_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}RefitProvider";
                 enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
@@ -1223,7 +1223,7 @@ namespace SharedLib.Services
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Refit коннектор к API/{project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
-                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, true, false);
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, false, true, false);
 
                 enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name[1..]}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
@@ -1239,7 +1239,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t[Headers(\"Content-Type: application/json\")]");
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
-                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, true, true);
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, false, true, true);
 
                 #endregion
             }
