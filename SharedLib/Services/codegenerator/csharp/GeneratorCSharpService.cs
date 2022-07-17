@@ -208,6 +208,12 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
+        /// <summary>
+        /// Запись реализации Refit провайдера
+        /// </summary>
+        /// <param name="writer">Поток записи ZIP архива</param>
+        /// <param name="type_name">Имя типа данных (SystemCodeName)</param>
+        /// <param name="is_body_document">Если тело документа - true. Если табличная часть - false</param>
         static async Task WriteRefitProviderImplementation(StreamWriter writer, string type_name, bool is_body_document)
         {
             string type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
