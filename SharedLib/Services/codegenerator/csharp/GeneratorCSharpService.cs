@@ -214,14 +214,14 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tprivate readonly ILogger<{type_name}RefitProvider> _logger;");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async {type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}RefitProvider(I{type_name}RefitService set_api, ILogger<{type_name}RefitProvider> set_logger)");
+            await writer.WriteLineAsync($"\t\tpublic {type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}RefitProvider(I{type_name}RefitService set_api, ILogger<{type_name}RefitProvider> set_logger)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t_api = set_api;");
             await writer.WriteLineAsync("\t\t\t_logger = set_logger;");
             await writer.WriteLineAsync("\t\t}");
             string type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
 
-            await writer.WriteLineAsync($"\t\tpublic Task<ApiResponse<ResponseBaseModel>> AddAsync({type_name_gen} object_rest)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<ResponseBaseModel>> AddAsync({type_name_gen} object_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\treturn await _api.AddAsync(object_rest);");
             await writer.WriteLineAsync("\t\t}");
