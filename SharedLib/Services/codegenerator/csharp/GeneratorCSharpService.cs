@@ -300,7 +300,7 @@ namespace SharedLib.Services
 
             await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<ResponseBaseModel>> RemoveAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
-            await writer.WriteLineAsync("\t\t\treturn async await _api.RemoveAsync(id);");
+            await writer.WriteLineAsync("\t\t\treturn await _api.RemoveAsync(id);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
