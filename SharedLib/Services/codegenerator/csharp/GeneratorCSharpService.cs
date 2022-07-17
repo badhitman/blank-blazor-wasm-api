@@ -286,24 +286,28 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<ResponseBaseModel>> UpdateRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest_upd)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\treturn await _api.UpdateRangeAsync(objects_range_rest_upd);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
+            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<ResponseBaseModel>> IsDeleteMarkerToggleAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\treturn await _api.IsDeleteMarkerToggleAsync(id);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
+            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<ResponseBaseModel>> RemoveAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\treturn await _api.RemoveAsync(id);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
+            await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<ResponseBaseModel>> RemoveRangeAsync(IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\treturn await _api.RemoveRangeAsync(ids);");
