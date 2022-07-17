@@ -213,7 +213,8 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tprivate readonly I{type_name}RefitService _api;");
             await writer.WriteLineAsync($"\t\tprivate readonly ILogger<{type_name}RefitProvider> _logger;");
             await writer.WriteLineAsync();
-            await writer.WriteLineAsync($"\t\tpublic {type_name}RefitProvider(I{type_name}RefitService set_api, ILogger<{type_name}RefitProvider> set_logger)");
+            await writer.WriteLineAsync("/// <inheritdoc/>");
+            await writer.WriteLineAsync($"\t\tpublic async {type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}RefitProvider(I{type_name}RefitService set_api, ILogger<{type_name}RefitProvider> set_logger)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t_api = set_api;");
             await writer.WriteLineAsync("\t\t\t_logger = set_logger;");
