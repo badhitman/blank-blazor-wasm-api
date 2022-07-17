@@ -217,7 +217,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync("\t\t/// Конструктор");
             await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\tpublic {type_name_gen}RefitProvider(I{type_name}RefitService set_api, ILogger<{type_name_gen}RefitProvider> set_logger)");
+            await writer.WriteLineAsync($"\t\tpublic {type_name_gen}RefitProvider(I{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}RefitService set_api, ILogger<{type_name_gen}RefitProvider> set_logger)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t_api = set_api;");
             await writer.WriteLineAsync("\t\t\t_logger = set_logger;");
