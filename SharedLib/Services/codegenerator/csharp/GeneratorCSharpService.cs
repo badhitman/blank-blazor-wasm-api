@@ -210,8 +210,8 @@ namespace SharedLib.Services
 
         static async Task WriteRefitProviderImplementation(StreamWriter writer, string type_name, bool is_body_document)
         {
-            await writer.WriteLineAsync($"\t\tprivate readonly {type_name}RefitService _api;");
-            await writer.WriteLineAsync($"\t\tprivate readonly ILogger<{type_name[1..]}RefitProvider> _logger;");
+            await writer.WriteLineAsync($"\t\tprivate readonly I{type_name}RefitService _api;");
+            await writer.WriteLineAsync($"\t\tprivate readonly ILogger<{type_name}RefitProvider> _logger;");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync($"\t\tpublic {type_name}RefitProvider(I{type_name}RefitService set_api, ILogger<{type_name}RefitProvider> set_logger)");
             await writer.WriteLineAsync("\t\t{");
@@ -985,7 +985,7 @@ namespace SharedLib.Services
                 writer = new(enumEntry.Open(), Encoding.UTF8);
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Refit коннектор к API/{project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                 await writer.WriteLineAsync("\t[Headers(\"Content-Type: application/json\")]");
-                await writer.WriteLineAsync($"\tpublic interface {rest_service_name}RefitService");
+                await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
                 await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, true, true);
 
