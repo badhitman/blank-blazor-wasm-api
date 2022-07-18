@@ -108,9 +108,9 @@ namespace SharedLib.Services
             foreach (string s in types)
             {
                 await writer.WriteLineAsync($"\t\t\tservices.AddRefitClient<I{s}RefitService>()");
-                await writer.WriteLineAsync("\t\t\t.ConfigureHttpClient(c => c.BaseAddress = conf.ApiConfig.Url)");
-                await writer.WriteLineAsync("\t\t\t.AddHttpMessageHandler<RefitHeadersDelegatingHandler>()");
-                await writer.WriteLineAsync("\t\t\t.SetHandlerLifetime(handler_lifetime);");
+                await writer.WriteLineAsync("\t\t\t\t.ConfigureHttpClient(c => c.BaseAddress = conf.ApiConfig.Url)");
+                await writer.WriteLineAsync("\t\t\t\t.AddHttpMessageHandler<RefitHeadersDelegatingHandler>()");
+                await writer.WriteLineAsync("\t\t\t\t.SetHandlerLifetime(handler_lifetime);");
                 await writer.WriteLineAsync($"\t\t\tservices.AddScoped<I{s}RefitProvider, {s}RefitProvider>();");
                 await writer.WriteLineAsync($"\t\t\tservices.AddScoped<I{s}RestService, {s}RestService>();");
                 await writer.WriteLineAsync();
@@ -1643,7 +1643,7 @@ namespace SharedLib.Services
                 await DbContextGen(dump.Documents, archive, conf.ProjectInfo);
                 await DbTableAccessGen(dump.Documents, archive, conf.AccessDbDirectoryPath, conf.ProjectInfo);
                 await GenServicesDI(archive, conf.ProjectInfo);
-                await GenRefitDI(archive, conf.ProjectInfo, dump.Documents.Select(x => x.SystemCodeName));
+                await GenRefitDI(archive, conf.ProjectInfo, dump.Documents.Where(x => !x.IsDeleted).Select(x => x.SystemCodeName));
                 string json_raw = JsonConvert.SerializeObject(dump, Formatting.Indented);
                 await GenerateJsonDump(archive, json_raw);
             }
