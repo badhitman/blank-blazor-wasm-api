@@ -273,7 +273,6 @@ namespace SharedLib.Services
                 //await writer.WriteLineAsync("\t\t\treturn await _api.SelectAsync(request);");
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
-
             }
             else
             {
@@ -333,8 +332,6 @@ namespace SharedLib.Services
             //await writer.WriteLineAsync("\t\t\treturn await _api.RemoveRangeAsync(ids);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
-            await writer.WriteLineAsync();
-            
             await writer.WriteLineAsync();
 
             await WriteEnd(writer);
