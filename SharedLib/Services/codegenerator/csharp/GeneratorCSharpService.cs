@@ -223,10 +223,10 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t\t\tresult.IsSuccess = rest.Content.IsSuccess;");
             await writer.WriteLineAsync("\t\t\t\tresult = rest.Content;");
             await writer.WriteLineAsync("\t\t\t}");
-            await writer.WriteLineAsync("catch (Exception ex)");
+            await writer.WriteLineAsync("\t\t\tcatch (Exception ex)");
             await writer.WriteLineAsync("\t\t\t{");
             await writer.WriteLineAsync("\t\t\t\tresult.IsSuccess = false;");
-            await writer.WriteLineAsync($"\t\t\t\tresult.Message = $\"Exception {{nameof(_users_projects_service.{method_name})}}\";");
+            await writer.WriteLineAsync($"\t\t\t\tresult.Message = $\"Exception {{nameof(_service.{method_name})}}\";");
             await writer.WriteLineAsync("\t\t\t\t_logger.LogError(ex, result.Message);");
             await writer.WriteLineAsync("\t\t\t}");
             await writer.WriteLineAsync("\t\treturn result;");
@@ -253,7 +253,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddAsync({type_name_gen} object_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
-            await WriteRestServiceBody(writer, "AddAsync", "object_rest", "tResponseBaseModel");
+            await WriteRestServiceBody(writer, "AddAsync", "object_rest", "ResponseBaseModel");
             //await writer.WriteLineAsync("\t\t\treturn await _api.AddAsync(object_rest);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
