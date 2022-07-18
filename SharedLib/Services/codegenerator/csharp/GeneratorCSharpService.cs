@@ -100,19 +100,19 @@ namespace SharedLib.Services
         {
             ZipArchiveEntry readmeEntry = archive.CreateEntry("refit_di.cs");
             using StreamWriter writer = new(readmeEntry.Open(), Encoding.UTF8);
-            await WriteHead(writer, project_info.Name, null, "di refit", new string[] { project_info.NameSpace });
+            await WriteHead(writer, project_info.Name, null, "di refit", new string[] { project_info.NameSpace, "Refit", "SharedLib", "Microsoft.Extensions.DependencyInjection" });
             await writer.WriteLineAsync("\tpublic static class RefitExtensionDesignerDI");
             await writer.WriteLineAsync("\t{");
-            await writer.WriteLineAsync("\t\tpublic static void BuildRefitServicesDI(this IServiceCollection services)");
+            await writer.WriteLineAsync("\t\tpublic static void BuildRefitServicesDI(this IServiceCollection services, ClientConfigModel conf, TimeSpan handler_lifetime)");
             await writer.WriteLineAsync("\t\t{");
             foreach (string s in types)
             {
-                await writer.WriteLineAsync($"services.AddRefitClient<I{s}RefitService>()");
-                await writer.WriteLineAsync(".ConfigureHttpClient(c => c.BaseAddress = conf.ApiConfig.Url)");
-                await writer.WriteLineAsync(".AddHttpMessageHandler<RefitHeadersDelegatingHandler>()");
-                await writer.WriteLineAsync(".SetHandlerLifetime(handler_lifetime);");
-                await writer.WriteLineAsync($"services.AddScoped<I{s}RefitProvider, {s}RefitProvider>();");
-                await writer.WriteLineAsync($"services.AddScoped<I{s}RestService, {s}RestService>();");
+                await writer.WriteLineAsync($"\t\t\tservices.AddRefitClient<I{s}RefitService>()");
+                await writer.WriteLineAsync("\t\t\t.ConfigureHttpClient(c => c.BaseAddress = conf.ApiConfig.Url)");
+                await writer.WriteLineAsync("\t\t\t.AddHttpMessageHandler<RefitHeadersDelegatingHandler>()");
+                await writer.WriteLineAsync("\t\t\t.SetHandlerLifetime(handler_lifetime);");
+                await writer.WriteLineAsync($"\t\t\tservices.AddScoped<I{s}RefitProvider, {s}RefitProvider>();");
+                await writer.WriteLineAsync($"\t\t\tservices.AddScoped<I{s}RestService, {s}RestService>();");
             }
             await WriteEnd(writer);
         }
