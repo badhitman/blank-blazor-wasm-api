@@ -96,6 +96,27 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
+        static async Task GenRefitDI(ZipArchive archive, NameSpacedModel project_info, IEnumerable<string> types)
+        {
+            ZipArchiveEntry readmeEntry = archive.CreateEntry("refit_di.cs");
+            using StreamWriter writer = new(readmeEntry.Open(), Encoding.UTF8);
+            await WriteHead(writer, project_info.Name, null, "di refit", new string[] { project_info.NameSpace });
+            await writer.WriteLineAsync("\tpublic static class RefitExtensionDesignerDI");
+            await writer.WriteLineAsync("\t{");
+            await writer.WriteLineAsync("\t\tpublic static void BuildRefitServicesDI(this IServiceCollection services)");
+            await writer.WriteLineAsync("\t\t{");
+            foreach (string s in types)
+            {
+                await writer.WriteLineAsync($"services.AddRefitClient<I{s}RefitService>()");
+                await writer.WriteLineAsync(".ConfigureHttpClient(c => c.BaseAddress = conf.ApiConfig.Url)");
+                await writer.WriteLineAsync(".AddHttpMessageHandler<RefitHeadersDelegatingHandler>()");
+                await writer.WriteLineAsync(".SetHandlerLifetime(handler_lifetime);");
+                await writer.WriteLineAsync($"services.AddScoped<I{s}RefitProvider, {s}RefitProvider>();");
+                await writer.WriteLineAsync($"services.AddScoped<I{s}RestService, {s}RestService>();");
+            }
+            await WriteEnd(writer);
+        }
+
         /// <summary>
         /// Запись контроллеров
         /// </summary>
@@ -1621,11 +1642,12 @@ namespace SharedLib.Services
                 await DbContextGen(dump.Documents, archive, conf.ProjectInfo);
                 await DbTableAccessGen(dump.Documents, archive, conf.AccessDbDirectoryPath, conf.ProjectInfo);
                 await GenServicesDI(archive, conf.ProjectInfo);
+                await GenRefitDI(archive, conf.ProjectInfo, dump.Documents.Select(x=>x.SystemCodeName));
                 string json_raw = JsonConvert.SerializeObject(dump, Formatting.Indented);
                 await GenerateJsonDump(archive, json_raw);
             }
             await zipToOpen.FlushAsync();
-
+            services_di.Clear();
             return new MemoryStream(zipToOpen.ToArray());
         }
 
