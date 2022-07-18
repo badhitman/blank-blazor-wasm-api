@@ -100,7 +100,7 @@ namespace SharedLib.Services
         {
             ZipArchiveEntry readmeEntry = archive.CreateEntry("refit_di.cs");
             using StreamWriter writer = new(readmeEntry.Open(), Encoding.UTF8);
-            await WriteHead(writer, project_info.Name, null, "di refit", new string[] { project_info.NameSpace, "Refit", "SharedLib", "Microsoft.Extensions.DependencyInjection" });
+            await WriteHead(writer, project_info.Name, null, "di refit", new string[] { project_info.NameSpace, "Refit", "SharedLib.Models", "SharedLib", "Microsoft.Extensions.DependencyInjection" });
             await writer.WriteLineAsync("\tpublic static class RefitExtensionDesignerDI");
             await writer.WriteLineAsync("\t{");
             await writer.WriteLineAsync("\t\tpublic static void BuildRefitServicesDI(this IServiceCollection services, ClientConfigModel conf, TimeSpan handler_lifetime)");
@@ -113,6 +113,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t\t.SetHandlerLifetime(handler_lifetime);");
                 await writer.WriteLineAsync($"\t\t\tservices.AddScoped<I{s}RefitProvider, {s}RefitProvider>();");
                 await writer.WriteLineAsync($"\t\t\tservices.AddScoped<I{s}RestService, {s}RestService>();");
+                await writer.WriteLineAsync();
             }
             await WriteEnd(writer);
         }
