@@ -230,6 +230,8 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t\t\t_logger.LogError(ex, result.Message);");
             await writer.WriteLineAsync("\t\t\t}");
             await writer.WriteLineAsync("\t\treturn result;");
+            await writer.WriteLineAsync("\t\t}");
+            await writer.WriteLineAsync();
         }
 
         static async Task WriteRestServiceImplementation(StreamWriter writer, string type_name, bool is_body_document)
@@ -254,9 +256,6 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
             await WriteRestServiceBody(writer, "AddAsync", "object_rest", "ResponseBaseModel");
-            //await writer.WriteLineAsync("\t\t\treturn await _api.AddAsync(object_rest);");
-            await writer.WriteLineAsync("\t\t\treturn result;");
-            await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
             type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
@@ -265,10 +264,6 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
             await WriteRestServiceBody(writer, "AddRangeAsync", "objects_range_rest", "ResponseBaseModel");
-            //await writer.WriteLineAsync("\t\t\treturn await _api.AddRangeAsync(objects_range_rest);");
-            await writer.WriteLineAsync("\t\t\treturn result;");
-            await writer.WriteLineAsync("\t\t}");
-            await writer.WriteLineAsync();
 
             type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
@@ -276,10 +271,6 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\t{type_name_gen} result = new();");
             await WriteRestServiceBody(writer, "FirstAsync", "id", type_name_gen);
-            //await writer.WriteLineAsync("\t\t\treturn await _api.FirstAsync(id);");
-            await writer.WriteLineAsync("\t\t\treturn result;");
-            await writer.WriteLineAsync("\t\t}");
-            await writer.WriteLineAsync();
 
             type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
@@ -287,10 +278,6 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\t{type_name_gen} result = new();");
             await WriteRestServiceBody(writer, "SelectAsync", "ids", type_name_gen);
-            //await writer.WriteLineAsync("\t\t\treturn await _api.SelectAsync(ids);");
-            await writer.WriteLineAsync("\t\t\treturn result;");
-            await writer.WriteLineAsync("\t\t}");
-            await writer.WriteLineAsync();
 
             if (is_body_document)
             {
@@ -300,10 +287,6 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync($"\t\t\t{type_name_gen} result = new();");
                 await WriteRestServiceBody(writer, "SelectAsync", "request", type_name_gen);
-                //await writer.WriteLineAsync("\t\t\treturn await _api.SelectAsync(request);");
-                await writer.WriteLineAsync("\t\t\treturn result;");
-                await writer.WriteLineAsync("\t\t}");
-                await writer.WriteLineAsync();
             }
             else
             {
@@ -313,10 +296,6 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync($"\t\t\t{type_name_gen} result = new();");
                 await WriteRestServiceBody(writer, "SelectAsync", "request", type_name_gen);
-                //await writer.WriteLineAsync("\t\t\treturn await _api.SelectAsync(request);");
-                await writer.WriteLineAsync("\t\t\treturn result;");
-                await writer.WriteLineAsync("\t\t}");
-                await writer.WriteLineAsync();
             }
 
             type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
@@ -325,10 +304,6 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\tResponseBaseModel result = new();");
             await WriteRestServiceBody(writer, "UpdateAsync", "object_rest_upd", "ResponseBaseModel");
-            //await writer.WriteLineAsync("\t\t\treturn await _api.UpdateAsync(object_rest_upd);");
-            await writer.WriteLineAsync("\t\t\treturn result;");
-            await writer.WriteLineAsync("\t\t}");
-            await writer.WriteLineAsync();
 
             type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
@@ -336,40 +311,24 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\tResponseBaseModel result = new();");
             await WriteRestServiceBody(writer, "UpdateRangeAsync", "objects_range_rest_upd", "ResponseBaseModel");
-            //await writer.WriteLineAsync("\t\t\treturn await _api.UpdateRangeAsync(objects_range_rest_upd);");
-            await writer.WriteLineAsync("\t\t\treturn result;");
-            await writer.WriteLineAsync("\t\t}");
-            await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> IsDeleteMarkerToggleAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\tResponseBaseModel result = new();");
             await WriteRestServiceBody(writer, "IsDeleteMarkerToggleAsync", "id", "ResponseBaseModel");
-            //await writer.WriteLineAsync("\t\t\treturn await _api.IsDeleteMarkerToggleAsync(id);");
-            await writer.WriteLineAsync("\t\t\treturn result;");
-            await writer.WriteLineAsync("\t\t}");
-            await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\tResponseBaseModel result = new();");
             await WriteRestServiceBody(writer, "RemoveAsync", "id", "ResponseBaseModel");
-            //await writer.WriteLineAsync("\t\t\treturn await _api.RemoveAsync(id);");
-            await writer.WriteLineAsync("\t\t\treturn result;");
-            await writer.WriteLineAsync("\t\t}");
-            await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveRangeAsync(IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\tResponseBaseModel result = new();");
             await WriteRestServiceBody(writer, "RemoveRangeAsync", "ids", "ResponseBaseModel");
-            //await writer.WriteLineAsync("\t\t\treturn await _api.RemoveRangeAsync(ids);");
-            await writer.WriteLineAsync("\t\t\treturn result;");
-            await writer.WriteLineAsync("\t\t}");
-            await writer.WriteLineAsync();
 
             await WriteEnd(writer);
         }
