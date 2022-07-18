@@ -210,6 +210,20 @@ namespace SharedLib.Services
 
         static async Task WriteRestServiceImplementation(StreamWriter writer, string type_name, bool is_body_document)
         {
+            string type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            await writer.WriteLineAsync($"\t\tprivate readonly I{type_name_gen}RefitService _service;");
+            await writer.WriteLineAsync($"\t\tprivate readonly ILogger<{type_name_gen}RestService> _logger;");
+            await writer.WriteLineAsync();
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync("\t\t/// Конструктор");
+            await writer.WriteLineAsync("\t\t/// </summary>");
+            await writer.WriteLineAsync($"\t\tpublic {type_name_gen}RestService(I{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}RefitService set_service, ILogger<{type_name_gen}RestService> set_logger)");
+            await writer.WriteLineAsync("\t\t{");
+            await writer.WriteLineAsync("\t\t\t_service = set_service;");
+            await writer.WriteLineAsync("\t\t\t_logger = set_logger;");
+            await writer.WriteLineAsync("\t\t}");
+            await writer.WriteLineAsync();
+
 
             await writer.WriteLineAsync();
 
@@ -1068,6 +1082,13 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t{");
                 await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, false, false);
 
+                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), $"{rest_service_name[1..]}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, null, new string[] { "SharedLib.Models", "Refit", "Microsoft.Extensions.Logging" });
+                await writer.WriteLineAsync($"\tpublic class {rest_service_name[1..]} : {rest_service_name}");
+                await writer.WriteLineAsync("\t{");
+                await WriteRestServiceImplementation(writer, doc_obj.SystemCodeName, true);
+
                 rest_service_name = $"I{doc_obj.SystemCodeName}RefitProvider";
                 enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
@@ -1091,13 +1112,6 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
                 await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, true, true);
-
-                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), $"{rest_service_name[1..]}.cs"));
-                writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, null, new string[] { "SharedLib.Models", "Refit", "Microsoft.Extensions.Logging" });
-                await writer.WriteLineAsync($"\tpublic class {rest_service_name[1..]} : {rest_service_name}");
-                await writer.WriteLineAsync("\t{");
-                await WriteRestServiceImplementation(writer, doc_obj.SystemCodeName, true);
 
                 #endregion
 
@@ -1242,6 +1256,13 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t{");
                 await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, false, false, false);
 
+                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), $"{rest_service_name[1..]}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, null, new string[] { "SharedLib.Models", "Refit", "Microsoft.Extensions.Logging" });
+                await writer.WriteLineAsync($"\tpublic class {rest_service_name[1..]} : {rest_service_name}");
+                await writer.WriteLineAsync("\t{");
+                await WriteRestServiceImplementation(writer, doc_obj.SystemCodeName, false);
+
                 rest_service_name = $"I{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}RefitProvider";
                 enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
@@ -1265,13 +1286,6 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
                 await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, false, true, true);
-
-                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), $"{rest_service_name[1..]}.cs"));
-                writer = new(enumEntry.Open(), Encoding.UTF8);
-                await WriteHead(writer, project_info.Name, project_info.NameSpace, null, new string[] { "SharedLib.Models", "Refit", "Microsoft.Extensions.Logging" });
-                await writer.WriteLineAsync($"\tpublic class {rest_service_name[1..]} : {rest_service_name}");
-                await writer.WriteLineAsync("\t{");
-                await WriteRestServiceImplementation(writer, doc_obj.SystemCodeName, false);
 
                 #endregion
             }
