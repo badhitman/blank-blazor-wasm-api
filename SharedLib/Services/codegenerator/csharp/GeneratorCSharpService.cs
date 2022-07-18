@@ -270,7 +270,9 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
                 await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> SelectAsync(PaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
+                await writer.WriteLineAsync($"\t\t\t{type_name_gen} result = new();");
                 //await writer.WriteLineAsync("\t\t\treturn await _api.SelectAsync(request);");
+                await writer.WriteLineAsync("\t\t\treturn result;");
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
             }
