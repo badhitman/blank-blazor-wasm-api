@@ -208,6 +208,14 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
+        static async Task WriteRestServiceImplementation(StreamWriter writer, string type_name, bool is_body_document)
+        {
+
+            await writer.WriteLineAsync();
+
+            await WriteEnd(writer);
+        }
+
         /// <summary>
         /// Запись реализации Refit провайдера
         /// </summary>
@@ -1084,6 +1092,13 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t{");
                 await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, true, true);
 
+                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), $"{rest_service_name[1..]}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, null, new string[] { "SharedLib.Models", "Refit", "Microsoft.Extensions.Logging" });
+                await writer.WriteLineAsync($"\tpublic class {rest_service_name[1..]} : {rest_service_name}");
+                await writer.WriteLineAsync("\t{");
+                await WriteRestServiceImplementation(writer, doc_obj.SystemCodeName, true);
+
                 #endregion
 
                 if (!doc_obj.PropertiesGrid.Any(x => !x.IsDeleted && x.PropertyTypeMetadata?.IsDeleted != true))
@@ -1250,6 +1265,13 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
                 await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, false, true, true);
+
+                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), $"{rest_service_name[1..]}.cs"));
+                writer = new(enumEntry.Open(), Encoding.UTF8);
+                await WriteHead(writer, project_info.Name, project_info.NameSpace, null, new string[] { "SharedLib.Models", "Refit", "Microsoft.Extensions.Logging" });
+                await writer.WriteLineAsync($"\tpublic class {rest_service_name[1..]} : {rest_service_name}");
+                await writer.WriteLineAsync("\t{");
+                await WriteRestServiceImplementation(writer, doc_obj.SystemCodeName, false);
 
                 #endregion
             }
