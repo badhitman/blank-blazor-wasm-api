@@ -1642,7 +1642,7 @@ namespace SharedLib.Services
                 await DbContextGen(dump.Documents, archive, conf.ProjectInfo);
                 await DbTableAccessGen(dump.Documents, archive, conf.AccessDbDirectoryPath, conf.ProjectInfo);
                 await GenServicesDI(archive, conf.ProjectInfo);
-                await GenRefitDI(archive, conf.ProjectInfo, dump.Documents.Select(x=>x.SystemCodeName));
+                await GenRefitDI(archive, conf.ProjectInfo, dump.Documents.Select(x => x.SystemCodeName));
                 string json_raw = JsonConvert.SerializeObject(dump, Formatting.Indented);
                 await GenerateJsonDump(archive, json_raw);
             }
