@@ -208,6 +208,30 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
+        static async Task WriteRestServiceBody(StreamWriter writer, string method_name, string rest_parameter_name, string response_type_name)
+        {
+            await writer.WriteLineAsync("\t\t\ttry");
+            await writer.WriteLineAsync("\t\t\t{");
+            await writer.WriteLineAsync($"\t\t\t\tApiResponse<{response_type_name}> rest = await _service.{method_name}({rest_parameter_name});");
+            await writer.WriteLineAsync("\t\t\t\tif (rest.StatusCode != System.Net.HttpStatusCode.OK)");
+            await writer.WriteLineAsync("\t\t\t\t{");
+            await writer.WriteLineAsync("\t\t\t\t\tresult.IsSuccess = false;");
+            await writer.WriteLineAsync("\t\t\t\t\tresult.Message = $\"HTTP error: [code={rest.StatusCode}] {rest?.Error?.Content}\";");
+            await writer.WriteLineAsync("\t\t\t\t\t_logger.LogError(result.Message);");
+            await writer.WriteLineAsync("\t\t\t\t\treturn result;");
+            await writer.WriteLineAsync("\t\t\t\t}");
+            await writer.WriteLineAsync("\t\t\t\tresult.IsSuccess = rest.Content.IsSuccess;");
+            await writer.WriteLineAsync("\t\t\t\tresult = rest.Content;");
+            await writer.WriteLineAsync("\t\t\t}");
+            await writer.WriteLineAsync("catch (Exception ex)");
+            await writer.WriteLineAsync("\t\t\t{");
+            await writer.WriteLineAsync("\t\t\t\tresult.IsSuccess = false;");
+            await writer.WriteLineAsync($"\t\t\t\tresult.Message = $\"Exception {{nameof(_users_projects_service.{method_name})}}\";");
+            await writer.WriteLineAsync("\t\t\t\t_logger.LogError(ex, result.Message);");
+            await writer.WriteLineAsync("\t\t\t}");
+            await writer.WriteLineAsync("\t\treturn result;");
+        }
+
         static async Task WriteRestServiceImplementation(StreamWriter writer, string type_name, bool is_body_document)
         {
             string type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
@@ -229,6 +253,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddAsync({type_name_gen} object_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
+            await WriteRestServiceBody(writer, "AddAsync", "object_rest", "tResponseBaseModel");
             //await writer.WriteLineAsync("\t\t\treturn await _api.AddAsync(object_rest);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
@@ -239,6 +264,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
+            await WriteRestServiceBody(writer, "AddRangeAsync", "objects_range_rest", "ResponseBaseModel");
             //await writer.WriteLineAsync("\t\t\treturn await _api.AddRangeAsync(objects_range_rest);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
@@ -249,6 +275,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> FirstAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\t{type_name_gen} result = new();");
+            await WriteRestServiceBody(writer, "FirstAsync", "id", type_name_gen);
             //await writer.WriteLineAsync("\t\t\treturn await _api.FirstAsync(id);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
@@ -259,6 +286,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> SelectAsync(IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\t{type_name_gen} result = new();");
+            await WriteRestServiceBody(writer, "SelectAsync", "ids", type_name_gen);
             //await writer.WriteLineAsync("\t\t\treturn await _api.SelectAsync(ids);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
@@ -271,6 +299,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> SelectAsync(PaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync($"\t\t\t{type_name_gen} result = new();");
+                await WriteRestServiceBody(writer, "SelectAsync", "request", type_name_gen);
                 //await writer.WriteLineAsync("\t\t\treturn await _api.SelectAsync(request);");
                 await writer.WriteLineAsync("\t\t\treturn result;");
                 await writer.WriteLineAsync("\t\t}");
@@ -283,6 +312,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> SelectAsync(GetByIdPaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync($"\t\t\t{type_name_gen} result = new();");
+                await WriteRestServiceBody(writer, "SelectAsync", "request", type_name_gen);
                 //await writer.WriteLineAsync("\t\t\treturn await _api.SelectAsync(request);");
                 await writer.WriteLineAsync("\t\t\treturn result;");
                 await writer.WriteLineAsync("\t\t}");
@@ -294,6 +324,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateAsync({type_name_gen} object_rest_upd)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\tResponseBaseModel result = new();");
+            await WriteRestServiceBody(writer, "UpdateAsync", "object_rest_upd", "ResponseBaseModel");
             //await writer.WriteLineAsync("\t\t\treturn await _api.UpdateAsync(object_rest_upd);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
@@ -304,6 +335,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest_upd)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\tResponseBaseModel result = new();");
+            await WriteRestServiceBody(writer, "UpdateRangeAsync", "objects_range_rest_upd", "ResponseBaseModel");
             //await writer.WriteLineAsync("\t\t\treturn await _api.UpdateRangeAsync(objects_range_rest_upd);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
@@ -313,6 +345,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> IsDeleteMarkerToggleAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\tResponseBaseModel result = new();");
+            await WriteRestServiceBody(writer, "IsDeleteMarkerToggleAsync", "id", "ResponseBaseModel");
             //await writer.WriteLineAsync("\t\t\treturn await _api.IsDeleteMarkerToggleAsync(id);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
@@ -322,6 +355,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\tResponseBaseModel result = new();");
+            await WriteRestServiceBody(writer, "RemoveAsync", "id", "ResponseBaseModel");
             //await writer.WriteLineAsync("\t\t\treturn await _api.RemoveAsync(id);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
@@ -331,6 +365,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveRangeAsync(IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\tResponseBaseModel result = new();");
+            await WriteRestServiceBody(writer, "RemoveRangeAsync", "ids", "ResponseBaseModel");
             //await writer.WriteLineAsync("\t\t\treturn await _api.RemoveRangeAsync(ids);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
