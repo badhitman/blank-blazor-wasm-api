@@ -25,7 +25,7 @@
     </div>
     <div class="card-body">
         <TabSetComponent>
-            <TabComponent Title="База" Tooltip="Основные настройки">
+            <TabComponent Title="Описание" Tooltip="Основные настройки">
                 <UserProjectEditComponent id="@Id" @ref="userProjectEdit" />
             </TabComponent>
             <TabComponent Title="Права" Tooltip="Ссылки на проект (пользователи, связанные с проектом)." IsDisabled="@(Id.GetValueOrDefault(0) == 0)">
