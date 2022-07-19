@@ -151,7 +151,7 @@ else
         {
             DataRows = rest.DataRows;
             EnumsTypesOfProject = rest.EnumsTypesOfProject;
-            DocumentsTypesOfProject = rest.DocumentsTypesOfProject;
+            DocumentsTypesOfProject = rest.DocumentsTypesOfProject.Select(x=> { if (x.Id == Id) { x.IsDeleted = true; } return x; });
         }
         IsBusyProgress = false;
         StateHasChanged();
