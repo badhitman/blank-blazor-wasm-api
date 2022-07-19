@@ -141,7 +141,7 @@ namespace DbTablesLib
                 query = query.Include(x => x.UsersLinks);
             }
             var project_db = await query.FirstOrDefaultAsync(x => x.Id == project_id);
-            if (!project_db.UsersLinks.Any())
+            if (project_db is not null && !project_db.UsersLinks.Any())
             {
                 project_db.UsersLinks = await _db_context.DesignProjectsToUsersLinks.Where(x => x.ProjectId == project_id).ToArrayAsync();
             }
