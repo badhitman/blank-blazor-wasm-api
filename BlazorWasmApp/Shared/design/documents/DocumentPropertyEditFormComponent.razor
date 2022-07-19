@@ -49,7 +49,7 @@
     </div>
     <div class="mb-3">
         <label for="exampleInputAbout" class="form-label">Справочная информация</label>
-        <textarea @bind:event="oninput" class="form-control" rows="5" placeholder="Комментарий для поля" Id="exampleInputAbout" @bind="CurrentProperty.Description" aria-describedby="aboutHelp" />
+        <textarea disabled="@(CurrentProperty.Id <= 0)" @bind:event="oninput" class="form-control" rows="5" placeholder="Комментарий для поля" Id="exampleInputAbout" @bind="CurrentProperty.Description" aria-describedby="aboutHelp" />
         <div id="aboutHelp" class="form-text">Описание поля (подсказка). Избегайте использование HTML в этом описании.</div>
     </div>
 </EditForm>
