@@ -42,13 +42,15 @@ else
                 <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
                     <button @onclick="DownloadJsonFileFromStreamAsync" type="button" title="Генерация JSON дампа" class="btn btn-outline-dark">JSON</button>
                     <button @onclick="DownloadCSharpFileFromStreamAsync" type="button" title="Комплект C#" class="btn btn-outline-dark">C#</button>
-                    <button type="button" disabled title="в разработке" class="btn btn-outline-dark">PHP</button>
                 </div>
             </div>
         </div>
     </nav>
     <p></p>
     <div class="card">
+        <div class="card-header">
+            Перечисления:
+        </div>
         <div class="card-body">
             <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
                 @foreach (EnumFitModel row in StructureData.Enums)
@@ -70,6 +72,9 @@ else
     </div>
     <br />
     <div class="card">
+        <div class="card-header">
+            Документы:
+        </div>
         <div class="card-body">
             <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
                 @foreach (DocumentFitModel row in StructureData.Documents)
