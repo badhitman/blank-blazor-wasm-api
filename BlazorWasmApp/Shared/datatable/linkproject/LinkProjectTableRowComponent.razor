@@ -107,7 +107,7 @@
         if (Link.UserId == sessionMarker.Id || !CanAdminProject)
             return;
 
-        ModalChangeLinkAccessLevelUser.Open($"Уровнь доступа: ({Link.User.Email})");
+        ModalChangeLinkAccessLevelUser.Open($"Уровень доступа: ({Link.User.Email})");
     }
 
     async Task toggleDeleteLink(MouseEventArgs args)
