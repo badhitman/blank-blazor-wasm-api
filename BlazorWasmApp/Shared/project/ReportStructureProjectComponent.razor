@@ -140,6 +140,17 @@ else
             <hr />
             <div class="card">
                 <div class="card-header">
+                    Тело документа
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var row in CurrentOffCanvasDocument.PropertiesBody.OrderBy(x => x.SortIndex))
+                    {
+                        <li class="list-group-item">@(row.Name)</li>
+                    }
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-header">
                     Таблица документа
                 </div>
                 <ul class="list-group list-group-flush">
@@ -150,17 +161,6 @@ else
                 </ul>
             </div>
             <br />
-            <div class="card">
-                <div class="card-header">
-                    Тело документа
-                </div>
-                <ul class="list-group list-group-flush">
-                    @foreach (var row in CurrentOffCanvasDocument.PropertiesBody.OrderBy(x => x.SortIndex))
-                    {
-                        <li class="list-group-item">@(row.Name)</li>
-                    }
-                </ul>
-            </div>
         </div>
     </div>
 }
