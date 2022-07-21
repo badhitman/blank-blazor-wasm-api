@@ -35,5 +35,17 @@ namespace ApiRestApp.Controllers
         {
             return await _designer_structure_service.GetStructureProject(id);
         }
+
+        /// <summary>
+        /// Получить ссылки на вещественны тип
+        /// </summary>
+        /// <param name="owner_id">Идентификатор вещественнго типа</param>
+        /// <param name="owner_type">Тип вещественного типа</param>
+        /// <returns>Результат обработки</returns>
+        [HttpGet]
+        public async Task<LinksRealTypeResponseModel> Get([FromQuery] int owner_id, [FromQuery] OwnersLinksTypesEnum owner_type)
+        {
+            return await _designer_structure_service.GetRealTypeLinks(owner_id, owner_type);
+        }
     }
 }

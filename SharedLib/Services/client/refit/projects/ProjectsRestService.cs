@@ -235,5 +235,35 @@ namespace SharedLib.Services
 
             return result;
         }
+
+        /// <inheritdoc/>
+        public async Task<LinksRealTypeResponseModel> GetRealTypeLinks(int owner_id, OwnersLinksTypesEnum owner_type)
+        {
+            LinksRealTypeResponseModel result = new();
+
+            try
+            {
+                ApiResponse<LinksRealTypeResponseModel> rest = await _users_projects_service.GetRealTypeLinks(owner_id, owner_type);
+
+                if (rest.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    result.IsSuccess = false;
+                    result.Message = $"HTTP error: [code={rest.StatusCode}] {rest?.Error?.Content}";
+                    _logger.LogError(result.Message);
+
+                    return result;
+                }
+                result.IsSuccess = rest.Content.IsSuccess;
+                result = rest.Content;
+            }
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                result.Message = $"Exception {nameof(_users_projects_service.GetRealTypeLinks)}";
+                _logger.LogError(ex, result.Message);
+            }
+
+            return result;
+        }
     }
 }

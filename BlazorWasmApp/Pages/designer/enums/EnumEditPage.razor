@@ -1,5 +1,6 @@
 ﻿@page "/enums/edit/{id:int?}"
 
+@using BlazorWasmApp.Shared.design
 @using Microsoft.AspNetCore.Authorization
 @using SharedLib
 @using SharedLib.Services
@@ -144,6 +145,9 @@
                 </TabComponent>
                 <TabComponent Title="Логи" Tooltip="Изменения перечисления." IsDisabled="@(Id.GetValueOrDefault(0) == 0)">
                     <ReportLogsEnumComponent EnumId="@Id" />
+                </TabComponent>
+                <TabComponent Title="Связи" Tooltip="Ссылки на объект" IsDisabled="@(Id.GetValueOrDefault(0) == 0)">
+                    <LinksPropertiesComponent OwnerId="@Id.GetValueOrDefault(0)" OwnerType="OwnersLinksTypesEnum.Enum" />
                 </TabComponent>
             </TabSetComponent>
         }

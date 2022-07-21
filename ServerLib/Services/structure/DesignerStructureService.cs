@@ -23,6 +23,12 @@ namespace ServerLib
         }
 
         /// <inheritdoc/>
+        public async Task<LinksRealTypeResponseModel> GetRealTypeLinks(int owner_id, OwnersLinksTypesEnum owner_type)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
         public async Task<ProjectStructureResponseModel> GetStructureProject(int project_id)
         {
             ProjectStructureResponseModel res = new()
@@ -58,10 +64,10 @@ namespace ServerLib
             }
 
             res.StructureData = await _project_dt.GetStructureProjectAsync(project_id);
-            res.Project = new NameSpacedModel() 
-            { 
-                Name = project_db.Name, 
-                NameSpace = project_db.NameSpace 
+            res.Project = new NameSpacedModel()
+            {
+                Name = project_db.Name,
+                NameSpace = project_db.NameSpace
             };
             return res;
         }

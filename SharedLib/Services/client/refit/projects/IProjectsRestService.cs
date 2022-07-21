@@ -59,5 +59,13 @@ namespace SharedLib.Services
         /// <param name="project_id">Идентификатор проекта</param>
         /// <returns>Структура/состав проекта</returns>
         public Task<ProjectStructureResponseModel> GetStructureProject(int project_id);
+
+        /// <summary>
+        ///  Получить ссылки на вещественны тип
+        /// </summary>
+        /// <param name="owner_id">Идентификатор вещественнго типа</param>
+        /// <param name="owner_type">Тип вещественного типа</param>
+        /// <returns>Ссылки на вещественный тип</returns>
+        public Task<LinksRealTypeResponseModel> GetRealTypeLinks(int owner_id, OwnersLinksTypesEnum owner_type);
     }
 }

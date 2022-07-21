@@ -1,5 +1,6 @@
 ﻿@page "/documents/edit/{id:int?}"
 
+@using BlazorWasmApp.Shared.design
 @using BlazorWasmApp.Shared.design.documents
 @using BlazorWasmApp.Shared.tabs
 @using Microsoft.AspNetCore.Authorization
@@ -105,6 +106,9 @@
             </TabComponent>
             <TabComponent Title="Логи" Tooltip="Изменения документа." IsDisabled="@(Id.GetValueOrDefault(0) == 0)">
                 <ReportLogsDocumentComponent DocumentId="@Id" />
+            </TabComponent>
+            <TabComponent Title="Связи" Tooltip="Ссылки на объект" IsDisabled="@(Id.GetValueOrDefault(0) == 0)">
+                <LinksPropertiesComponent OwnerId="@Id.GetValueOrDefault(0)" OwnerType="OwnersLinksTypesEnum.Document" />
             </TabComponent>
         </TabSetComponent>
     </div>

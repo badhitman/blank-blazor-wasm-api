@@ -68,5 +68,14 @@ namespace SharedLib.Services
         /// <returns>Структура/состав проекта</returns>
         [Get("/api/designerstructure/{id}")]
         public Task<ApiResponse<ProjectStructureResponseModel>> GetStructureProject(int id);
+
+        /// <summary>
+        ///  Получить ссылки на вещественны тип
+        /// </summary>
+        /// <param name="owner_id">Идентификатор вещественнго типа</param>
+        /// <param name="owner_type">Тип вещественного типа</param>
+        /// <returns>Ссылки на вещественный тип</returns>
+        [Get("/api/designerstructure")]
+        public Task<ApiResponse<LinksRealTypeResponseModel>> GetRealTypeLinks(int owner_id, OwnersLinksTypesEnum owner_type);
     }
 }

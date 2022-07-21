@@ -1,0 +1,62 @@
+﻿@using SharedLib
+@using SharedLib.Models
+@using SharedLib.Services
+
+@inject IProjectsRestService _users_projects_refit_service
+
+@inherits BlazorBusyComponentBaseModel
+
+<h3>LinksPropertiesComponent</h3>
+
+@code {
+    [Parameter, EditorRequired]
+    public int OwnerId { get; set; }
+
+    [Parameter, EditorRequired]
+    public OwnersLinksTypesEnum OwnerType { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
+    /*
+     public async Task ReloadForm(int id)
+    {
+        if (project_id <= 0)
+        {
+            ModalBodyText = "Идентификатор пользовательского проекта не может быть 0";
+            _logger.LogError(ModalBodyText);
+            Modal.Open("Ошибка!");
+            return;
+        }
+
+        IsBusyProgress = true;
+
+        ProjectStructureResponseModel rest = await _users_projects_refit_service.GetStructureProject(ProjectId.Value);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                _logger.LogError(rest.Message);
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(_users_projects_refit_service.GetStructureProject)}";
+                _logger.LogError(ModalBodyText);
+                Modal.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            StructureData = rest.StructureData;
+            ProjectInfo = rest.Project;
+        }
+
+        IsBusyProgress = false;
+        StateHasChanged();
+    }
+     */
+}

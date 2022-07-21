@@ -64,5 +64,11 @@ namespace SharedLib.Services
         {
             return await _api.GetStructureProject(project_id);
         }
+
+        /// <inheritdoc/>
+        public async Task<ApiResponse<LinksRealTypeResponseModel>> GetRealTypeLinks(int owner_id, OwnersLinksTypesEnum owner_type)
+        {
+            return await _api.GetRealTypeLinks(owner_id, owner_type);
+        }
     }
 }
