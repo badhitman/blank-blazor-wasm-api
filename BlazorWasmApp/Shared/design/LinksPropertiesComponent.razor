@@ -2,28 +2,60 @@
 @using SharedLib.Models
 @using SharedLib.Services
 
+@inject ILogger<LinksPropertiesComponent> _logger
 @inject IProjectsRestService _users_projects_refit_service
 
 @inherits BlazorBusyComponentBaseModel
 
-<h3>LinksPropertiesComponent</h3>
+@if (LinksData.Any())
+{
+    <ul class="list-group list-group-flush">
+        @foreach (EntryDescriptionModel row in LinksData)
+        {
+            <li class="list-group-item"><b>#@(row.Id)</b> <a href="/@(GlobalStaticConstants.DOCUMENTS_CONTROLLER_NAME)/@(GlobalStaticConstants.EDIT_ACTION_NAME)/@(row.Id)">@(row.Name)</a> @((MarkupString)row.Description)</li>
+        }
+    </ul>
+}
+else
+{
+    <figure>
+        <blockquote class="blockquote">
+            <p>Связей нет</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            Ссылок на этот объект нет.
+        </figcaption>
+    </figure>
+}
+
+<ModalWindowComponent @ref="Modal">
+    <p>@ModalBodyText</p>
+</ModalWindowComponent>
+
 
 @code {
     [Parameter, EditorRequired]
-    public int OwnerId { get; set; }
+    public int? OwnerId { get; set; }
 
     [Parameter, EditorRequired]
     public OwnersLinksTypesEnum OwnerType { get; set; }
 
-    protected override Task OnInitializedAsync()
+    private ModalWindowComponent Modal { get; set; }
+    private string ModalBodyText { get; set; } = string.Empty;
+
+    IEnumerable<EntryDescriptionModel> LinksData = Enumerable.Empty<EntryDescriptionModel>();
+
+    protected override async Task OnInitializedAsync()
     {
-        return base.OnInitializedAsync();
+        if (OwnerId.GetValueOrDefault() > 0)
+        {
+            await ReloadForm(OwnerId.Value);
+        }
     }
 
-    /*
-     public async Task ReloadForm(int id)
+    public async Task ReloadForm(int id)
     {
-        if (project_id <= 0)
+        if (id <= 0)
         {
             ModalBodyText = "Идентификатор пользовательского проекта не может быть 0";
             _logger.LogError(ModalBodyText);
@@ -33,7 +65,7 @@
 
         IsBusyProgress = true;
 
-        ProjectStructureResponseModel rest = await _users_projects_refit_service.GetStructureProject(ProjectId.Value);
+        LinksRealTypeResponseModel rest = await _users_projects_refit_service.GetRealTypeLinks(id, OwnerType);
         if (!rest.IsSuccess)
         {
             if (!string.IsNullOrEmpty(rest.Message))
@@ -44,19 +76,17 @@
             }
             else
             {
-                ModalBodyText = $"Ошибка API: {nameof(_users_projects_refit_service.GetStructureProject)}";
+                ModalBodyText = $"Ошибка API: {nameof(_users_projects_refit_service.GetRealTypeLinks)}";
                 _logger.LogError(ModalBodyText);
                 Modal.Open("Ошибка!");
             }
         }
         else
         {
-            StructureData = rest.StructureData;
-            ProjectInfo = rest.Project;
+            LinksData = rest.LinksData ?? Enumerable.Empty<EntryDescriptionModel>();
         }
 
         IsBusyProgress = false;
         StateHasChanged();
     }
-     */
 }

@@ -172,17 +172,35 @@ namespace DbTablesLib
             return rows.Select(x => (x.Type, x.SystemCodeName, x.Id, x.Name, x.IsDeleted)).ToArray();
         }
 
+        /// <inheritdoc/>
         public async Task<StructureProjectModel> GetStructureProjectAsync(int project_id)
         {
             StructureProjectModel res = new StructureProjectModel()
             {
                 EnumsProxyAdapter = await _db_context.DesignEnums.Include(x => x.EnumItems).Where(x => x.ProjectId == project_id).ToArrayAsync(),
                 DocumentsProxyAdapter = await _db_context.DesignDocuments
-                .Include(x => x.PropertiesBody).ThenInclude(x=>x.PropertyLink)
+                .Include(x => x.PropertiesBody).ThenInclude(x => x.PropertyLink)
                 .Include(x => x.PropertiesGrid).ThenInclude(x => x.PropertyLink)
                 .Where(x => x.ProjectId == project_id).ToArrayAsync()
             };
             return res;
+        }
+
+        /// <inheritdoc/>
+        public async Task<EntryDescriptionModel[]> GetRealTypeLinks(int owner_id, OwnersLinksTypesEnum owner_type)
+        {
+            IQueryable<DocumentPropertyLinkModelDB> query = _db_context.DocumentsPropertiesLinks
+                .Include(x => x.OwnerPropertyMainGrid).ThenInclude(x => x.DocumentOwner)
+                .Include(x => x.OwnerPropertyMainBody).ThenInclude(x => x.DocumentOwner)
+                .AsQueryable();
+
+            DocumentPropertyLinkModelDB[]? pre_data = owner_type switch
+            {
+                OwnersLinksTypesEnum.Document => await query.Where(x => x.TypedDocumentId == owner_id).ToArrayAsync(),
+                OwnersLinksTypesEnum.Enum => await query.Where(x => x.TypedEnumId == owner_id).ToArrayAsync(),
+                _ => throw new NotImplementedException(),
+            };
+            return pre_data.Select(x => x.OwnerPropertyMainGrid is null ? x.OwnerPropertyMainBody.DocumentOwner : x.OwnerPropertyMainGrid.DocumentOwner).GroupBy(x => x.Id).Select(x => { DocumentDesignModelDB row = x.First(); return new EntryDescriptionModel(row.Name, row.Description) { Id = row.Id }; }).ToArray();
         }
     }
 }

@@ -108,7 +108,7 @@
                 <ReportLogsDocumentComponent DocumentId="@Id" />
             </TabComponent>
             <TabComponent Title="Связи" Tooltip="Ссылки на объект" IsDisabled="@(Id.GetValueOrDefault(0) == 0)">
-                <LinksPropertiesComponent OwnerId="@Id.GetValueOrDefault(0)" OwnerType="OwnersLinksTypesEnum.Document" />
+                <LinksPropertiesComponent OwnerId="@Id" OwnerType="OwnersLinksTypesEnum.Document" />
             </TabComponent>
         </TabSetComponent>
     </div>

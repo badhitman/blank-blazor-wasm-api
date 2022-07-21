@@ -33,6 +33,14 @@ namespace SharedLib
         public Task<bool> DeleteAsync(int project_id, bool auto_save = true);
 
         /// <summary>
+        ///  Получить ссылки на вещественны тип
+        /// </summary>
+        /// <param name="owner_id">Идентификатор вещественнго типа</param>
+        /// <param name="owner_type">Тип вещественного типа</param>
+        /// <returns>Результат обработки</returns>
+        public Task<EntryDescriptionModel[]> GetRealTypeLinks(int owner_id, OwnersLinksTypesEnum owner_type);
+
+        /// <summary>
         /// Получить проекты для пользователя
         /// </summary>
         /// <param name="user">Пользователь, для которого производится поиск</param>
@@ -47,7 +55,7 @@ namespace SharedLib
         /// <param name="include_users_data">Включить загрузку данных пользователей</param>
         /// <returns>Пользовательский проект</returns>
         public Task<ProjectModelDB?> GetProjectAsync(int project_id, bool include_users_data);
-        
+
         /// <summary>
         /// Существует прокт по идентификатору
         /// </summary>

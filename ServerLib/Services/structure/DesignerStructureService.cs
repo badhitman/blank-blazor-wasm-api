@@ -25,7 +25,26 @@ namespace ServerLib
         /// <inheritdoc/>
         public async Task<LinksRealTypeResponseModel> GetRealTypeLinks(int owner_id, OwnersLinksTypesEnum owner_type)
         {
-            throw new NotImplementedException();
+            LinksRealTypeResponseModel res = new()
+            {
+                IsSuccess = _session_service.SessionMarker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed
+            };
+            if (!res.IsSuccess)
+            {
+                res.Message = "Ваш акаунт не подтверждён. Пройдите верификацию своего профиля!";
+                return res;
+            }
+
+            res.IsSuccess = owner_id > 0;
+            if (!res.IsSuccess)
+            {
+                res.Message = "Идентификатор должен быть больше нуля";
+                return res;
+            }
+
+            res.LinksData = await _project_dt.GetRealTypeLinks(owner_id, owner_type);
+
+            return res;
         }
 
         /// <inheritdoc/>

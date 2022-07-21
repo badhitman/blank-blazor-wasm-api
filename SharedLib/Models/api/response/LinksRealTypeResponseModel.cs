@@ -12,6 +12,6 @@ namespace SharedLib.Models
         /// <summary>
         /// Информация о составе проекта
         /// </summary>
-        public IEnumerable<DocumentPropertyLinkModelDB> LinksData { get; set; }
+        public IEnumerable<EntryDescriptionModel> LinksData { get; set; }
     }
 }
