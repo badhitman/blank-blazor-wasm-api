@@ -98,6 +98,7 @@ else
         if (OwnerId.GetValueOrDefault(0) > 0 && _old_owner_id != OwnerId)
         {
             ReloadForm(OwnerId.Value);
+            _old_owner_id = OwnerId.Value;
         }
     }
 
