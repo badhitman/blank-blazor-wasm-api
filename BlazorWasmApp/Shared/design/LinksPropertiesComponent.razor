@@ -4,6 +4,7 @@
 
 @inject ILogger<LinksPropertiesComponent> _logger
 @inject IProjectsRestService _users_projects_refit_service
+@inject NavigationManager _navigation_manager
 
 @inherits BlazorBusyComponentBaseModel
 
@@ -36,6 +37,7 @@ else
 @code {
     [Parameter, EditorRequired]
     public int? OwnerId { get; set; }
+    int _old_owner_id;
 
     [Parameter, EditorRequired]
     public OwnersLinksTypesEnum OwnerType { get; set; }
@@ -47,6 +49,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        _navigation_manager.LocationChanged += HandleLocationChanged;
         if (OwnerId.GetValueOrDefault() > 0)
         {
             await ReloadForm(OwnerId.Value);
@@ -62,7 +65,7 @@ else
             Modal.Open("Ошибка!");
             return;
         }
-
+        _old_owner_id = id;
         IsBusyProgress = true;
 
         LinksRealTypeResponseModel rest = await _users_projects_refit_service.GetRealTypeLinks(id, OwnerType);
@@ -88,5 +91,19 @@ else
 
         IsBusyProgress = false;
         StateHasChanged();
+    }
+
+    protected void HandleLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        if (OwnerId.GetValueOrDefault(0) > 0 && _old_owner_id != OwnerId)
+        {
+            ReloadForm(OwnerId.Value);
+        }
+    }
+
+    public void Dispose()
+    {
+        if (_navigation_manager is not null)
+            _navigation_manager.LocationChanged -= HandleLocationChanged;
     }
 }
