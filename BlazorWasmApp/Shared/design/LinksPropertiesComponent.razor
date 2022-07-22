@@ -97,8 +97,8 @@ else
     {
         if (OwnerId.GetValueOrDefault(0) > 0 && _old_owner_id != OwnerId)
         {
-            ReloadForm(OwnerId.Value).Wait();
             _old_owner_id = OwnerId.Value;
+            ReloadForm(OwnerId.Value).Wait();
         }
     }
 
