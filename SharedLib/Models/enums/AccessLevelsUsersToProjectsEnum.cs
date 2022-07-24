@@ -12,12 +12,6 @@ namespace SharedLib.Models
     public enum AccessLevelsUsersToProjectsEnum
     {
         /// <summary>
-        /// Заблокирован
-        /// </summary>
-        [Display(Name = "Заблокирован", Description = "Заблокирован")]
-        Blocked = -10,
-
-        /// <summary>
         /// Чтение и просмотр
         /// </summary>
         Reader = 10,

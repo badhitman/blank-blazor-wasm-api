@@ -12,7 +12,7 @@ namespace SharedLib.Models
         /// <summary>
         /// Уровень доступа пользвателя к проекту
         /// </summary>
-        public AccessLevelsUsersToProjectsEnum AccessLevelUser { get; set; } = AccessLevelsUsersToProjectsEnum.Blocked;
+        public AccessLevelsUsersToProjectsEnum AccessLevelUser { get; set; } = AccessLevelsUsersToProjectsEnum.Reader;
 
         /// <summary>
         /// Ссылка помечена на удаление

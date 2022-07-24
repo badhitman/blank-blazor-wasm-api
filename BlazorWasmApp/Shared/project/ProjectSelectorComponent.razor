@@ -27,7 +27,7 @@
             <select @onchange="projectOnChangeAsync" class="form-select" aria-label="Default select example">
                 @foreach (LinkToProjectForUserModel project in UsersProjects)
                 {
-                    <option selected="@(CurrentEditProject == project.ProjectId && (sessionMarker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (!project.IsDeleted && !project.ProjectIsDeleted)))" value="@project.ProjectId" disabled="@(project.AccessLevelUser <= AccessLevelsUsersToProjectsEnum.Blocked || project.IsDeleted || project.ProjectIsDeleted)">@project.Name</option>
+                    <option selected="@(CurrentEditProject == project.ProjectId && (sessionMarker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (!project.IsDeleted && !project.ProjectIsDeleted)))" value="@project.ProjectId" disabled="@(project.IsDeleted || project.ProjectIsDeleted)">@project.Name</option>
                 }
             </select>
         </div>
