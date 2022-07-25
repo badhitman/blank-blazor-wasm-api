@@ -40,6 +40,11 @@ namespace DbLayerLib
         public DbSet<DocumentDesignModelDB> DesignDocuments { get; set; }
 
         /// <summary>
+        /// Табличные части документов
+        /// </summary>
+        public DbSet<DocumentGridModelDB> DesignDocumentsGrids { get; set; }
+
+        /// <summary>
         /// Связи полей документов с типами вещественных данных
         /// </summary>
         public DbSet<DocumentPropertyLinkModelDB> DocumentsPropertiesLinks { get; set; }

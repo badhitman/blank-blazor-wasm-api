@@ -1,0 +1,136 @@
+﻿@using BlazorWasmApp.Shared.design
+@using BlazorWasmApp.Shared.design.documents
+@using BlazorWasmApp.Shared.tabs
+@using Microsoft.AspNetCore.Authorization
+@using SharedLib
+@using SharedLib.Models
+@using SharedLib.Services
+
+@inject SessionMarkerLiteModel _session_marker
+@inject IDocumentsDesignRestService _documents_design_refit_service
+@inject ILogger<DocumentGridsManageComponent> _logger
+
+@inherits BlazorBusyComponentBaseModel
+
+@attribute [Authorize]
+
+@if (IsBusyProgress == true)
+{
+    <div class="text-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Загрузка...</span>
+        </div>
+    </div>
+}
+else
+{
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    Accordion Item #1
+                </button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                    Accordion Item #2
+                </button>
+            </h2>
+            <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                    Accordion Item #3
+                </button>
+            </h2>
+            <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public int? Id { get; set; }
+
+    private ModalWindowComponent Modal { get; set; }
+    private string ModalBodyText { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id.GetValueOrDefault(0) == 0)
+        {
+            return;
+        }
+        await ReloadForm(Id.Value);
+    }
+
+    private async Task HandleValidSubmitEnumAsync()
+    {
+        if (Id.GetValueOrDefault(0) > 0)
+        {
+            //ResponseBaseCurrentProjectModel rest = await _documents_design_refit_service.UpdateDocumentAsync((IdNameDescriptionSimpleRealTypeModel)docomentObject);
+            //ModalBodyText = rest.Message;
+            //Modal.Open(rest.IsSuccess ? "Сохранено" : "Ошибка!");
+        }
+        else
+        {
+            //IdResponseOwnedModel rest = await _documents_design_refit_service.AddDocumentAsync((NameDescriptionSimpleRealTypeModel)docomentObject);
+            //if (rest.IsSuccess)
+            //{
+            //    docomentObject.Project = new ProjectModelDB(rest.CurrentOwnerObject);
+            //    _navigation_manager.NavigateTo($"/{GlobalStaticConstants.DOCUMENTS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}/{rest.Id}", false);
+            //}
+            //else
+            //{
+            //    ModalBodyText = rest.Message;
+            //    Modal.Open("Ошибка!");
+            //}
+        }
+    }
+
+    public async Task ReloadForm(int id)
+    {
+        if (id <= 0)
+        {
+            ModalBodyText = "Идентификатор документа не может быть 0";
+            _logger.LogError(ModalBodyText);
+            Modal.Open("Ошибка!");
+            return;
+        }
+
+        IsBusyProgress = true;
+        //DocumentDesignResponseModel rest = await _documents_design_refit_service.GetDocumentAsync(id);
+        //if (!rest.IsSuccess)
+        //{
+        //    if (!string.IsNullOrEmpty(rest.Message))
+        //    {
+        //        _logger.LogError(rest.Message);
+        //        ModalBodyText = rest.Message;
+        //        Modal.Open("Ошибка!");
+        //    }
+        //    else
+        //    {
+        //        ModalBodyText = $"Ошибка API: {nameof(_documents_design_refit_service.GetDocumentAsync)}";
+        //        _logger.LogError(ModalBodyText);
+        //        Modal.Open("Ошибка!");
+        //    }
+        //}
+        //else
+        //{
+        //    docomentObject = rest.DocumentDesign;
+        //    currentUserLinkProject = rest.CurrentUserLinkProject;
+        //}
+        IsBusyProgress = false;
+        StateHasChanged();
+    }
+}

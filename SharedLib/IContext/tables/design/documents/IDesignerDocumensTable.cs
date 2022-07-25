@@ -25,8 +25,9 @@ namespace SharedLib
         /// </summary>
         /// <param name="document_id">Идентификатор документа</param>
         /// <param name="include_users_links_for_project">Загрузить данные по ссылкам пользователей на проект</param>
+        /// <param name="include_grids">Загрузить табличные части документа</param>
         /// <returns>Объект документа</returns>
-        public Task<DocumentDesignModelDB?> GetDocumentAsync(int document_id, bool include_users_links_for_project = true);
+        public Task<DocumentDesignModelDB?> GetDocumentAsync(int document_id, bool include_users_links_for_project = true, bool include_grids = false);
 
         /// <summary>
         /// Получить объект документа по идентификатору поля "основного" тела 
@@ -42,8 +43,9 @@ namespace SharedLib
         /// <param name="document_system_code">Системное кодовое имя документа</param>
         /// <param name="project_id">Идентификатор проекта, где требуется произвести поиск</param>
         /// <param name="include_users_links_for_project">Загрузить данные по ссылкам пользователей на проект</param>
+        /// <param name="include_grids">Загрузить табличные части документа</param>
         /// <returns>Объект документа</returns>
-        public Task<DocumentDesignModelDB> GetDocumentAsync(string document_system_code, int project_id, bool include_users_links_for_project = true);
+        public Task<DocumentDesignModelDB> GetDocumentAsync(string document_system_code, int project_id, bool include_users_links_for_project = true, bool include_grids = false);
 
         /// <summary>
         /// Создать новый документ
@@ -58,5 +60,23 @@ namespace SharedLib
         /// <param name="document_upd">Объект документа</param>
         /// <param name="auto_save">Автоматически сохранять в БД</param>
         public Task UpdateDocumentAsync(DocumentDesignModelDB document_upd, bool auto_save = true);
+
+        /// <summary>
+        /// Создать новую табличную часть документа
+        /// </summary>
+        /// <param name="added_grid">Новая табличная часть</param>
+        public Task AddGridAsync(SystemDocumentsNamedSimpleModel added_grid);
+
+        /// <summary>
+        /// Обновить табличную часть документа
+        /// </summary>
+        /// <param name="grid_upd">Табличная часть документа</param>
+        public Task UpdateGridAsync(RealTypeModel grid_upd);
+
+        /// <summary>
+        /// Переключить признак удаления табличной части документа
+        /// </summary>
+        /// <param name="grid_id">Идентификатор табличной части</param>
+        public Task ToggleMarkDeleteGridAsync(int grid_id);
     }
 }

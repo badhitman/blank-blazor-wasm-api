@@ -10,7 +10,7 @@ namespace SharedLib.Models
     /// <summary>
     /// Базовая абстрактная модель поля/свойства/реквизита поля документа
     /// </summary>
-    public abstract class PropertyBaseRealTypeModel : PropertyLiteRealTypeModel
+    public abstract class PropertyBaseRealTypeModel : SystemDocumentsNamedSimpleModel
     {
         /// <summary>
         /// Сброс состояния

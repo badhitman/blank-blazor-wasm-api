@@ -7,7 +7,7 @@ namespace SharedLib.Models
     /// <summary>
     /// Системный объект (с поддержкой истемного кода/наименования) с имененем и описанием
     /// </summary>
-    public class PropertySimpleRealTypeModel : PropertyLiteRealTypeModel
+    public class PropertySimpleRealTypeModel : SystemDocumentsNamedSimpleModel
     {
         /// <summary>
         /// Тип поля (перечисление, документ)

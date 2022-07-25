@@ -45,5 +45,26 @@ namespace ServerLib
         /// <param name="id">Идентификатор документа</param>
         /// <returns>Результат обработки запроса</returns>
         public Task<ResponseBaseModel> DocumentToggleDeleteAsync(int id);
+
+        /// <summary>
+        /// Создать новую табличную часть документа
+        /// </summary>
+        /// <param name="added_grid">Новая табличная часть</param>
+        /// <returns>Результат обработки запроса</returns>
+        public Task<RealTypeRowsResponseModel> AddGridAsync(SystemDocumentsNamedSimpleModel added_grid);
+
+        /// <summary>
+        /// Обновить табличную часть документа
+        /// </summary>
+        /// <param name="grid_upd">Табличная часть документа</param>
+        /// <returns>Результат обработки запроса</returns>
+        public Task<RealTypeRowsResponseModel> UpdateGridAsync(RealTypeModel grid_upd);
+
+        /// <summary>
+        /// Переключить признак удаления табличной части документа
+        /// </summary>
+        /// <param name="grid_id">Идентификатор табличной части</param>
+        /// <returns>Результат обработки запроса</returns>
+        public Task<RealTypeRowsResponseModel> ToggleMarkDeleteGridAsync(int grid_id);
     }
 }

@@ -9,7 +9,7 @@ namespace SharedLib.Models
     /// <summary>
     /// Вещественная модель (базовая с описанием)
     /// </summary>
-    public abstract class RealTypeModel : EntryDescriptionModel
+    public class RealTypeModel : EntryDescriptionModel
     {
         /// <summary>
         /// Системное имя (имя типа/класса C#)

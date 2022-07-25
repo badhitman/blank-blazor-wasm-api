@@ -29,4 +29,15 @@ namespace SharedLib.Models
         /// </summary>
         public int Id { get; set; }
     }
+
+    /// <summary>
+    /// Набор данных IdNameDescriptionSimpleRealTypeModel
+    /// </summary>
+    public class RealTypeRowsResponseModel : ResponseBaseModel
+    {
+        /// <summary>
+        /// Строки данных
+        /// </summary>
+        public IEnumerable<RealTypeModel> Rows { get; set; }
+    }
 }

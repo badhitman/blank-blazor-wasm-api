@@ -9,7 +9,7 @@ namespace SharedLib.Models
     /// <summary>
     /// Сситемный объект с именем и системным кодом
     /// </summary>
-    public class PropertyLiteRealTypeModel : NamedSimpleModel
+    public class SystemDocumentsNamedSimpleModel : NamedSimpleModel
     {
         /// <summary>
         /// Системное имя (имя типа/класса C#)
@@ -23,10 +23,5 @@ namespace SharedLib.Models
         /// Идентификатор документа
         /// </summary>
         public int DocumentOwnerId { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public DocumentDesignModelDB? DocumentOwner { get; set; }
     }
 }

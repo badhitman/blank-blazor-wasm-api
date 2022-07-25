@@ -80,19 +80,10 @@
                     <br />
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Таблица</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Метаданные табличной части документа (генерируется на оснвоании системного/кодового имени документа)</h6>
+                            <h5 class="card-title">Коллекции</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Табличные части документа</h6>
                             <div class="row g-3">
-                                <div class="col">
-                                    <label for="exampleInputNameTableProperty" class="form-label">Имя поля</label>
-                                    <input readonly class="form-control" id="exampleInputNameTableProperty" value="@TablePropertyName" aria-describedby="nameTablePropertyHelp" />
-                                    <div id="nameTablePropertyHelp" class="form-text">Системное поле объекта документа</div>
-                                </div>
-                                <div class="col">
-                                    <label for="exampleInputNameTableType" class="form-label">Тип данных</label>
-                                    <input readonly class="form-control" id="exampleInputNameTableType" value="@TablePropertyModel" aria-describedby="nameTableTypeHelp" />
-                                    <div id="nameTableTypeHelp" class="form-text">Имя типа данных табличной части C#.</div>
-                                </div>
+                                <DocumentGridsManageComponent Id="Id" />
                             </div>
                         </div>
                     </div>
@@ -119,7 +110,7 @@
 </ModalWindowComponent>
 
 @code {
-    [Parameter]
+    [Parameter, EditorRequired]
     public int? Id { get; set; }
 
     private ModalWindowComponent Modal { get; set; }
@@ -128,9 +119,6 @@
     DocumentDesignModelDB docomentObject = new();
     UserToProjectLinkModelDb currentUserLinkProject;
     bool canEditObject => _session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed && currentUserLinkProject.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Editor);
-
-    string TablePropertyName => $"{docomentObject.SystemCodeName}{GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX}";
-    string TablePropertyModel => $"{docomentObject.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}";
 
     protected override async Task OnInitializedAsync()
     {
