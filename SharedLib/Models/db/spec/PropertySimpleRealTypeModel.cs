@@ -38,7 +38,6 @@ namespace SharedLib.Models
             {
                 SystemCodeName = v.SystemCodeName,
                 PropertyType = v.PropertyType,
-                DocumentOwnerId = v.DocumentOwnerId,
                 Name = v.Name,
                 IsDeleted = false,
                 PropertyLink = v.DocumentPropertyLink

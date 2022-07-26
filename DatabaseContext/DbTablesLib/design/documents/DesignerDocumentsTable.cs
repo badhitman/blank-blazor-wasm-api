@@ -138,7 +138,7 @@ namespace DbTablesLib
                 {
                     doc = x,
                     count_properties_body = _db_context.DesignDocumentsMainBodyProperties.Count(y => x.Id == y.DocumentOwnerId),
-                    count_properties_grid = _db_context.DesignDocumentsGridProperties.Count(y => x.Id == y.DocumentOwnerId)
+                    count_properties_grid = _db_context.DesignDocumentsGridProperties.Count(y => x.Id == y.Grid.DocumentOwnerId)
                 })
                 .Select(x => new SimpleRealTypeModel()
                 {

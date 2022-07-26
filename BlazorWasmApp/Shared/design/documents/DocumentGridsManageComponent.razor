@@ -43,25 +43,25 @@ else
 
 @code {
     [Parameter, EditorRequired]
-    public int? Id { get; set; }
+    public int Id { get; set; }
 
     private ModalWindowComponent Modal { get; set; }
     private string ModalBodyText { get; set; } = string.Empty;
 
-    IEnumerable<RealTypeModel> Grids;
+    IEnumerable<RealTypeModel> Grids = Enumerable.Empty<RealTypeModel>();
 
     protected override async Task OnInitializedAsync()
     {
-        if (Id.GetValueOrDefault(0) == 0)
+        if (Id <= 0)
         {
             return;
         }
-        await ReloadForm(Id.Value);
+        await ReloadForm(Id);
     }
 
     private async Task HandleValidSubmitEnumAsync()
     {
-        if (Id.GetValueOrDefault(0) > 0)
+        if (Id > 0)
         {
             //ResponseBaseCurrentProjectModel rest = await _documents_grids_design_refit_service.UpdateDocumentAsync((IdNameDescriptionSimpleRealTypeModel)docomentObject);
             //ModalBodyText = rest.Message;

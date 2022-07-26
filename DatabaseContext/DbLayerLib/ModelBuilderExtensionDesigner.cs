@@ -302,7 +302,7 @@ namespace DbLayerLib
                 {
                     Id = ++index_id,
                     DocumentOwnerId = x.Id,
-                    DocumentOwner = x,
+                    //DocumentOwner = x,
                     IsDeleted = rand.Next(1, 100) > 70,
                     SystemCodeName = $"Grid{index_id}ForDocument{x.Id}",
                     Description = $"Description grid document{index_id}",
@@ -315,7 +315,7 @@ namespace DbLayerLib
             {
                 change_logs.Add(new LogChangeModelDB()
                 {
-                    Id = ++index_id,
+                    Id = ++log_change_index_id,
                     OwnerType = ContextesChangeLogEnum.Document,
                     OwnerId = x.DocumentOwnerId,
                     Name = $"Создана табличная часть документа (demo HasData)",
@@ -374,8 +374,8 @@ namespace DbLayerLib
                         break;
                 }
             }
+            modelBuilder.Entity<DocumentGridModelDB>().HasData(docs_grids);
             modelBuilder.Entity<DocumentPropertyLinkModelDB>().HasData(props_links);
-            modelBuilder.Entity<DocumentPropertyGridModelDB>().HasData(doc_props_demo_data_grid);
 
             change_logs.AddRange(doc_props_demo_data_grid.Select(x =>
             {
@@ -402,8 +402,15 @@ namespace DbLayerLib
                 return log_obj;
             }));
 
+            doc_props_demo_data_grid = doc_props_demo_data_grid.Select(x => { x.Grid = null; return x; }).ToArray();
+            modelBuilder.Entity<DocumentPropertyGridModelDB>().HasData(doc_props_demo_data_grid);
+
             change_logs.ForEach(x => { x.AuthorId = 1; });
             modelBuilder.Entity<LogChangeModelDB>().HasData(change_logs);
+
+            //#if DEBUG
+            //            var dbg = change_logs.GroupBy(x => x.Id).Select(x => { var f = x.First(); return new { id = f.Id, cnt = x.Count() }; }).OrderByDescending(x => x.cnt).ToArray();
+            //#endif
         }
     }
 }

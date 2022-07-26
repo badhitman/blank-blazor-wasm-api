@@ -32,7 +32,7 @@ namespace DbTablesLib
         public async Task<SimplePropertyRealTypeModel[]> GetPropertiesAsync(int document_id)
         {
             IQueryable<DocumentPropertyGridModelDB> query = _db_context.DesignDocumentsGridProperties
-                .Where(x => x.DocumentOwnerId == document_id)
+                .Where(x => x.Grid.DocumentOwnerId == document_id)
                 .OrderBy(x => x.SortIndex)
                 .Include(x => x.PropertyLink).ThenInclude(x => x.TypedDocument)
                 .Include(x => x.PropertyLink).ThenInclude(x => x.TypedEnum)
@@ -64,8 +64,8 @@ namespace DbTablesLib
         {
             IQueryable<DocumentPropertyGridModelDB> query = _db_context.DesignDocumentsGridProperties.AsQueryable();
             query = include_users_links_for_project
-                ? query.Include(x => x.DocumentOwner).ThenInclude(x => x.Project).ThenInclude(x => x.UsersLinks)
-                : query.Include(x => x.DocumentOwner).ThenInclude(x => x.Project);
+                ? query.Include(x=>x.Grid).ThenInclude(x => x.DocumentOwner).ThenInclude(x => x.Project).ThenInclude(x => x.UsersLinks)
+                : query.Include(x => x.Grid).ThenInclude(x => x.DocumentOwner).ThenInclude(x => x.Project);
             return await query.FirstOrDefaultAsync(x => x.Id == property_id);
         }
 
@@ -92,8 +92,8 @@ namespace DbTablesLib
         /// <inheritdoc/>
         public async Task<uint> NextSortIndexAsync(int document_id)
         {
-            if (await _db_context.DesignDocumentsGridProperties.AnyAsync(x => x.DocumentOwnerId == document_id))
-                return (await _db_context.DesignDocumentsGridProperties.Where(x => x.DocumentOwnerId == document_id).MaxAsync(x => x.SortIndex)) + 1;
+            if (await _db_context.DesignDocumentsGridProperties.AnyAsync(x => x.Grid.DocumentOwnerId == document_id))
+                return (await _db_context.DesignDocumentsGridProperties.Where(x => x.Grid.DocumentOwnerId == document_id).MaxAsync(x => x.SortIndex)) + 1;
 
             return 0;
         }

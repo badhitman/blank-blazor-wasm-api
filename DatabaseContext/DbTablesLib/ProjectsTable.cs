@@ -190,7 +190,7 @@ namespace DbTablesLib
         public async Task<EntryDescriptionModel[]> GetRealTypeLinks(int owner_id, OwnersLinksTypesEnum owner_type)
         {
             IQueryable<DocumentPropertyLinkModelDB> query = _db_context.DocumentsPropertiesLinks
-                .Include(x => x.OwnerPropertyMainGrid).ThenInclude(x => x.DocumentOwner)
+                .Include(x => x.OwnerPropertyMainGrid).ThenInclude(x => x.Grid).ThenInclude(x => x.DocumentOwner)
                 .Include(x => x.OwnerPropertyMainBody).ThenInclude(x => x.DocumentOwner)
                 .AsQueryable();
 
@@ -200,7 +200,7 @@ namespace DbTablesLib
                 OwnersLinksTypesEnum.Enum => await query.Where(x => x.TypedEnumId == owner_id).ToArrayAsync(),
                 _ => throw new NotImplementedException(),
             };
-            return pre_data.Select(x => x.OwnerPropertyMainGrid is null ? x.OwnerPropertyMainBody.DocumentOwner : x.OwnerPropertyMainGrid.DocumentOwner).GroupBy(x => x.Id).Select(x => { DocumentDesignModelDB row = x.First(); return new EntryDescriptionModel(row.Name, row.Description) { Id = row.Id }; }).ToArray();
+            return pre_data.Select(x => x.OwnerPropertyMainGrid is null ? x.OwnerPropertyMainBody.DocumentOwner : x.OwnerPropertyMainGrid.Grid.DocumentOwner).GroupBy(x => x.Id).Select(x => { DocumentDesignModelDB row = x.First(); return new EntryDescriptionModel(row.Name, row.Description) { Id = row.Id }; }).ToArray();
         }
     }
 }

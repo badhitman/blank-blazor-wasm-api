@@ -152,7 +152,7 @@ namespace ServerLib
                 return res;
             }
 
-            List<SimplePropertyRealTypeModel> properties_items = new List<SimplePropertyRealTypeModel>(await _documens_main_grid_dt.GetPropertiesAsync(check.Property.DocumentOwnerId));
+            List<SimplePropertyRealTypeModel> properties_items = new List<SimplePropertyRealTypeModel>(await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.DocumentOwnerId));
             int index_at = properties_items.FindIndex(e => e.Id == id);
             res.IsSuccess = index_at > 0;
             if (!res.IsSuccess)
@@ -166,7 +166,7 @@ namespace ServerLib
             upd_items[1].SortIndex--;
 
             await _documens_main_grid_dt.UpdatePropertiesRangeAsync(upd_items, true);
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.DocumentOwnerId);
+            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.DocumentOwnerId);
             return res;
         }
 
@@ -181,7 +181,7 @@ namespace ServerLib
                 return res;
             }
 
-            List<SimplePropertyRealTypeModel> properties_items = new List<SimplePropertyRealTypeModel>(await _documens_main_grid_dt.GetPropertiesAsync(check.Property.DocumentOwnerId));
+            List<SimplePropertyRealTypeModel> properties_items = new List<SimplePropertyRealTypeModel>(await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.DocumentOwnerId));
             int index_at = properties_items.FindIndex(e => e.Id == id);
             res.IsSuccess = index_at < properties_items.Count - 1;
             if (!res.IsSuccess)
@@ -195,7 +195,7 @@ namespace ServerLib
             upd_items[1].SortIndex--;
 
             await _documens_main_grid_dt.UpdatePropertiesRangeAsync(upd_items, true);
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.DocumentOwnerId);
+            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.DocumentOwnerId);
             return res;
         }
 
@@ -227,7 +227,7 @@ namespace ServerLib
                 return res;
             }
 
-            res.IsSuccess = check.Project.Id == res.Property.DocumentOwner.ProjectId;
+            res.IsSuccess = check.Project.Id == res.Property.Grid.DocumentOwner.ProjectId;
             if (!res.IsSuccess)
             {
                 res.Message = "Текущий проект пользователя не совпадает с проектом перечисления";
@@ -263,10 +263,10 @@ namespace ServerLib
                 return res;
             }
 
-            res.IsSuccess = property_db.DocumentOwner.ProjectId == check.Project.Id;
+            res.IsSuccess = property_db.Grid.DocumentOwner.ProjectId == check.Project.Id;
             if (!res.IsSuccess)
             {
-                res.Message = $"Проект поля документа (#{property_db.DocumentOwner.ProjectId} '{property_db.DocumentOwner.Project.Name}') отличается от вашего текущего (#{check.Project.Id} '{check.Project.Name}')";
+                res.Message = $"Проект поля документа (#{property_db.Grid.DocumentOwner.ProjectId} '{property_db.Grid.DocumentOwner.Project.Name}') отличается от вашего текущего (#{check.Project.Id} '{check.Project.Name}')";
                 return res;
             }
 
@@ -317,7 +317,7 @@ namespace ServerLib
                 res.Message = ex.Message;
                 return res;
             }
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(property_db.DocumentOwnerId);
+            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(property_db.Grid.DocumentOwnerId);
             res.Message = "Изменения записаны.";
             return res;
         }
@@ -334,7 +334,7 @@ namespace ServerLib
             }
             check.Property.IsDeleted = !check.Property.IsDeleted;
             await _documens_main_grid_dt.UpdatePropertyAsync(check.Property, true);
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.DocumentOwnerId);
+            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.DocumentOwnerId);
             return res;
         }
 
@@ -355,7 +355,7 @@ namespace ServerLib
                 return res;
             }
             await _documens_main_grid_dt.RemovePropertyAsync(check.Property, true);
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.DocumentOwnerId);
+            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.DocumentOwnerId);
             return res;
         }
 

@@ -29,7 +29,7 @@ namespace SharedLib.Models
             return new DocumentGridModelDB()
             {
                 Description = string.Empty,
-                DocumentId = v.DocumentOwnerId,
+                DocumentOwnerId = v.DocumentOwnerId,
                 Name = v.Name,
                 SystemCodeName = v.SystemCodeName
             };
