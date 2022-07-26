@@ -322,7 +322,7 @@ namespace DbLayerLib
                 });
 
                 uint sort_index2 = 0;
-                return Enumerable.Range(3, rand.Next(3, 11)).Select(y => new DocumentPropertyGridModelDB()
+                return Enumerable.Range(3, rand.Next(3, 5)).Select(y => new DocumentPropertyGridModelDB()
                 {
                     PropertyType = enums_types[rand.Next(0, enums_types.Length)],
                     Id = ++index_id,
