@@ -9,7 +9,7 @@
 
 @inject SessionMarkerLiteModel _session_marker
 @inject IDocumentsPropertiesMainBodyDesignRestService _documents_properties_main_body_refit_service
-@inject IDocumentsPropertiesMainGridDesignRestService _documents_properties_main_grid_refit_service
+@inject IDocumentsPropertiesGridDesignRestService _documents_properties_main_grid_refit_service
 @inject ILogger<DocumentPropertiesComponent> _logger
 
 @attribute [Authorize]
@@ -38,6 +38,10 @@
             <span class="visually-hidden">Загрузка...</span>
         </div>
     </div>
+}
+else if (AreaProperty == AreasPropertiesEnum.Table)
+{
+    <text>Раздел в переработке...</text>
 }
 else
 {
@@ -151,7 +155,7 @@ else
         {
             DataRows = rest.DataRows;
             EnumsTypesOfProject = rest.EnumsTypesOfProject;
-            DocumentsTypesOfProject = rest.DocumentsTypesOfProject.Select(x=> { if (x.Id == Id) { x.IsDeleted = true; } return x; });
+            DocumentsTypesOfProject = rest.DocumentsTypesOfProject.Select(x => { if (x.Id == Id) { x.IsDeleted = true; } return x; });
         }
         IsBusyProgress = false;
         StateHasChanged();

@@ -9,15 +9,15 @@ using SharedLib.Models;
 namespace SharedLib.Services
 {
     /// <inheritdoc/>
-    public class DocumentsPropertiesMainGridDesignRefitProvider : IDocumentsPropertiesMainGridDesignRefitProvider
+    public class DocumentsPropertiesGridDesignRefitProvider : IDocumentsPropertiesGridDesignRefitProvider
     {
-        private readonly IDocumentsPropertiesMainGridDesignRefitService _api;
-        private readonly ILogger<DocumentsPropertiesMainGridDesignRefitProvider> _logger;
+        private readonly IDocumentsPropertiesGridDesignRefitService _api;
+        private readonly ILogger<DocumentsPropertiesGridDesignRefitProvider> _logger;
 
         /// <summary>
         /// Конструктор
         /// </summary>
-        public DocumentsPropertiesMainGridDesignRefitProvider(IDocumentsPropertiesMainGridDesignRefitService set_api, ILogger<DocumentsPropertiesMainGridDesignRefitProvider> set_logger)
+        public DocumentsPropertiesGridDesignRefitProvider(IDocumentsPropertiesGridDesignRefitService set_api, ILogger<DocumentsPropertiesGridDesignRefitProvider> set_logger)
         {
             _api = set_api;
             _logger = set_logger;

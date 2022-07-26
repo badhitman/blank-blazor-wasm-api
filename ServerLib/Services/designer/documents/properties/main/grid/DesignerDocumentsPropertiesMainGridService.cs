@@ -34,7 +34,7 @@ namespace ServerLib
         {
             UserProjectResponseModel check = await _shared_service.CheckLiteAsync();
 
-            GetDocumentDataResponseModel res = new GetDocumentDataResponseModel() { IsSuccess = check.IsSuccess };
+            GetDocumentDataResponseModel res = new() { IsSuccess = check.IsSuccess };
             if (!res.IsSuccess)
             {
                 res.Message = check.Message;

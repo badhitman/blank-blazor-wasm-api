@@ -24,18 +24,39 @@
 }
 else
 {
-    <div class="accordion accordion-flush" id="accordionFlushExample">
+    <div class="accordion" id="accordionFlushExample">
         @foreach (RealTypeModel row in Grids)
         {
             <div class="accordion-item">
                 <h2 class="accordion-header" id="flush-heading_@($"{row.Id}")">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse_@($"{row.Id}")" aria-expanded="false" aria-controls="flush-collapse_@($"{row.Id}")">
+                    <button @onclick="() => SetCurrentGrid(row)" class="accordion-button@(row.Id == current_grid.Id ? "" : " collapsed")" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse_@($"{row.Id}")" aria-expanded="false" aria-controls="flush-collapse_@($"{row.Id}")">
                         @(row.Name) #@($"{row.Id}")
                     </button>
                 </h2>
-                <div id="flush-collapse_@($"{row.Id}")" class="accordion-collapse collapse" aria-labelledby="flush-heading_@($"{row.Id}")" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">@((MarkupString)row.Description)</div>
-                </div>
+                @if (row.Id == current_grid.Id)
+                {
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div id="flush-collapse_@($"{row.Id}")" class="accordion-collapse collapse show" aria-labelledby="flush-heading_@($"{row.Id}")" data-bs-parent="#accordionFlushExample">
+                                <div class="mb-3">
+                                    <label for="exampleInputName" class="form-label">Наименование табличной части</label>
+                                    <input @bind="current_grid.Name" @bind:event="oninput" type="text" class="form-control" id="exampleInputName" aria-describedby="nameHelp" />
+                                    <div id="nameHelp" class="form-text">Заголовок табличной части в форме и комментарий к классу/class.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputSystemCode" class="form-label">Кодовое имя</label>
+                                    <input @bind="current_grid.SystemCodeName" @bind:event="oninput" type="text" class="form-control" id="exampleInputSystemCode" aria-describedby="systemCodeHelp" />
+                                    <div id="systemCodeHelp" class="form-text">Системное имя типа данных C#.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputAbout" class="form-label">Справочная информация</label>
+                                    <textarea @bind="current_grid.Description" @bind:event="oninput" class="form-control" rows="5" placeholder="Комментарий для табличной части" aria-describedby="aboutHelp" />
+                                    <div id="aboutHelp" class="form-text">Описание поля (подсказка). Избегайте использование HTML в этом описании.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         }
     </div>
@@ -54,6 +75,8 @@ else
 
     IEnumerable<RealTypeModel> Grids = Enumerable.Empty<RealTypeModel>();
 
+    RealTypeModel? current_grid = new();
+
     protected override async Task OnInitializedAsync()
     {
         if (Id <= 0)
@@ -61,6 +84,12 @@ else
             return;
         }
         await ReloadForm(Id);
+    }
+
+    private void SetCurrentGrid(RealTypeModel set_current_grid)
+    {
+        current_grid = set_current_grid;
+        StateHasChanged();
     }
 
     private async Task HandleValidSubmitEnumAsync()
@@ -118,6 +147,7 @@ else
         else
         {
             Grids = rest.Rows;
+            current_grid = Grids.FirstOrDefault() ?? new();
         }
 
         IsBusyProgress = false;

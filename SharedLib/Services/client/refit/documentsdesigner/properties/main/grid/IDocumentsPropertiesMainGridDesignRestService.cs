@@ -9,7 +9,7 @@ namespace SharedLib.Services
     /// <summary>
     /// REST служба работы с API полей основной табличной частью документа
     /// </summary>
-    public interface IDocumentsPropertiesMainGridDesignRestService
+    public interface IDocumentsPropertiesGridDesignRestService
     {
         /// <summary>
         /// Получить поля "основной" табличной части документа

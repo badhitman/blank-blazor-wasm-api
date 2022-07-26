@@ -11,7 +11,7 @@ namespace SharedLib.Services
     /// Refit коннектор к API/DocumentsPropertiesMainGridDesigner
     /// </summary>
     [Headers("Content-Type: application/json")]
-    public interface IDocumentsPropertiesMainGridDesignRefitService
+    public interface IDocumentsPropertiesGridDesignRefitService
     {
         /// <summary>
         /// Получить поля "основной" табличной части документа

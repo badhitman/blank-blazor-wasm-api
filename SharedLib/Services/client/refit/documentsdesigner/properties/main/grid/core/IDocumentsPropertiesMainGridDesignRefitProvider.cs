@@ -10,7 +10,7 @@ namespace SharedLib.Services
     /// <summary>
     /// Refit коннектор к API/DocumentsPropertiesMainGridDesigner
     /// </summary>
-    public interface IDocumentsPropertiesMainGridDesignRefitProvider
+    public interface IDocumentsPropertiesGridDesignRefitProvider
     {
         /// <summary>
         /// Получить поля "основной" табличной части документа
