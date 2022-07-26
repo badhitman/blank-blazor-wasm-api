@@ -10,92 +10,90 @@ using SharedLib.Models;
 namespace ApiRestApp.Controllers
 {
     /// <summary>
-    /// Доступ к документам
+    /// Доступ к табличной части документа
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class DocumentsGridsDesignerController : ControllerBase
     {
-        readonly IOptions<ServerConfigModel> _config;
-        readonly IDesignerDocumentsService _documents_service;        
+        readonly IDesignerDocumentsService _documents_service;
 
-        public DocumentsGridsDesignerController(IOptions<ServerConfigModel> set_config, IDesignerDocumentsService set_documents_service)
+        public DocumentsGridsDesignerController(IDesignerDocumentsService set_documents_service)
         {
-            _config = set_config;
             _documents_service = set_documents_service;
         }
 
         /// <summary>
-        /// Получить документы текущего пользователя (в рамках текущего проекта)
-        /// </summary>
-        /// <param name="filter">Запрос/фильтр</param>
-        /// <returns>Результат обработки запроса</returns>
-        [HttpGet]
-        public async Task<GetSimpleResponsePaginationModel> Get([FromQuery] PaginationRequestModel filter)
-        {
-            return await _documents_service.GetDocumentsForCurrentProjectAsync(filter);
-        }
-
-        /// <summary>
-        /// Получить объект документа
+        /// Получить табличные части документа
         /// </summary>
         /// <param name="id">Идентификатор документа</param>
         /// <returns>Результат запроса объекта документа</returns>
         [HttpGet("{id}")]
-        public async Task<DocumentDesignResponseModel> Get([FromRoute] int id)
+        public async Task<RealTypeRowsResponseModel> Get([FromRoute] int id)
         {
-            return await _documents_service.GetDocumentAsync(id);
+            return await _documents_service.GetGridsAsync(id);
         }
 
         /// <summary>
-        /// Создать объект документа
+        /// Создать табличную часть документа
         /// </summary>
-        /// <param name="document_object">Объект документа</param>
+        /// <param name="grid_object">Объект табличной части документа</param>
         /// <returns>Результат обработки запроса</returns>
         [HttpPost]
-        public async Task<IdResponseOwnedModel> Post(NameDescriptionSimpleRealTypeModel document_object)
+        public async Task<RealTypeRowsResponseModel> Post(SystemDocumentsNamedSimpleModel grid_object)
         {
             if (!ModelState.IsValid)
             {
                 IEnumerable<string> allErrors = ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage);
-                return new IdResponseOwnedModel()
+                return new RealTypeRowsResponseModel()
                 {
                     IsSuccess = false,
                     Message = string.Join(";", allErrors)
                 };
             }
-            return await _documents_service.AddDocumentAsync(document_object);
+            return await _documents_service.AddGridAsync(grid_object);
         }
 
         /// <summary>
-        /// Обновить документ
+        /// Обновить табличную часть документа
         /// </summary>
-        /// <param name="document_obj">Объект документа</param>
+        /// <param name="grid_obj">Объект табличной части документа</param>
         /// <returns>Результат обработки запроса</returns>
         [HttpPut]
-        public async Task<ResponseBaseCurrentProjectModel> Put(IdNameDescriptionSimpleRealTypeModel document_obj)
+        public async Task<RealTypeRowsResponseModel> Put(RealTypeModel grid_obj)
         {
             if (!ModelState.IsValid)
             {
                 IEnumerable<string> allErrors = ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage);
-                return new ResponseBaseCurrentProjectModel()
+                return new RealTypeRowsResponseModel()
                 {
                     IsSuccess = false,
                     Message = string.Join(";", allErrors)
                 };
             }
-            return await _documents_service.UpdateDocumentAsync(document_obj);
+            return await _documents_service.UpdateGridAsync(grid_obj);
         }
 
         /// <summary>
-        /// Инвертировать пометку удаления документа
+        /// Инвертировать пометку удаления табличной части документа
         /// </summary>
-        /// <param name="id">Идентификатор документа</param>
+        /// <param name="id">Идентификатор табличной части документа</param>
+        /// <returns>Результат обработки запроса</returns>
+        [HttpPatch("{id}")]
+        public async Task<RealTypeRowsResponseModel> Patch([FromRoute] int id)
+        {
+            return await _documents_service.ToggleMarkDeleteGridAsync(id);
+        }
+
+        /// <summary>
+        /// Удалить табличную часть документа
+        /// </summary>
+        /// <param name="id">Идентификатор табличной части документа</param>
         /// <returns>Результат обработки запроса</returns>
         [HttpDelete("{id}")]
-        public async Task<ResponseBaseModel> Delete([FromRoute] int id)
+        public async Task<RealTypeRowsResponseModel> Delete([FromRoute] int id)
         {
-            return await _documents_service.DocumentToggleDeleteAsync(id);
+            return await _documents_service.RemoveGridAsync(id);
         }
     }
 }

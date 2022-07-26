@@ -35,31 +35,59 @@ namespace DbTablesLib
         }
 
         /// <inheritdoc/>
-        public async Task<DocumentDesignModelDB?> GetDocumentAsync(int document_id, bool include_users_links_for_project = true)
+        public async Task<DocumentDesignModelDB?> GetDocumentAsync(int document_id, bool include_users_links_for_project = true, bool include_grids = false)
         {
             IQueryable<DocumentDesignModelDB> query = _db_context.DesignDocuments.AsQueryable();
             if (include_users_links_for_project)
             {
-                query = query.Include(x => x.Project).ThenInclude(x => x.UsersLinks);
+                if (include_grids)
+                {
+                    query = query.Include(x => x.Project).ThenInclude(x => x.UsersLinks).Include(x => x.Grids);
+                }
+                else
+                {
+                    query = query.Include(x => x.Project).ThenInclude(x => x.UsersLinks);
+                }
             }
             else
             {
-                query = query.Include(x => x.Project);
+                if (include_grids)
+                {
+                    query = query.Include(x => x.Project).Include(x => x.Grids);
+                }
+                else
+                {
+                    query = query.Include(x => x.Project);
+                }
             }
             return await query.FirstOrDefaultAsync(x => x.Id == document_id);
         }
 
         /// <inheritdoc/>
-        public async Task<DocumentDesignModelDB> GetDocumentAsync(string document_system_code, int project_id, bool include_users_links_for_project = true)
+        public async Task<DocumentDesignModelDB> GetDocumentAsync(string document_system_code, int project_id, bool include_users_links_for_project = true, bool include_grids = false)
         {
             IQueryable<DocumentDesignModelDB> query = _db_context.DesignDocuments.AsQueryable();
             if (include_users_links_for_project)
             {
-                query = query.Include(x => x.Project).ThenInclude(x => x.UsersLinks);
+                if (include_grids)
+                {
+                    query = query.Include(x => x.Project).ThenInclude(x => x.UsersLinks).Include(x => x.Grids);
+                }
+                else
+                {
+                    query = query.Include(x => x.Project).ThenInclude(x => x.UsersLinks);
+                }
             }
             else
             {
-                query = query.Include(x => x.Project);
+                if (include_grids)
+                {
+                    query = query.Include(x => x.Project).Include(x => x.Grids);
+                }
+                else
+                {
+                    query = query.Include(x => x.Project);
+                }
             }
             return await query.FirstOrDefaultAsync(x => x.SystemCodeName == document_system_code && x.ProjectId == project_id);
         }
@@ -153,7 +181,25 @@ namespace DbTablesLib
             {
                 query = query.Include(x => x.Project);
             }
-            return query.FirstOrDefault();
+            return await query.FirstOrDefaultAsync();
+        }
+
+        /// <inheritdoc/>
+        public async Task AddGridAsync(DocumentGridModelDB added_grid)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task UpdateGridAsync(DocumentGridModelDB grid_upd)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task RemoveGridAsync(int grid_id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

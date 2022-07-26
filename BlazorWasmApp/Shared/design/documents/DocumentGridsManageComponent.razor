@@ -7,7 +7,7 @@
 @using SharedLib.Services
 
 @inject SessionMarkerLiteModel _session_marker
-@inject IDocumentsDesignRestService _documents_design_refit_service
+@inject IDocumentsGridsDesignRestService _documents_grids_design_refit_service
 @inject ILogger<DocumentGridsManageComponent> _logger
 
 @inherits BlazorBusyComponentBaseModel
@@ -78,13 +78,13 @@ else
     {
         if (Id.GetValueOrDefault(0) > 0)
         {
-            //ResponseBaseCurrentProjectModel rest = await _documents_design_refit_service.UpdateDocumentAsync((IdNameDescriptionSimpleRealTypeModel)docomentObject);
+            //ResponseBaseCurrentProjectModel rest = await _documents_grids_design_refit_service.UpdateDocumentAsync((IdNameDescriptionSimpleRealTypeModel)docomentObject);
             //ModalBodyText = rest.Message;
             //Modal.Open(rest.IsSuccess ? "Сохранено" : "Ошибка!");
         }
         else
         {
-            //IdResponseOwnedModel rest = await _documents_design_refit_service.AddDocumentAsync((NameDescriptionSimpleRealTypeModel)docomentObject);
+            //IdResponseOwnedModel rest = await _documents_grids_design_refit_service.AddDocumentAsync((NameDescriptionSimpleRealTypeModel)docomentObject);
             //if (rest.IsSuccess)
             //{
             //    docomentObject.Project = new ProjectModelDB(rest.CurrentOwnerObject);
@@ -109,7 +109,7 @@ else
         }
 
         IsBusyProgress = true;
-        //DocumentDesignResponseModel rest = await _documents_design_refit_service.GetDocumentAsync(id);
+        //DocumentDesignResponseModel rest = await _documents_grids_design_refit_service.GetDocumentAsync(id);
         //if (!rest.IsSuccess)
         //{
         //    if (!string.IsNullOrEmpty(rest.Message))
@@ -120,7 +120,7 @@ else
         //    }
         //    else
         //    {
-        //        ModalBodyText = $"Ошибка API: {nameof(_documents_design_refit_service.GetDocumentAsync)}";
+        //        ModalBodyText = $"Ошибка API: {nameof(_documents_grids_design_refit_service.GetDocumentAsync)}";
         //        _logger.LogError(ModalBodyText);
         //        Modal.Open("Ошибка!");
         //    }

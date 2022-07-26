@@ -65,18 +65,18 @@ namespace SharedLib
         /// Создать новую табличную часть документа
         /// </summary>
         /// <param name="added_grid">Новая табличная часть</param>
-        public Task AddGridAsync(SystemDocumentsNamedSimpleModel added_grid);
+        public Task AddGridAsync(DocumentGridModelDB added_grid);
 
         /// <summary>
         /// Обновить табличную часть документа
         /// </summary>
         /// <param name="grid_upd">Табличная часть документа</param>
-        public Task UpdateGridAsync(RealTypeModel grid_upd);
+        public Task UpdateGridAsync(DocumentGridModelDB grid_upd);
 
         /// <summary>
-        /// Переключить признак удаления табличной части документа
+        /// Удалить табличную часть документа
         /// </summary>
         /// <param name="grid_id">Идентификатор табличной части</param>
-        public Task ToggleMarkDeleteGridAsync(int grid_id);
+        public Task RemoveGridAsync(int grid_id);
     }
 }

@@ -227,5 +227,35 @@ namespace ServerLib
         {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc/>
+        public async Task<RealTypeRowsResponseModel> GetGridsAsync(int document_id)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task<RealTypeRowsResponseModel> AddGridAsync(SystemDocumentsNamedSimpleModel added_grid)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task<RealTypeRowsResponseModel> UpdateGridAsync(RealTypeModel grid_upd)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task<RealTypeRowsResponseModel> ToggleMarkDeleteGridAsync(int grid_id)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task<RealTypeRowsResponseModel> RemoveGridAsync(int grid_id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
