@@ -22,6 +22,6 @@ namespace SharedLib.Models
         /// <summary>
         /// Поля документа (табличная часть)
         /// </summary>
-        public ICollection<DocumentPropertyMainGridModelDB> PropertiesGrid { get; set; }
+        public ICollection<DocumentPropertyGridModelDB> PropertiesGrid { get; set; }
     }
 }

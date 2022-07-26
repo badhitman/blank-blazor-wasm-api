@@ -13,28 +13,28 @@ namespace DbLayerLib
         public static void BuilderExtensionDesigner(this ModelBuilder modelBuilder)
         {
             modelBuilder
-            .Entity<DocumentPropertyMainBodyModelDB>()
-            .HasOne(u => u.PropertyLink)
-            .WithOne(p => p.OwnerPropertyMainBody)
-            .HasForeignKey<DocumentPropertyLinkModelDB>(p => p.OwnerPropertyMainBodyId);
+                .Entity<DocumentPropertyMainBodyModelDB>()
+                .HasOne(u => u.PropertyLink)
+                .WithOne(p => p.OwnerPropertyMainBody)
+                .HasForeignKey<DocumentPropertyLinkModelDB>(p => p.OwnerPropertyMainBodyId);
 
             modelBuilder
-            .Entity<DocumentPropertyMainGridModelDB>()
-            .HasOne(u => u.PropertyLink)
-            .WithOne(p => p.OwnerPropertyMainGrid)
-            .HasForeignKey<DocumentPropertyLinkModelDB>(p => p.OwnerPropertyMainGridId);
+                .Entity<DocumentPropertyGridModelDB>()
+                .HasOne(u => u.PropertyLink)
+                .WithOne(p => p.OwnerPropertyMainGrid)
+                .HasForeignKey<DocumentPropertyLinkModelDB>(p => p.OwnerPropertyMainGridId);
 
             modelBuilder
-            .Entity<DocumentPropertyLinkModelDB>()
-            .HasOne(u => u.TypedEnum)
-            .WithMany(p => p.PropertiesTypesLinks)
-            .HasForeignKey(p => p.TypedEnumId);
+                .Entity<DocumentPropertyLinkModelDB>()
+                .HasOne(u => u.TypedEnum)
+                .WithMany(p => p.PropertiesTypesLinks)
+                .HasForeignKey(p => p.TypedEnumId);
 
             modelBuilder
-            .Entity<DocumentPropertyLinkModelDB>()
-            .HasOne(u => u.TypedDocument)
-            .WithMany(p => p.PropertiesTypesLinks)
-            .HasForeignKey(p => p.TypedDocumentId);
+                .Entity<DocumentPropertyLinkModelDB>()
+                .HasOne(u => u.TypedDocument)
+                .WithMany(p => p.PropertiesTypesLinks)
+                .HasForeignKey(p => p.TypedDocumentId);
 #if DEMO
             modelBuilder.HasDemoData();
 #endif
@@ -211,7 +211,7 @@ namespace DbLayerLib
             int project_id;
             IEnumerable<EnumDesignModelDB> enums_for_project;
             IEnumerable<DocumentDesignModelDB> docs_for_project;
-            List<DocumentPropertyLinkModelDB> props_links = new List<DocumentPropertyLinkModelDB>();
+            List<DocumentPropertyLinkModelDB> props_links = new();
 
             index_id = 0;
             DocumentPropertyMainBodyModelDB[] doc_props_demo_data_body = documents_demo_data.SelectMany(x =>
@@ -296,24 +296,49 @@ namespace DbLayerLib
             }));
 
             index_id = 0;
-            DocumentPropertyMainGridModelDB[] doc_props_demo_data_grid = documents_demo_data.SelectMany(x =>
+            DocumentGridModelDB[] docs_grids = documents_demo_data.SelectMany(x =>
             {
+                return Enumerable.Range(1, rand.Next(1, 3)).Select(y => new DocumentGridModelDB()
+                {
+                    Id = ++index_id,
+                    DocumentOwnerId = x.Id,
+                    DocumentOwner = x,
+                    IsDeleted = rand.Next(1, 100) > 70,
+                    SystemCodeName = $"Grid{index_id}ForDocument{x.Id}",
+                    Description = $"Description grid document{index_id}",
+                    Name = $"Document grid name '{index_id}'"
+                });
+            }).ToArray();
+
+            index_id = 0;
+            DocumentPropertyGridModelDB[] doc_props_demo_data_grid = docs_grids.SelectMany(x =>
+            {
+                change_logs.Add(new LogChangeModelDB()
+                {
+                    Id = ++index_id,
+                    OwnerType = ContextesChangeLogEnum.Document,
+                    OwnerId = x.DocumentOwnerId,
+                    Name = $"Создана табличная часть документа (demo HasData)",
+                    Description = $"[name:{x.Name}] [descr:{x.Description}] [is_del:{x.IsDeleted}] [code:{x.SystemCodeName}]"
+                });
+
                 uint sort_index2 = 0;
-                return Enumerable.Range(3, rand.Next(3, 11)).Select(y => new DocumentPropertyMainGridModelDB()
+                return Enumerable.Range(3, rand.Next(3, 11)).Select(y => new DocumentPropertyGridModelDB()
                 {
                     PropertyType = enums_types[rand.Next(0, enums_types.Length)],
                     Id = ++index_id,
-                    DocumentOwnerId = x.Id,
+                    GridId = x.Id,
+                    Grid = x,
                     IsDeleted = rand.Next(1, 100) > 70,
-                    SystemCodeName = $"DocumentMainGrid{index_id}_Property",
+                    SystemCodeName = $"DocumentGrid{index_id}_Property",
                     Description = $"Description document prop (main grid) {index_id}",
                     Name = $"Document prop (main grid) name '{index_id}'",
                     SortIndex = ++sort_index2
                 });
             }).ToArray();
-            foreach (DocumentPropertyMainGridModelDB el in doc_props_demo_data_grid)
+            foreach (DocumentPropertyGridModelDB el in doc_props_demo_data_grid)
             {
-                project_id = documents_demo_data.First(x => x.Id == el.DocumentOwnerId).ProjectId;
+                project_id = documents_demo_data.First(x => x.Id == el.Grid.DocumentOwnerId).ProjectId;
                 switch (el.PropertyType)
                 {
                     case PropertyTypesEnum.SimpleEnum:
@@ -331,7 +356,7 @@ namespace DbLayerLib
                         el.PropertyLinkId = links_index_id;
                         break;
                     case PropertyTypesEnum.Document:
-                        docs_for_project = documents_demo_data.Where(x => x.ProjectId == project_id && x.Id != el.DocumentOwnerId);
+                        docs_for_project = documents_demo_data.Where(x => x.ProjectId == project_id && x.Id != el.Grid.DocumentOwnerId);
                         if (!docs_for_project.Any())
                             break;
 
@@ -350,15 +375,15 @@ namespace DbLayerLib
                 }
             }
             modelBuilder.Entity<DocumentPropertyLinkModelDB>().HasData(props_links);
-            modelBuilder.Entity<DocumentPropertyMainGridModelDB>().HasData(doc_props_demo_data_grid);
+            modelBuilder.Entity<DocumentPropertyGridModelDB>().HasData(doc_props_demo_data_grid);
 
             change_logs.AddRange(doc_props_demo_data_grid.Select(x =>
             {
-                LogChangeModelDB log_obj = new LogChangeModelDB()
+                LogChangeModelDB log_obj = new()
                 {
                     Id = ++log_change_index_id,
                     OwnerType = ContextesChangeLogEnum.Document,
-                    OwnerId = x.DocumentOwnerId,
+                    OwnerId = x.Grid.DocumentOwnerId,
                     Name = $"Создано поле табличной части документа (demo HasData)",
                     Description = $"[name:{x.Name}] [type:{x.PropertyType}] [descr:{x.Description}] [is_del:{x.IsDeleted}] [code:{x.SystemCodeName}]"
                 };

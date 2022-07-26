@@ -31,7 +31,7 @@ namespace SharedLib.Models
         /// Поле/свойство (владелец) тела документа.
         /// NULL если владелец - табличная часть документа
         /// </summary>
-        public DocumentPropertyMainGridModelDB? OwnerPropertyMainGrid { get; set; }
+        public DocumentPropertyGridModelDB? OwnerPropertyMainGrid { get; set; }
 
         /// <summary>
         /// Идентификатор тип:перечисления.

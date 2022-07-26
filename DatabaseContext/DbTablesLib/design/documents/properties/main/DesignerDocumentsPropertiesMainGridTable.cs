@@ -31,7 +31,7 @@ namespace DbTablesLib
         /// <inheritdoc/>
         public async Task<SimplePropertyRealTypeModel[]> GetPropertiesAsync(int document_id)
         {
-            IQueryable<DocumentPropertyMainGridModelDB> query = _db_context.DesignDocumentsMainGridProperties
+            IQueryable<DocumentPropertyGridModelDB> query = _db_context.DesignDocumentsGridProperties
                 .Where(x => x.DocumentOwnerId == document_id)
                 .OrderBy(x => x.SortIndex)
                 .Include(x => x.PropertyLink).ThenInclude(x => x.TypedDocument)
@@ -52,7 +52,7 @@ namespace DbTablesLib
         }
 
         /// <inheritdoc/>
-        public async Task AddPropertyAsync(DocumentPropertyMainGridModelDB property_new, bool auto_save = true)
+        public async Task AddPropertyAsync(DocumentPropertyGridModelDB property_new, bool auto_save = true)
         {
             await _db_context.AddAsync(property_new);
             if (auto_save)
@@ -60,9 +60,9 @@ namespace DbTablesLib
         }
 
         /// <inheritdoc/>
-        public async Task<DocumentPropertyMainGridModelDB?> GetPropertyAsync(int property_id, bool include_users_links_for_project = true)
+        public async Task<DocumentPropertyGridModelDB?> GetPropertyAsync(int property_id, bool include_users_links_for_project = true)
         {
-            IQueryable<DocumentPropertyMainGridModelDB> query = _db_context.DesignDocumentsMainGridProperties.AsQueryable();
+            IQueryable<DocumentPropertyGridModelDB> query = _db_context.DesignDocumentsGridProperties.AsQueryable();
             query = include_users_links_for_project
                 ? query.Include(x => x.DocumentOwner).ThenInclude(x => x.Project).ThenInclude(x => x.UsersLinks)
                 : query.Include(x => x.DocumentOwner).ThenInclude(x => x.Project);
@@ -70,13 +70,13 @@ namespace DbTablesLib
         }
 
         /// <inheritdoc/>
-        public async Task<DocumentPropertyMainGridModelDB> GetPropertyAsync(string property_system_code, int document_id, bool include_users_links_for_project = true)
+        public async Task<DocumentPropertyGridModelDB> GetPropertyAsync(string property_system_code, int document_id, bool include_users_links_for_project = true)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public async Task UpdatePropertyAsync(DocumentPropertyMainGridModelDB property_upd, bool auto_save = true)
+        public async Task UpdatePropertyAsync(DocumentPropertyGridModelDB property_upd, bool auto_save = true)
         {
             _db_context.Update(property_upd);
             if (auto_save)
@@ -92,8 +92,8 @@ namespace DbTablesLib
         /// <inheritdoc/>
         public async Task<uint> NextSortIndexAsync(int document_id)
         {
-            if (await _db_context.DesignDocumentsMainGridProperties.AnyAsync(x => x.DocumentOwnerId == document_id))
-                return (await _db_context.DesignDocumentsMainGridProperties.Where(x => x.DocumentOwnerId == document_id).MaxAsync(x => x.SortIndex)) + 1;
+            if (await _db_context.DesignDocumentsGridProperties.AnyAsync(x => x.DocumentOwnerId == document_id))
+                return (await _db_context.DesignDocumentsGridProperties.Where(x => x.DocumentOwnerId == document_id).MaxAsync(x => x.SortIndex)) + 1;
 
             return 0;
         }
@@ -107,7 +107,7 @@ namespace DbTablesLib
             }
             IEnumerable<int> ids = dataRows.Select(x => x.Id);
 
-            DocumentPropertyMainGridModelDB[] rows_db = await _db_context.DesignDocumentsMainGridProperties.Where(x => ids.Contains(x.Id)).ToArrayAsync();
+            DocumentPropertyGridModelDB[] rows_db = await _db_context.DesignDocumentsGridProperties.Where(x => ids.Contains(x.Id)).ToArrayAsync();
 
             int[]? ids_err = ids.Where(x => !rows_db.Any(y => y.Id == x)).ToArray();
             if (ids_err.Any())
@@ -115,7 +115,7 @@ namespace DbTablesLib
                 throw new Exception($"В базе данных не найдены объекты/идентификаторы: {string.Join("; ", ids_err)};");
             }
 
-            foreach (DocumentPropertyMainGridModelDB row_db in rows_db)
+            foreach (DocumentPropertyGridModelDB row_db in rows_db)
             {
                 SimplePropertyRealTypeModel? prop_json = dataRows.First(x => x.Id == row_db.Id);
 
@@ -136,7 +136,7 @@ namespace DbTablesLib
         }
 
         /// <inheritdoc/>
-        public async Task RemovePropertyAsync(DocumentPropertyMainGridModelDB property, bool auto_save)
+        public async Task RemovePropertyAsync(DocumentPropertyGridModelDB property, bool auto_save)
         {
             _db_context.Remove(property);
 

@@ -32,9 +32,9 @@ namespace SharedLib.Models
             };
         }
 
-        public static explicit operator DocumentPropertyMainGridModelDB(PropertySimpleRealTypeModel v)
+        public static explicit operator DocumentPropertyGridModelDB(PropertySimpleRealTypeModel v)
         {
-            return new DocumentPropertyMainGridModelDB()
+            return new DocumentPropertyGridModelDB()
             {
                 SystemCodeName = v.SystemCodeName,
                 PropertyType = v.PropertyType,

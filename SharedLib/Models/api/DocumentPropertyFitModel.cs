@@ -57,7 +57,7 @@ namespace SharedLib.Models
             };
         }
 
-        public static explicit operator DocumentPropertyFitModel(DocumentPropertyMainGridModelDB v)
+        public static explicit operator DocumentPropertyFitModel(DocumentPropertyGridModelDB v)
         {
             return new DocumentPropertyFitModel()
             {

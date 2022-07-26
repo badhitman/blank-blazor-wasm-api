@@ -88,7 +88,7 @@ namespace ServerLib
                 return res;
             }
 
-            DocumentPropertyMainGridModelDB property_new = (DocumentPropertyMainGridModelDB)property_object;
+            DocumentPropertyGridModelDB property_new = (DocumentPropertyGridModelDB)property_object;
             property_new.SortIndex = await _documens_main_grid_dt.NextSortIndexAsync(property_object.DocumentOwnerId);
             try
             {
@@ -255,7 +255,7 @@ namespace ServerLib
                 return res;
             }
 
-            DocumentPropertyMainGridModelDB? property_db = await _documens_main_grid_dt.GetPropertyAsync(action.Id, true);
+            DocumentPropertyGridModelDB? property_db = await _documens_main_grid_dt.GetPropertyAsync(action.Id, true);
             res.IsSuccess = property_db is not null;
             if (!res.IsSuccess)
             {

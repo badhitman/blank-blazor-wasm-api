@@ -12,6 +12,6 @@ namespace SharedLib.Models
         /// <summary>
         /// Элемент поля таблчной части документа
         /// </summary>
-        public DocumentPropertyMainGridModelDB Property { get; set; }
+        public DocumentPropertyGridModelDB Property { get; set; }
     }
 }

@@ -3,18 +3,24 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SharedLib.Models
 {
     /// <summary>
     /// Поле/свойтво (основное) в таблице документа
-    /// </summary>    
-    [Table("DesignDocumentsMainGridProperties")]
-    [Comment("Реквизиты документов (основная табличная часть)")]
+    /// </summary>
+    [Comment("Реквизиты табличной части документов")]
     [Index(nameof(PropertyLinkId))]
-    public class DocumentPropertyMainGridModelDB : DocumentPropertyMainModelDB
+    public class DocumentPropertyGridModelDB : MetaMapBaseModelDB
     {
-        
+        /// <summary>
+        /// FK: Табличная часть документа
+        /// </summary>
+        public int GridId { get; set; }
+
+        /// <summary>
+        /// Табличная часть документа
+        /// </summary>
+        public DocumentGridModelDB Grid { get; set; }
     }
 }

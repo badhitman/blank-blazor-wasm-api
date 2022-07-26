@@ -4,8 +4,6 @@
 
 using SharedLib.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using SharedLib;
 
 namespace DbLayerLib
 {
@@ -55,7 +53,7 @@ namespace DbLayerLib
         /// <summary>
         /// Поля документов (табличная часть документа)
         /// </summary>
-        public DbSet<DocumentPropertyMainGridModelDB> DesignDocumentsMainGridProperties { get; set; }
+        public DbSet<DocumentPropertyGridModelDB> DesignDocumentsGridProperties { get; set; }
 
         /// <summary>
         /// Лог изменений
