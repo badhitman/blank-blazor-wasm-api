@@ -65,18 +65,21 @@ namespace SharedLib
         /// Создать новую табличную часть документа
         /// </summary>
         /// <param name="added_grid">Новая табличная часть</param>
-        public Task AddGridAsync(DocumentGridModelDB added_grid);
+        /// <param name="auto_save">Автоматически сохранять в БД</param>
+        public Task AddGridAsync(DocumentGridModelDB added_grid, bool auto_save = true);
 
         /// <summary>
         /// Обновить табличную часть документа
         /// </summary>
         /// <param name="grid_upd">Табличная часть документа</param>
-        public Task UpdateGridAsync(DocumentGridModelDB grid_upd);
+        /// <param name="auto_save">Автоматически сохранять в БД</param>
+        public Task UpdateGridAsync(DocumentGridModelDB grid_upd, bool auto_save = true);
 
         /// <summary>
         /// Удалить табличную часть документа
         /// </summary>
-        /// <param name="grid_id">Идентификатор табличной части</param>
-        public Task RemoveGridAsync(int grid_id);
+        /// <param name="grid">Табличная часть документя</param>
+        /// <param name="auto_save">Автоматически сохранять в БД</param>
+        public Task RemoveGridAsync(DocumentGridModelDB grid, bool auto_save = true);
     }
 }

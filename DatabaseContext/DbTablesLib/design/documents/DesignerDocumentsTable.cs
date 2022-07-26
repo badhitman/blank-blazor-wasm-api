@@ -185,21 +185,27 @@ namespace DbTablesLib
         }
 
         /// <inheritdoc/>
-        public async Task AddGridAsync(DocumentGridModelDB added_grid)
+        public async Task AddGridAsync(DocumentGridModelDB added_grid, bool auto_save = true)
         {
-            throw new NotImplementedException();
+            await _db_context.AddAsync(added_grid);
+            if (auto_save)
+                await SaveChangesAsync();
         }
 
         /// <inheritdoc/>
-        public async Task UpdateGridAsync(DocumentGridModelDB grid_upd)
+        public async Task UpdateGridAsync(DocumentGridModelDB grid_upd, bool auto_save = true)
         {
-            throw new NotImplementedException();
+            _db_context.Update(grid_upd);
+            if (auto_save)
+                await SaveChangesAsync();
         }
 
         /// <inheritdoc/>
-        public async Task RemoveGridAsync(int grid_id)
+        public async Task RemoveGridAsync(DocumentGridModelDB grid, bool auto_save = true)
         {
-            throw new NotImplementedException();
+            _db_context.Remove(grid);
+            if (auto_save)
+                await SaveChangesAsync();
         }
     }
 }

@@ -44,6 +44,6 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="id">Идентификатор документа</param>
         /// <returns>Результат обработки запроса</returns>
-        public Task<ResponseBaseModel> SetToggleDeleteDocumentAsync(int id);
+        public Task<DocumentDesignResponseModel> SetToggleDeleteDocumentAsync(int id);
     }
 }

@@ -223,21 +223,114 @@ namespace ServerLib
         }
 
         /// <inheritdoc/>
-        public Task<ResponseBaseModel> DocumentToggleDeleteAsync(int id)
+        public async Task<DocumentDesignResponseModel> DocumentToggleDeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            UserProjectResponseModel check = await _shared_service.CheckLiteAsync();
+            DocumentDesignResponseModel res = new()
+            {
+                IsSuccess = check.IsSuccess
+            };
+            if (!res.IsSuccess)
+            {
+                res.Message = check.Message;
+                return res;
+            }
+
+            DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentAsync(id, true);
+            res.IsSuccess = document_db != null;
+            if (!res.IsSuccess)
+            {
+                res.Message = "Документ не найден";
+                return res;
+            }
+
+            res.IsSuccess = document_db.ProjectId == check.Project.Id;
+            if (!res.IsSuccess)
+            {
+                res.Message = $"Текущий проект пользовтаеля #{check.Project.Id} '{check.Project.Name}' не совпадает с проектом документа #{document_db.Project.Id} '{document_db.Project.Name}'";
+                return res;
+            }
+
+            document_db.IsDeleted = !document_db.IsDeleted;
+
+            document_db.Project.UsersLinks = null;
+            res.DocumentDesign = document_db;
+            res.CurrentUserLinkProject = check.CurrentUserLinkProject;
+            res.CurrentUserLinkProject.Project = null;
+
+            return res;
         }
 
         /// <inheritdoc/>
         public async Task<RealTypeRowsResponseModel> GetGridsAsync(int document_id)
         {
-            throw new NotImplementedException();
+            UserProjectResponseModel check = await _shared_service.CheckLiteAsync();
+            RealTypeRowsResponseModel res = new()
+            {
+                IsSuccess = check.IsSuccess
+            };
+            if (!res.IsSuccess)
+            {
+                res.Message = check.Message;
+                return res;
+            }
+
+            DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentAsync(document_id, true, true);
+            res.IsSuccess = document_db != null;
+            if (!res.IsSuccess)
+            {
+                res.Message = "Документ не найден";
+                return res;
+            }
+
+            res.IsSuccess = document_db.ProjectId == check.Project.Id;
+            if (!res.IsSuccess)
+            {
+                res.Message = $"Текущий проект пользовтаеля #{check.Project.Id} '{check.Project.Name}' не совпадает с проектом документа #{document_db.Project.Id} '{document_db.Project.Name}'";
+                return res;
+            }
+
+            res.Rows = document_db.Grids.Select(x => (RealTypeModel)x);
+
+            return res;
         }
 
         /// <inheritdoc/>
         public async Task<RealTypeRowsResponseModel> AddGridAsync(SystemDocumentsNamedSimpleModel added_grid)
         {
-            throw new NotImplementedException();
+            UserProjectResponseModel check = await _shared_service.CheckLiteAsync();
+            RealTypeRowsResponseModel res = new()
+            {
+                IsSuccess = check.IsSuccess
+            };
+            if (!res.IsSuccess)
+            {
+                res.Message = check.Message;
+                return res;
+            }
+
+            DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentAsync(added_grid.DocumentOwnerId, true, true);
+            res.IsSuccess = document_db != null;
+            if (!res.IsSuccess)
+            {
+                res.Message = "Документ не найден";
+                return res;
+            }
+
+            var new_grid = (DocumentGridModelDB)added_grid;
+            List<string> changes = new();
+
+
+            res.IsSuccess = document_db.ProjectId == check.Project.Id;
+            if (!res.IsSuccess)
+            {
+                res.Message = $"Текущий проект пользовтаеля #{check.Project.Id} '{check.Project.Name}' не совпадает с проектом документа #{document_db.Project.Id} '{document_db.Project.Name}'";
+                return res;
+            }
+
+            res.Rows = document_db.Grids.Select(x => (RealTypeModel)x);
+
+            return res;
         }
 
         /// <inheritdoc/>

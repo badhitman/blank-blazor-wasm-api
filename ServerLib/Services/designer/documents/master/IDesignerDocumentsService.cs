@@ -44,7 +44,7 @@ namespace ServerLib
         /// </summary>
         /// <param name="id">Идентификатор документа</param>
         /// <returns>Результат обработки запроса</returns>
-        public Task<ResponseBaseModel> DocumentToggleDeleteAsync(int id);
+        public Task<DocumentDesignResponseModel> DocumentToggleDeleteAsync(int id);
 
         /// <summary>
         /// Получить табличные части документа

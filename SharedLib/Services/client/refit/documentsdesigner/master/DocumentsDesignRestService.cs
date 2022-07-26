@@ -145,13 +145,13 @@ namespace SharedLib.Services
         }
 
         /// <inheritdoc/>
-        public async Task<ResponseBaseModel> SetToggleDeleteDocumentAsync(int id)
+        public async Task<DocumentDesignResponseModel> SetToggleDeleteDocumentAsync(int id)
         {
-            ResponseBaseModel result = new();
+            DocumentDesignResponseModel result = new();
 
             try
             {
-                ApiResponse<ResponseBaseModel> rest = await _documents_service.SetToggleDeleteDocumentAsync(id);
+                ApiResponse<DocumentDesignResponseModel> rest = await _documents_service.SetToggleDeleteDocumentAsync(id);
 
                 if (rest.StatusCode != System.Net.HttpStatusCode.OK)
                 {
