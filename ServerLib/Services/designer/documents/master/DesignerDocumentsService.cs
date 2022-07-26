@@ -298,7 +298,7 @@ namespace ServerLib
         /// <inheritdoc/>
         public async Task<RealTypeRowsResponseModel> AddGridAsync(SystemDocumentsNamedSimpleModel added_grid)
         {
-            UserProjectResponseModel check = await _shared_service.CheckLiteAsync();
+            UserProjectResponseModel check = await _shared_service.CheckComplexAsync(0, added_grid.Name, added_grid.SystemCodeName, typeof(DocumentGridModelDB));
             RealTypeRowsResponseModel res = new()
             {
                 IsSuccess = check.IsSuccess
@@ -317,10 +317,6 @@ namespace ServerLib
                 return res;
             }
 
-            var new_grid = (DocumentGridModelDB)added_grid;
-            List<string> changes = new();
-
-
             res.IsSuccess = document_db.ProjectId == check.Project.Id;
             if (!res.IsSuccess)
             {
@@ -328,7 +324,10 @@ namespace ServerLib
                 return res;
             }
 
-            res.Rows = document_db.Grids.Select(x => (RealTypeModel)x);
+            DocumentGridModelDB new_grid = (DocumentGridModelDB)added_grid;
+            await _documens_dt.AddGridAsync(new_grid);
+
+            res.Rows = document_db.Grids.Append(new_grid);
 
             return res;
         }
@@ -336,19 +335,137 @@ namespace ServerLib
         /// <inheritdoc/>
         public async Task<RealTypeRowsResponseModel> UpdateGridAsync(RealTypeModel grid_upd)
         {
-            throw new NotImplementedException();
+            UserProjectResponseModel check = await _shared_service.CheckComplexAsync(grid_upd.Id, grid_upd.Name, grid_upd.SystemCodeName, typeof(DocumentGridModelDB));
+            RealTypeRowsResponseModel res = new()
+            {
+                IsSuccess = check.IsSuccess
+            };
+            if (!res.IsSuccess)
+            {
+                res.Message = check.Message;
+                return res;
+            }
+
+            DocumentGridModelDB? grid_db = await _documens_dt.GetGridAsync(grid_upd.Id, true);
+            res.IsSuccess = grid_db is not null;
+            if (!res.IsSuccess)
+            {
+                res.Message = "Табличная часть не найдена";
+                return res;
+            }
+
+            res.IsSuccess = grid_db.DocumentOwner.ProjectId == check.Project.Id;
+            if (!res.IsSuccess)
+            {
+                res.Message = $"Текущий проект пользовтаеля #{check.Project.Id} '{check.Project.Name}' не совпадает с проектом документа запрашиваемой табличной части #{grid_db.DocumentOwner.Project.Id} '{grid_db.DocumentOwner.Project.Name}'";
+                return res;
+            }
+
+            List<string> changes = new();
+            if (grid_db.Name != grid_upd.Name)
+            {
+                changes.Add("Наименование");
+                grid_db.Name = grid_upd.Name;
+            }
+            if (grid_db.SystemCodeName != grid_upd.SystemCodeName)
+            {
+                changes.Add("Системное кодовое имя");
+                grid_db.SystemCodeName = grid_upd.SystemCodeName;
+            }
+            if (grid_db.Description != grid_upd.Description)
+            {
+                changes.Add("Описание");
+                grid_db.Description = grid_upd.Description;
+            }
+            res.IsSuccess = changes.Any();
+            if (!res.IsSuccess)
+            {
+                res.Message = "Нет изменений для сохранения";
+                return res;
+            }
+            await _documens_dt.UpdateGridAsync(grid_db, true);
+            DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentAsync(grid_db.DocumentOwnerId, true, true);
+            res.Rows = document_db.Grids;
+            return res;
         }
 
         /// <inheritdoc/>
         public async Task<RealTypeRowsResponseModel> ToggleMarkDeleteGridAsync(int grid_id)
         {
-            throw new NotImplementedException();
+            UserProjectResponseModel check = await _shared_service.CheckLiteAsync();
+            RealTypeRowsResponseModel res = new()
+            {
+                IsSuccess = check.IsSuccess
+            };
+            if (!res.IsSuccess)
+            {
+                res.Message = check.Message;
+                return res;
+            }
+
+            DocumentGridModelDB? grid_db = await _documens_dt.GetGridAsync(grid_id, true);
+            res.IsSuccess = grid_db is not null;
+            if (!res.IsSuccess)
+            {
+                res.Message = "Табличная часть не найдена";
+                return res;
+            }
+
+            res.IsSuccess = grid_db.DocumentOwner.ProjectId == check.Project.Id;
+            if (!res.IsSuccess)
+            {
+                res.Message = $"Текущий проект пользовтаеля #{check.Project.Id} '{check.Project.Name}' не совпадает с проектом документа запрашиваемой табличной части #{grid_db.DocumentOwner.Project.Id} '{grid_db.DocumentOwner.Project.Name}'";
+                return res;
+            }
+
+            grid_db.IsDeleted = !grid_db.IsDeleted;
+
+            await _documens_dt.UpdateGridAsync(grid_db, true);
+            DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentAsync(grid_db.DocumentOwnerId, true, true);
+            res.Rows = document_db.Grids;
+            return res;
         }
 
         /// <inheritdoc/>
         public async Task<RealTypeRowsResponseModel> RemoveGridAsync(int grid_id)
         {
-            throw new NotImplementedException();
+            UserProjectResponseModel check = await _shared_service.CheckLiteAsync();
+            RealTypeRowsResponseModel res = new()
+            {
+                IsSuccess = check.IsSuccess
+            };
+            if (!res.IsSuccess)
+            {
+                res.Message = check.Message;
+                return res;
+            }
+
+            DocumentGridModelDB? grid_db = await _documens_dt.GetGridAsync(grid_id, true);
+            res.IsSuccess = grid_db is not null;
+            if (!res.IsSuccess)
+            {
+                res.Message = "Табличная часть не найдена";
+                return res;
+            }
+
+            res.IsSuccess = grid_db.DocumentOwner.ProjectId == check.Project.Id;
+            if (!res.IsSuccess)
+            {
+                res.Message = $"Текущий проект пользовтаеля #{check.Project.Id} '{check.Project.Name}' не совпадает с проектом документа запрашиваемой табличной части #{grid_db.DocumentOwner.Project.Id} '{grid_db.DocumentOwner.Project.Name}'";
+                return res;
+            }
+            res.IsSuccess = grid_db.IsDeleted;
+            if (!res.IsSuccess)
+            {
+                res.Message = "Перед удалением объект должен быть сначала помечен на удаление";
+                return res;
+            }
+
+            await _documens_dt.RemoveGridAsync(grid_db, true);
+
+            DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentAsync(grid_db.DocumentOwnerId, true, true);
+            res.Rows = document_db.Grids;
+            return res;
         }
     }
 }

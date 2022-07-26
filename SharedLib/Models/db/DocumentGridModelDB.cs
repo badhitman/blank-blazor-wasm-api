@@ -12,12 +12,12 @@ namespace SharedLib.Models
         /// <summary>
         /// FK: Документ - владелец табличной части
         /// </summary>
-        public int DocumentId { get; set; }
+        public int DocumentOwnerId { get; set; }
 
         /// <summary>
         /// Документ - владелец табличной части
         /// </summary>
-        public DocumentDesignModelDB Document { get; set; }
+        public DocumentDesignModelDB DocumentOwner { get; set; }
 
         /// <summary>
         /// Поля документа (табличная часть)

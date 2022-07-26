@@ -207,5 +207,18 @@ namespace DbTablesLib
             if (auto_save)
                 await SaveChangesAsync();
         }
+
+        /// <inheritdoc/>
+        public async Task<DocumentGridModelDB?> GetGridAsync(int grid_id, bool include_properties)
+        {
+            IQueryable<DocumentGridModelDB> query = _db_context.DesignDocumentsGrids
+                .Include(x => x.DocumentOwner).ThenInclude(x => x.Project)
+                .Where(x => x.Id == grid_id).AsQueryable();
+
+            if (include_properties)
+                query = query.Include(x => x.PropertiesGrid);
+
+            return await query.FirstOrDefaultAsync();
+        }
     }
 }

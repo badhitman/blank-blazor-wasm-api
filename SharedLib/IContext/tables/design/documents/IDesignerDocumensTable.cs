@@ -62,6 +62,14 @@ namespace SharedLib
         public Task UpdateDocumentAsync(DocumentDesignModelDB document_upd, bool auto_save = true);
 
         /// <summary>
+        /// Получить табличную часть документа
+        /// </summary>
+        /// <param name="grid_id">Идентификатор табличной части</param>
+        /// <param name="include_properties">Загрузить поля табличной части документа</param>
+        /// <returns>Табличная часть документа</returns>
+        public Task<DocumentGridModelDB> GetGridAsync(int grid_id, bool include_properties);
+
+        /// <summary>
         /// Создать новую табличную часть документа
         /// </summary>
         /// <param name="added_grid">Новая табличная часть</param>

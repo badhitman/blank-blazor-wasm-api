@@ -23,5 +23,16 @@ namespace SharedLib.Models
         /// Идентификатор документа
         /// </summary>
         public int DocumentOwnerId { get; set; }
+
+        public static explicit operator DocumentGridModelDB(SystemDocumentsNamedSimpleModel v)
+        {
+            return new DocumentGridModelDB()
+            {
+                Description = string.Empty,
+                DocumentId = v.DocumentOwnerId,
+                Name = v.Name,
+                SystemCodeName = v.SystemCodeName
+            };
+        }
     }
 }
