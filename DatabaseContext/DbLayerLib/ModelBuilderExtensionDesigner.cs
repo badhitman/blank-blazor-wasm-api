@@ -272,7 +272,7 @@ namespace DbLayerLib
             DocumentPropertyLinkModelDB prop_link;
             change_logs.AddRange(doc_props_demo_data_body.Select(x =>
             {
-                LogChangeModelDB log_obj = new LogChangeModelDB()
+                LogChangeModelDB log_obj = new()
                 {
                     Id = ++log_change_index_id,
                     OwnerType = ContextesChangeLogEnum.Document,
@@ -298,11 +298,10 @@ namespace DbLayerLib
             index_id = 0;
             DocumentGridModelDB[] docs_grids = documents_demo_data.SelectMany(x =>
             {
-                return Enumerable.Range(1, rand.Next(1, 3)).Select(y => new DocumentGridModelDB()
+                return Enumerable.Range(1, rand.Next(2, 4)).Select(y => new DocumentGridModelDB()
                 {
                     Id = ++index_id,
                     DocumentOwnerId = x.Id,
-                    //DocumentOwner = x,
                     IsDeleted = rand.Next(1, 100) > 70,
                     SystemCodeName = $"Grid{index_id}ForDocument{x.Id}",
                     Description = $"Description grid document{index_id}",
@@ -407,10 +406,6 @@ namespace DbLayerLib
 
             change_logs.ForEach(x => { x.AuthorId = 1; });
             modelBuilder.Entity<LogChangeModelDB>().HasData(change_logs);
-
-            //#if DEBUG
-            //            var dbg = change_logs.GroupBy(x => x.Id).Select(x => { var f = x.First(); return new { id = f.Id, cnt = x.Count() }; }).OrderByDescending(x => x.cnt).ToArray();
-            //#endif
         }
     }
 }
