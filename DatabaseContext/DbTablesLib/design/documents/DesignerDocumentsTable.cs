@@ -216,7 +216,7 @@ namespace DbTablesLib
                 .Where(x => x.Id == grid_id).AsQueryable();
 
             if (include_properties)
-                query = query.Include(x => x.PropertiesGrid);
+                query = query.Include(x => x.PropertiesGrid).ThenInclude(x => x.PropertyLink);
 
             return await query.FirstOrDefaultAsync();
         }

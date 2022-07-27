@@ -28,6 +28,7 @@ else
         #create-new-grid > .validation-errors {
             margin-left: 25px;
         }
+
         button.is-deleted {
             text-decoration: line-through;
         }
@@ -79,7 +80,15 @@ else
                                     <div class="btn-group me-2" role="group" aria-label="First group">
                                         <button type="button" class="btn btn-outline-secondary" disabled="@(!IsEdited)" @onclick="HandleValidSaveAsync">Записать</button>
                                         <button type="button" class="btn btn-outline-secondary" disabled="@(!IsEdited)" @onclick="HandleResetCurrentGrid">Отмена</button>
-                                        <button type="button" class="btn btn-outline-secondary" disabled="@(IsEdited)" @onclick="HandleToggleMarkDeleteAsync">Удалить</button>
+                                        @if (row.IsDeleted)
+                                        {
+                                            <button type="button" class="btn btn-outline-secondary" disabled="@(IsEdited)" @onclick="HandleToggleMarkDeleteAsync">Отменить удаление</button>
+                                            <button type="button" class="btn btn-outline-secondary" disabled="@(IsEdited)" @onclick="HandleRemoveAsync">Удалить окончательно</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-outline-secondary" disabled="@(IsEdited)" @onclick="HandleToggleMarkDeleteAsync">Удалить</button>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -158,15 +167,29 @@ else
         if (rest.IsSuccess)
         {
             Grids = rest.Rows;
-            //current_grid = Grids.FirstOrDefault(x => x.SystemCodeName == current_grid.SystemCodeName);
-            //_control_current_grid = new()
-            //    {
-            //        Id = current_grid.Id,
-            //        Description = current_grid.Description,
-            //        IsDeleted = current_grid.IsDeleted,
-            //        Name = current_grid.Name,
-            //        SystemCodeName = current_grid.SystemCodeName
-            //    };
+        }
+    }
+
+    async Task HandleRemoveAsync()
+    {
+        if (current_grid.Id <= 0)
+            return;
+
+        RealTypeRowsResponseModel rest = await _documents_grids_design_refit_service.RemoveGridAsync(current_grid.Id);
+        ModalBodyText = rest.Message;
+        Modal.Open(rest.IsSuccess ? "Сохранено" : "Ошибка!");
+        if (rest.IsSuccess)
+        {
+            Grids = rest.Rows;
+            current_grid = Grids.FirstOrDefault() ?? new();
+            _control_current_grid = new()
+                {
+                    Id = current_grid.Id,
+                    Description = current_grid.Description,
+                    IsDeleted = current_grid.IsDeleted,
+                    Name = current_grid.Name,
+                    SystemCodeName = current_grid.SystemCodeName
+                };
         }
     }
 

@@ -424,6 +424,7 @@ namespace ServerLib
             await _documens_dt.UpdateGridAsync(grid_db, true);
             DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentAsync(grid_db.DocumentOwnerId, true, true);
             res.Rows = document_db.Grids;
+            res.Message = $"Документ: {(grid_db.IsDeleted ? "помечен на удаление" : "пометка на удаления отключена")}";
             return res;
         }
 
@@ -466,6 +467,7 @@ namespace ServerLib
 
             DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentAsync(grid_db.DocumentOwnerId, true, true);
             res.Rows = document_db.Grids;
+            res.Message = $"Табличная часть удалена: '{grid_db.Name}'/{grid_db.SystemCodeName} #{grid_db.Id}";
             return res;
         }
     }
