@@ -26,7 +26,10 @@ else
 {
     <style>
         #create-new-grid > .validation-errors {
-        margin-left: 25px;
+            margin-left: 25px;
+        }
+        button.is-deleted {
+            text-decoration: line-through;
         }
     </style>
     <EditForm id="create-new-grid" autocomplete="off" Model="@create_grid" OnValidSubmit="@HandleValidSubmitCreateGridAsync" class="row row-cols-lg-auto g-3 align-items-center">
@@ -45,7 +48,7 @@ else
         {
             <div class="accordion-item@(row.Id == current_grid.Id ? " border border-primary" : "")">
                 <h2 class="accordion-header" id="flush-heading_@($"{row.Id}")">
-                    <button @onclick="() => SetCurrentGrid(row)" class="accordion-button@(row.Id == current_grid.Id ? "" : " collapsed")" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse_@($"{row.Id}")" aria-expanded="false" aria-controls="flush-collapse_@($"{row.Id}")">
+                    <button @onclick="() => SetCurrentGrid(row)" class="accordion-button@(row.Id == current_grid.Id ? "" : " collapsed") @(row.IsDeleted ? " is-deleted" : "")" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse_@($"{row.Id}")" aria-expanded="false" aria-controls="flush-collapse_@($"{row.Id}")">
                         @(row.Name) #@($"{row.Id}")
                     </button>
                 </h2>
@@ -76,7 +79,7 @@ else
                                     <div class="btn-group me-2" role="group" aria-label="First group">
                                         <button type="button" class="btn btn-outline-secondary" disabled="@(!IsEdited)" @onclick="HandleValidSaveAsync">Записать</button>
                                         <button type="button" class="btn btn-outline-secondary" disabled="@(!IsEdited)" @onclick="HandleResetCurrentGrid">Отмена</button>
-                                        <button type="button" class="btn btn-outline-secondary" disabled="@(IsEdited)">Удалить</button>
+                                        <button type="button" class="btn btn-outline-secondary" disabled="@(IsEdited)" @onclick="HandleToggleMarkDeleteAsync">Удалить</button>
                                     </div>
                                 </div>
                             </div>
@@ -144,7 +147,30 @@ else
             };
     }
 
-    private async Task HandleValidSaveAsync()
+    async Task HandleToggleMarkDeleteAsync()
+    {
+        if (Id <= 0 || current_grid.Id <= 0)
+            return;
+
+        RealTypeRowsResponseModel rest = await _documents_grids_design_refit_service.SetToggleDeleteGridAsync(current_grid.Id);
+        ModalBodyText = rest.Message;
+        Modal.Open(rest.IsSuccess ? "Сохранено" : "Ошибка!");
+        if (rest.IsSuccess)
+        {
+            Grids = rest.Rows;
+            //current_grid = Grids.FirstOrDefault(x => x.SystemCodeName == current_grid.SystemCodeName);
+            //_control_current_grid = new()
+            //    {
+            //        Id = current_grid.Id,
+            //        Description = current_grid.Description,
+            //        IsDeleted = current_grid.IsDeleted,
+            //        Name = current_grid.Name,
+            //        SystemCodeName = current_grid.SystemCodeName
+            //    };
+        }
+    }
+
+    async Task HandleValidSaveAsync()
     {
         if (Id <= 0)
             return;
@@ -170,7 +196,7 @@ else
         }
     }
 
-    private async Task HandleValidSubmitCreateGridAsync()
+    async Task HandleValidSubmitCreateGridAsync()
     {
         if (Id <= 0)
             return;
@@ -198,7 +224,7 @@ else
         }
     }
 
-    public async Task ReloadForm(int id)
+    async Task ReloadForm(int id)
     {
         if (id <= 0)
         {
