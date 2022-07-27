@@ -14,8 +14,8 @@ namespace SharedLib.Models
         /// <summary>
         /// Системное имя (имя типа/класса C#)
         /// </summary>
-        [RegularExpression(GlobalStaticConstants.SYSTEM_CODE_NAME_TEMPLATE, ErrorMessage = "Системное имя может содержать только буквы латинского алфавита (a-zA-Z)")]
-        [Required]
+        [RegularExpression(GlobalStaticConstants.SYSTEM_CODE_NAME_TEMPLATE, ErrorMessage = "Системное имя должно быть не менее трёх симоволов. Может содержать только буквы латинского алфавита (a-zA-Z)")]
+        [Required(ErrorMessage = "Системное кодовое имя обязательно к указанию")]
         public string SystemCodeName { get; set; } = string.Empty;
 
 

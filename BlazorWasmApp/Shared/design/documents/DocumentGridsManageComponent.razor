@@ -24,6 +24,22 @@
 }
 else
 {
+    <style>
+        #create-new-grid>.validation-errors {
+            margin-left: 25px;
+        }
+    </style>
+    <EditForm id="create-new-grid" autocomplete="off" Model="@create_grid" OnValidSubmit="@HandleValidSubmitEnumAsync" class="row row-cols-lg-auto g-3 align-items-center">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="input-group">
+            <span class="input-group-text">Новая таб.часть</span>
+            <input type="text" @bind="create_grid.Name" @bind:event="oninput" aria-label="Название" placeholder="Название" title="Наименование табличной части в интерфейсе" class="form-control">
+            <input type="text" @bind="create_grid.SystemCodeName" @bind:event="oninput" aria-label="Системное кодовое имя" placeholder="Системное/кодовое имя" title="Имя класса C#" class="form-control">
+            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Создать</button>
+        </div>
+    </EditForm>
+    <br />
     <div class="accordion" id="accordionFlushExample">
         @foreach (RealTypeModel row in Grids)
         {
@@ -77,6 +93,8 @@ else
 
     RealTypeModel? current_grid = new();
 
+    SystemDocumentsNamedSimpleModel create_grid = new();
+
     protected override async Task OnInitializedAsync()
     {
         if (Id <= 0)
@@ -99,6 +117,8 @@ else
             //ResponseBaseCurrentProjectModel rest = await _documents_grids_design_refit_service.UpdateDocumentAsync((IdNameDescriptionSimpleRealTypeModel)docomentObject);
             //ModalBodyText = rest.Message;
             //Modal.Open(rest.IsSuccess ? "Сохранено" : "Ошибка!");
+            create_grid.Name = string.Empty;
+            create_grid.SystemCodeName = string.Empty;
         }
         else
         {
@@ -148,6 +168,7 @@ else
         {
             Grids = rest.Rows;
             current_grid = Grids.FirstOrDefault() ?? new();
+            create_grid.DocumentOwnerId = id;
         }
 
         IsBusyProgress = false;
