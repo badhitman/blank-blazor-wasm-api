@@ -327,7 +327,8 @@ namespace ServerLib
             DocumentGridModelDB new_grid = (DocumentGridModelDB)added_grid;
             await _documens_dt.AddGridAsync(new_grid);
 
-            res.Rows = document_db.Grids.Append(new_grid);
+            res.Message = $"Табличная часть '{new_grid.SystemCodeName}' создана: #{new_grid.Id}";
+            res.Rows = document_db.Grids;
 
             return res;
         }

@@ -25,7 +25,7 @@
 else
 {
     <style>
-        #create-new-grid>.validation-errors {
+        #create-new-grid > .validation-errors {
             margin-left: 25px;
         }
     </style>
@@ -43,7 +43,7 @@ else
     <div class="accordion" id="accordionFlushExample">
         @foreach (RealTypeModel row in Grids)
         {
-            <div class="accordion-item">
+            <div class="accordion-item@(row.Id == current_grid.Id ? " border border-primary" : "")">
                 <h2 class="accordion-header" id="flush-heading_@($"{row.Id}")">
                     <button @onclick="() => SetCurrentGrid(row)" class="accordion-button@(row.Id == current_grid.Id ? "" : " collapsed")" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse_@($"{row.Id}")" aria-expanded="false" aria-controls="flush-collapse_@($"{row.Id}")">
                         @(row.Name) #@($"{row.Id}")
@@ -51,7 +51,7 @@ else
                 </h2>
                 @if (row.Id == current_grid.Id)
                 {
-                    <div class="card border-0">
+                    <div class="card border-0 bg-light">
                         <div class="card-body">
                             <div id="flush-collapse_@($"{row.Id}")" class="accordion-collapse collapse show" aria-labelledby="flush-heading_@($"{row.Id}")" data-bs-parent="#accordionFlushExample">
                                 <div class="mb-3">
@@ -112,28 +112,28 @@ else
 
     private async Task HandleValidSubmitEnumAsync()
     {
-        if (Id > 0)
+        if (Id <= 0)
+            return;
+
+        IsBusyProgress = true;
+
+        create_grid.SystemCodeName = create_grid.SystemCodeName.Trim();
+        create_grid.Name = create_grid.Name.Trim();
+
+        RealTypeRowsResponseModel rest = await _documents_grids_design_refit_service.AddGridAsync(create_grid);
+        ModalBodyText = rest.Message;
+        Modal.Open(rest.IsSuccess ? "Сохранено" : "Ошибка!");
+        if (rest.IsSuccess)
         {
-            //ResponseBaseCurrentProjectModel rest = await _documents_grids_design_refit_service.UpdateDocumentAsync((IdNameDescriptionSimpleRealTypeModel)docomentObject);
-            //ModalBodyText = rest.Message;
-            //Modal.Open(rest.IsSuccess ? "Сохранено" : "Ошибка!");
+            Grids = rest.Rows;
+            current_grid = Grids.FirstOrDefault(x => x.SystemCodeName == create_grid.SystemCodeName);
+
             create_grid.Name = string.Empty;
             create_grid.SystemCodeName = string.Empty;
         }
-        else
-        {
-            //IdResponseOwnedModel rest = await _documents_grids_design_refit_service.AddDocumentAsync((NameDescriptionSimpleRealTypeModel)docomentObject);
-            //if (rest.IsSuccess)
-            //{
-            //    docomentObject.Project = new ProjectModelDB(rest.CurrentOwnerObject);
-            //    _navigation_manager.NavigateTo($"/{GlobalStaticConstants.DOCUMENTS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}/{rest.Id}", false);
-            //}
-            //else
-            //{
-            //    ModalBodyText = rest.Message;
-            //    Modal.Open("Ошибка!");
-            //}
-        }
+
+        IsBusyProgress = false;
+        StateHasChanged();
     }
 
     public async Task ReloadForm(int id)
