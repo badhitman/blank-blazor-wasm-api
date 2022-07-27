@@ -42,7 +42,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="id">Идентификатор табличной части документа</param>
         /// <returns>Результат обработки запроса</returns>
-        [Delete("/api/documentsgridsdesigner/{id}")]
+        [Patch("/api/documentsgridsdesigner/{id}")]
         public Task<ApiResponse<RealTypeRowsResponseModel>> SetToggleDeleteGridAsync(int id);
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="id">Идентификатор таблиной части документа</param>
         /// <returns>Результат обработки запроса</returns>
-        [Patch("/api/documentsgridsdesigner/{id}")]
+        [Delete("/api/documentsgridsdesigner/{id}")]
         public Task<ApiResponse<RealTypeRowsResponseModel>> RemoveGridAsync(int id);
     }
 }
