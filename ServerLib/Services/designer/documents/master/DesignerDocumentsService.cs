@@ -329,7 +329,6 @@ namespace ServerLib
 
             res.Message = $"Табличная часть '{new_grid.SystemCodeName}' создана: #{new_grid.Id}";
             res.Rows = document_db.Grids;
-
             return res;
         }
 
@@ -387,6 +386,7 @@ namespace ServerLib
             await _documens_dt.UpdateGridAsync(grid_db, true);
             DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentAsync(grid_db.DocumentOwnerId, true, true);
             res.Rows = document_db.Grids;
+            res.Message = $"Изменения сохранены: {string.Join("; ", changes)};";
             return res;
         }
 

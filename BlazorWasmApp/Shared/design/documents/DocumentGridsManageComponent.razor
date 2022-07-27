@@ -26,10 +26,10 @@ else
 {
     <style>
         #create-new-grid > .validation-errors {
-            margin-left: 25px;
+        margin-left: 25px;
         }
     </style>
-    <EditForm id="create-new-grid" autocomplete="off" Model="@create_grid" OnValidSubmit="@HandleValidSubmitEnumAsync" class="row row-cols-lg-auto g-3 align-items-center">
+    <EditForm id="create-new-grid" autocomplete="off" Model="@create_grid" OnValidSubmit="@HandleValidSubmitCreateGridAsync" class="row row-cols-lg-auto g-3 align-items-center">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="input-group">
@@ -66,7 +66,7 @@ else
                                 </div>
                                 <div class="mb-3">
                                     <label for="currentInputAbout" class="form-label">Справочная информация</label>
-                                    <textarea @bind="current_grid.Description" @bind:event="oninput" class="form-control"  id="currentInputAbout" rows="5" placeholder="Комментарий для табличной части" aria-describedby="aboutCurrentHelp" />
+                                    <textarea @bind="current_grid.Description" @bind:event="oninput" class="form-control" id="currentInputAbout" rows="5" placeholder="Комментарий для табличной части" aria-describedby="aboutCurrentHelp" />
                                     <div id="aboutCurrentHelp" class="form-text">Описание поля (подсказка). Избегайте использование HTML в этом описании.</div>
                                 </div>
                             </div>
@@ -74,9 +74,9 @@ else
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
                                     <div class="btn-group me-2" role="group" aria-label="First group">
-                                        <button type="button" class="btn btn-outline-secondary">Записать</button>
-                                        <button type="button" class="btn btn-outline-secondary">Отмена</button>
-                                        <button type="button" class="btn btn-outline-secondary">Удалить</button>
+                                        <button type="button" class="btn btn-outline-secondary" disabled="@(!IsEdited)" @onclick="HandleValidSaveAsync">Записать</button>
+                                        <button type="button" class="btn btn-outline-secondary" disabled="@(!IsEdited)" @onclick="HandleResetCurrentGrid">Отмена</button>
+                                        <button type="button" class="btn btn-outline-secondary" disabled="@(IsEdited)">Удалить</button>
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +100,16 @@ else
 
     IEnumerable<RealTypeModel> Grids = Enumerable.Empty<RealTypeModel>();
 
+    RealTypeModel? _control_current_grid = new();
     RealTypeModel? current_grid = new();
+
+    bool IsEdited
+    {
+        get
+        {
+            return _control_current_grid.Description != current_grid.Description || _control_current_grid.Name != current_grid.Name || _control_current_grid.SystemCodeName != current_grid.SystemCodeName || _control_current_grid.Id != current_grid.Id;
+        }
+    }
 
     SystemDocumentsNamedSimpleModel create_grid = new();
 
@@ -113,18 +122,58 @@ else
         await ReloadForm(Id);
     }
 
-    private void SetCurrentGrid(RealTypeModel set_current_grid)
+    void HandleResetCurrentGrid()
     {
-        current_grid = set_current_grid;
-        StateHasChanged();
+        current_grid.Description = _control_current_grid.Description;
+        current_grid.IsDeleted = _control_current_grid.IsDeleted;
+        current_grid.Name = _control_current_grid.Name;
+        current_grid.SystemCodeName = _control_current_grid.SystemCodeName;
     }
 
-    private async Task HandleValidSubmitEnumAsync()
+    void SetCurrentGrid(RealTypeModel set_current_grid)
+    {
+        HandleResetCurrentGrid();
+        current_grid = set_current_grid;
+        _control_current_grid = new()
+            {
+                Id = current_grid.Id,
+                Description = current_grid.Description,
+                IsDeleted = current_grid.IsDeleted,
+                Name = current_grid.Name,
+                SystemCodeName = current_grid.SystemCodeName
+            };
+    }
+
+    private async Task HandleValidSaveAsync()
     {
         if (Id <= 0)
             return;
 
-        IsBusyProgress = true;
+        current_grid.SystemCodeName = current_grid.SystemCodeName.Trim();
+        current_grid.Name = current_grid.Name.Trim();
+
+        RealTypeRowsResponseModel rest = await _documents_grids_design_refit_service.UpdateGridAsync(current_grid);
+        ModalBodyText = rest.Message;
+        Modal.Open(rest.IsSuccess ? "Сохранено" : "Ошибка!");
+        if (rest.IsSuccess)
+        {
+            Grids = rest.Rows;
+            current_grid = Grids.FirstOrDefault(x => x.SystemCodeName == current_grid.SystemCodeName);
+            _control_current_grid = new()
+                {
+                    Id = current_grid.Id,
+                    Description = current_grid.Description,
+                    IsDeleted = current_grid.IsDeleted,
+                    Name = current_grid.Name,
+                    SystemCodeName = current_grid.SystemCodeName
+                };
+        }
+    }
+
+    private async Task HandleValidSubmitCreateGridAsync()
+    {
+        if (Id <= 0)
+            return;
 
         create_grid.SystemCodeName = create_grid.SystemCodeName.Trim();
         create_grid.Name = create_grid.Name.Trim();
@@ -136,13 +185,17 @@ else
         {
             Grids = rest.Rows;
             current_grid = Grids.FirstOrDefault(x => x.SystemCodeName == create_grid.SystemCodeName);
-
+            _control_current_grid = new()
+                {
+                    Id = current_grid.Id,
+                    Description = current_grid.Description,
+                    IsDeleted = current_grid.IsDeleted,
+                    Name = current_grid.Name,
+                    SystemCodeName = current_grid.SystemCodeName
+                };
             create_grid.Name = string.Empty;
             create_grid.SystemCodeName = string.Empty;
         }
-
-        IsBusyProgress = false;
-        StateHasChanged();
     }
 
     public async Task ReloadForm(int id)
@@ -177,6 +230,15 @@ else
         {
             Grids = rest.Rows;
             current_grid = Grids.FirstOrDefault() ?? new();
+            _control_current_grid = new()
+                {
+                    Id = current_grid.Id,
+                    Description = current_grid.Description,
+                    IsDeleted = current_grid.IsDeleted,
+                    Name = current_grid.Name,
+                    SystemCodeName = current_grid.SystemCodeName
+                };
+
             create_grid.DocumentOwnerId = id;
         }
 
