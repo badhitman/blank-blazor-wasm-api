@@ -8,28 +8,39 @@
 @using System.Collections.ObjectModel
 
 @inject SessionMarkerLiteModel _session_marker
-@inject IDocumentsPropertiesMainBodyDesignRestService _documents_properties_main_body_refit_service
-@inject IDocumentsPropertiesGridDesignRestService _documents_properties_main_grid_refit_service
+@inject IDocumentsPropertiesMainBodyDesignRestService _documents_properties_body_refit_service
+@inject IDocumentsGridsDesignRestService _documents_grids_design_refit_service
+@inject IDocumentsPropertiesGridDesignRestService _documents_grid_properties_refit_service
 @inject ILogger<DocumentPropertiesComponent> _logger
 
 @attribute [Authorize]
 
 @inherits BlazorBusyComponentBaseModel
+<div class="row justify-content-between">
+    <h4 class="col-auto">
+        @switch (AreaProperty)
+        {
+            case AreasPropertiesEnum.Body:
+                <text>Реквизиты/свойства тела документа.</text>
+                <small class="text-muted">Поля тела документа</small>
+                break;
+            case AreasPropertiesEnum.Table:
+                <text>Реквизиты/свойства табличной части документа.</text>
+                <small class="text-muted">Поля табличной части документа</small>
+                break;
+        }
 
-<h4>
-    @switch (AreaProperty)
+    </h4>
+    @if (AreaProperty == AreasPropertiesEnum.Table)
     {
-        case AreasPropertiesEnum.Body:
-            <text>Реквизиты/свойства тела документа.</text>
-            <small class="text-muted">Основные поля в теле документа</small>
-            break;
-        case AreasPropertiesEnum.Table:
-            <text>Реквизиты/свойства табличной части документа.</text>
-            <small class="text-muted">Основные поля в табличной части документа</small>
-            break;
+        <select class="col form-select" aria-label="Default select example">
+            @foreach (RealTypeModel grid_row in Grids)
+            {
+                <option disabled="@(grid_row.IsDeleted)" value="@(grid_row.Id)">@(grid_row.Name)[@(grid_row.SystemCodeName)]</option>
+            }
+        </select>
     }
-
-</h4>
+</div>
 <br />
 @if (IsBusyProgress == true)
 {
@@ -95,6 +106,8 @@ else
     private ModalWindowComponent Modal { get; set; }
     private string ModalBodyText { get; set; } = string.Empty;
 
+    IEnumerable<RealTypeModel> Grids = Enumerable.Empty<RealTypeModel>();
+
     /// <summary>
     /// Данные
     /// </summary>
@@ -116,7 +129,49 @@ else
         {
             return;
         }
-        await ReloadForm(Id);
+
+        if (AreaProperty == AreasPropertiesEnum.Table)
+        {
+            await GetGridsAsync(Id);
+        }
+        else
+        {
+            await ReloadForm(Id);
+        }
+    }
+
+    async Task GetGridsAsync(int id)
+    {
+        if (id <= 0)
+        {
+            ModalBodyText = "Идентификатор документа не может быть 0";
+            _logger.LogError(ModalBodyText);
+            Modal.Open("Ошибка!");
+            return;
+        }
+        IsBusyProgress = true;
+        RealTypeRowsResponseModel rest = await _documents_grids_design_refit_service.GetGridsAsync(id);
+        if (!rest.IsSuccess)
+        {
+            if (!string.IsNullOrEmpty(rest.Message))
+            {
+                _logger.LogError(rest.Message);
+                ModalBodyText = rest.Message;
+                Modal.Open("Ошибка!");
+            }
+            else
+            {
+                ModalBodyText = $"Ошибка API: {nameof(_documents_grids_design_refit_service.GetGridsAsync)}";
+                _logger.LogError(ModalBodyText);
+                Modal.Open("Ошибка!");
+            }
+        }
+        else
+        {
+            Grids = rest.Rows;
+        }
+        IsBusyProgress = false;
+        StateHasChanged();
     }
 
     public async Task ReloadForm(int id)
@@ -132,8 +187,8 @@ else
         IsBusyProgress = true;
         GetDocumentDataResponseModel rest = AreaProperty switch
         {
-            AreasPropertiesEnum.Body => await _documents_properties_main_body_refit_service.GetPropertiesAsync(id),
-            AreasPropertiesEnum.Table => await _documents_properties_main_grid_refit_service.GetPropertiesAsync(id)
+            AreasPropertiesEnum.Body => await _documents_properties_body_refit_service.GetPropertiesAsync(id),
+            AreasPropertiesEnum.Table => await _documents_grid_properties_refit_service.GetPropertiesAsync(id)
         };
 
         if (!rest.IsSuccess)
@@ -146,7 +201,7 @@ else
             }
             else
             {
-                ModalBodyText = $"Ошибка API: {nameof(_documents_properties_main_body_refit_service.GetPropertiesAsync)}";
+                ModalBodyText = $"Ошибка API: {nameof(_documents_properties_body_refit_service.GetPropertiesAsync)}";
                 _logger.LogError(ModalBodyText);
                 Modal.Open("Ошибка!");
             }
@@ -195,8 +250,8 @@ else
 
         GetPropertiesSimpleRealTypeResponseModel rest = AreaProperty switch
         {
-            AreasPropertiesEnum.Body => await _documents_properties_main_body_refit_service.AddPropertyAsync(obj),
-            AreasPropertiesEnum.Table => await _documents_properties_main_grid_refit_service.AddPropertyAsync(obj)
+            AreasPropertiesEnum.Body => await _documents_properties_body_refit_service.AddPropertyAsync(obj),
+            AreasPropertiesEnum.Table => await _documents_grid_properties_refit_service.AddPropertyAsync(obj)
         };
 
         if (!rest.IsSuccess)
