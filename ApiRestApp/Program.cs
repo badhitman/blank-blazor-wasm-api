@@ -100,16 +100,16 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Title = "DesignerMetaApp API",
         Description = "An ASP.NET Core Web API for Design metadata app",
-        TermsOfService = new Uri("https://github.com/badhitman/DesignerMetaApp/blob/main/TERMS.md"),
+        TermsOfService = new Uri("https://github.com/badhitman/blank-blazor-wasm-api/blob/main/TERMS.md"),
         Contact = new OpenApiContact
         {
             Name = "my Contact",
-            Url = new Uri("https://github.com/badhitman/DesignerMetaApp/blob/main/CONTACT.md")
+            Url = new Uri("https://github.com/badhitman/blank-blazor-wasm-api/blob/main/CONTACT.md")
         },
         License = new OpenApiLicense
         {
             Name = "License",
-            Url = new Uri("https://github.com/badhitman/DesignerMetaApp/blob/main/LICENSE")
+            Url = new Uri("https://github.com/badhitman/blank-blazor-wasm-api/blob/main/LICENSE")
         }
     });
 
