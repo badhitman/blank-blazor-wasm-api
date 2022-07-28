@@ -13,7 +13,7 @@ namespace ServerLib
         readonly ISessionService _session_service;
         readonly IProjectsTable _projects_dt;
         readonly IDesignerSharedService _shared_service;
-        readonly IDesignerDocumensGridPropertiesTable _documens_main_grid_dt;
+        readonly IDesignerDocumensGridPropertiesTable _documens_grid_dt;
         readonly IDesignerDocumensTable _documens_dt;
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace ServerLib
             _projects_dt = set_projects_dt;
             _session_service = set_session_service;
             _shared_service = shared_service;
-            _documens_main_grid_dt = documens_main_grid_dt;
+            _documens_grid_dt = documens_main_grid_dt;
             _documens_dt = documens_dt;
         }
 
@@ -44,7 +44,7 @@ namespace ServerLib
             res.IsSuccess = document_db is not null;
             if (!res.IsSuccess)
             {
-                res.Message = $"Документ [{grid_id}] не существует";
+                res.Message = $"Документ по идентификатору табличной части [{grid_id}] не найден";
                 return res;
             }
 
@@ -57,7 +57,7 @@ namespace ServerLib
 
             try
             {
-                res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(grid_id);
+                res.DataRows = await _documens_grid_dt.GetPropertiesAsync(grid_id);
                 IEnumerable<(PropertyTypesEnum PropertyType, string SystemCodeName, int Id, string Name, bool IsDeleted)> types_of_project = await _projects_dt.GetTypesOfProjectAsync(check.Project.Id, _session_service.SessionMarker.Id);
                 res.EnumsTypesOfProject = types_of_project.Where(x => x.PropertyType == PropertyTypesEnum.SimpleEnum).Select(x => new RealTypeLiteModel() { SystemCodeName = x.SystemCodeName, Id = x.Id, Name = x.Name, IsDeleted = x.IsDeleted });
                 res.DocumentsTypesOfProject = types_of_project.Where(x => x.PropertyType == PropertyTypesEnum.Document).Select(x => new RealTypeLiteModel() { SystemCodeName = x.SystemCodeName, Id = x.Id, Name = x.Name, IsDeleted = x.IsDeleted });
@@ -88,10 +88,10 @@ namespace ServerLib
             }
 
             DocumentPropertyGridModelDB property_new = (DocumentPropertyGridModelDB)property_object;
-            property_new.SortIndex = await _documens_main_grid_dt.NextSortIndexAsync(property_object.OwnerId);
+            property_new.SortIndex = await _documens_grid_dt.NextSortIndexAsync(property_object.OwnerId);
             try
             {
-                await _documens_main_grid_dt.AddPropertyAsync(property_new, true);
+                await _documens_grid_dt.AddPropertyAsync(property_new, true);
             }
             catch (Exception ex)
             {
@@ -99,7 +99,7 @@ namespace ServerLib
                 res.Message = ex.Message;
             }
 
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(property_object.OwnerId);
+            res.DataRows = await _documens_grid_dt.GetPropertiesAsync(property_object.OwnerId);
             res.IsSuccess = res.DataRows?.Any() == true;
             if (!res.IsSuccess)
             {
@@ -128,7 +128,7 @@ namespace ServerLib
                 }
                 try
                 {
-                    await _documens_main_grid_dt.UpdatePropertiesRangeAsync(res.DataRows, true);
+                    await _documens_grid_dt.UpdatePropertiesRangeAsync(res.DataRows, true);
                 }
                 catch (Exception ex)
                 {
@@ -151,7 +151,7 @@ namespace ServerLib
                 return res;
             }
 
-            List<SimplePropertyRealTypeModel> properties_items = new(await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.Id));
+            List<SimplePropertyRealTypeModel> properties_items = new(await _documens_grid_dt.GetPropertiesAsync(check.Property.Grid.Id));
             int index_at = properties_items.FindIndex(e => e.Id == id);
             res.IsSuccess = index_at > 0;
             if (!res.IsSuccess)
@@ -164,8 +164,8 @@ namespace ServerLib
             upd_items[0].SortIndex++;
             upd_items[1].SortIndex--;
 
-            await _documens_main_grid_dt.UpdatePropertiesRangeAsync(upd_items, true);
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.Id);
+            await _documens_grid_dt.UpdatePropertiesRangeAsync(upd_items, true);
+            res.DataRows = await _documens_grid_dt.GetPropertiesAsync(check.Property.Grid.Id);
             return res;
         }
 
@@ -180,7 +180,7 @@ namespace ServerLib
                 return res;
             }
 
-            List<SimplePropertyRealTypeModel> properties_items = new(await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.Id));
+            List<SimplePropertyRealTypeModel> properties_items = new(await _documens_grid_dt.GetPropertiesAsync(check.Property.Grid.Id));
             int index_at = properties_items.FindIndex(e => e.Id == id);
             res.IsSuccess = index_at < properties_items.Count - 1;
             if (!res.IsSuccess)
@@ -193,8 +193,8 @@ namespace ServerLib
             upd_items[0].SortIndex++;
             upd_items[1].SortIndex--;
 
-            await _documens_main_grid_dt.UpdatePropertiesRangeAsync(upd_items, true);
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.Id);
+            await _documens_grid_dt.UpdatePropertiesRangeAsync(upd_items, true);
+            res.DataRows = await _documens_grid_dt.GetPropertiesAsync(check.Property.Grid.Id);
             return res;
         }
 
@@ -218,7 +218,7 @@ namespace ServerLib
                 return res;
             }
 
-            res.Property = await _documens_main_grid_dt.GetPropertyAsync(property_document_id);
+            res.Property = await _documens_grid_dt.GetPropertyAsync(property_document_id);
             res.IsSuccess = res.Property is not null;
             if (!res.IsSuccess)
             {
@@ -254,7 +254,7 @@ namespace ServerLib
                 return res;
             }
 
-            DocumentPropertyGridModelDB? property_db = await _documens_main_grid_dt.GetPropertyAsync(action.Id, true);
+            DocumentPropertyGridModelDB? property_db = await _documens_grid_dt.GetPropertyAsync(action.Id, true);
             res.IsSuccess = property_db is not null;
             if (!res.IsSuccess)
             {
@@ -308,7 +308,7 @@ namespace ServerLib
 
             try
             {
-                await _documens_main_grid_dt.UpdatePropertyAsync(property_db, true);
+                await _documens_grid_dt.UpdatePropertyAsync(property_db, true);
             }
             catch (Exception ex)
             {
@@ -316,7 +316,7 @@ namespace ServerLib
                 res.Message = ex.Message;
                 return res;
             }
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(property_db.Grid.Id);
+            res.DataRows = await _documens_grid_dt.GetPropertiesAsync(property_db.Grid.Id);
             res.Message = "Изменения записаны.";
             return res;
         }
@@ -332,8 +332,8 @@ namespace ServerLib
                 return res;
             }
             check.Property.IsDeleted = !check.Property.IsDeleted;
-            await _documens_main_grid_dt.UpdatePropertyAsync(check.Property, true);
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.Id);
+            await _documens_grid_dt.UpdatePropertyAsync(check.Property, true);
+            res.DataRows = await _documens_grid_dt.GetPropertiesAsync(check.Property.Grid.Id);
             return res;
         }
 
@@ -353,8 +353,8 @@ namespace ServerLib
                 res.Message = "Для окончательного удаления - объект должен быть помечен на удаление!";
                 return res;
             }
-            await _documens_main_grid_dt.RemovePropertyAsync(check.Property, true);
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.Id);
+            await _documens_grid_dt.RemovePropertyAsync(check.Property, true);
+            res.DataRows = await _documens_grid_dt.GetPropertiesAsync(check.Property.Grid.Id);
             return res;
         }
     }
