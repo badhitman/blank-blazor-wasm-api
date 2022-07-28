@@ -13,6 +13,5 @@ namespace SharedLib.Models
         /// Системное кодовое имя
         /// </summary>
         public string SystemCodeName { get; set; }
-
     }
 }

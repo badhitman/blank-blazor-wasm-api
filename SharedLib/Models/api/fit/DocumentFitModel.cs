@@ -10,14 +10,14 @@ namespace SharedLib.Models
     public class DocumentFitModel : BaseFitRealTypeModel
     {
         /// <summary>
-        /// Поля основного тела документа
+        /// Поля тела документа
         /// </summary>
         public IEnumerable<DocumentPropertyFitModel> PropertiesBody { get; set; }
 
         /// <summary>
-        /// Поля оснвоной табличной части документа
+        /// Табличные части документа
         /// </summary>
-        public IEnumerable<DocumentPropertyFitModel> PropertiesGrid { get; set; }
+        public IEnumerable<GridFitModel> Grids { get; set; }
 
         public static explicit operator DocumentFitModel(DocumentDesignModelDB v)
         {
@@ -29,7 +29,7 @@ namespace SharedLib.Models
                 Name = v.Name,
                 SystemCodeName = v.SystemCodeName,
                 PropertiesBody = v.PropertiesBody.Select(x => (DocumentPropertyFitModel)x),
-                PropertiesGrid = v.PropertiesGrid.Select(x => (DocumentPropertyFitModel)x)
+                Grids = v.Grids.Select(x => (GridFitModel)x)
             };
         }
     }
