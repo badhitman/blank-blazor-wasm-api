@@ -127,7 +127,7 @@ namespace SharedLib.Services
         /// <param name="is_body_document">Если тело документа - true. Если табличная часть - false</param>
         static async Task WriteDocumentControllers(StreamWriter writer, string service_instance, string type_name, bool is_body_document)
         {
-            string type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            string type_name_gen = $"{type_name}";
             await writer.WriteLineAsync("\t\t[HttpPost($\"{nameof(RouteMethodsPrefixesEnum.AddSingle)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddAsync({type_name_gen} object_rest)");
             await writer.WriteLineAsync("\t\t{");
@@ -136,7 +136,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            type_name_gen = $"{type_name}";
             await writer.WriteLineAsync("\t\t[HttpPost($\"{nameof(RouteMethodsPrefixesEnum.AddRange)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest)");
             await writer.WriteLineAsync("\t\t{");
@@ -145,7 +145,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
+            type_name_gen = $"{type_name}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
             await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetSingleById)}/{{id}}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> FirstAsync([FromRoute] int id)");
             await writer.WriteLineAsync("\t\t{");
@@ -154,7 +154,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
+            type_name_gen = $"{type_name}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
             await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangeByIds)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> SelectAsync([FromQuery] IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
@@ -176,7 +176,7 @@ namespace SharedLib.Services
             }
             else
             {
-                type_name_gen = $"{type_name}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
+                type_name_gen = $"{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
                 await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangeByOwnerId)}\")]");
                 await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> SelectAsync([FromQuery] GetByIdPaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
@@ -186,7 +186,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync();
             }
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            type_name_gen = $"{type_name}";
             await writer.WriteLineAsync("\t\t[HttpPut($\"{nameof(RouteMethodsPrefixesEnum.UpdateSingle)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateAsync({type_name_gen} object_rest_upd)");
             await writer.WriteLineAsync("\t\t{");
@@ -195,7 +195,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            type_name_gen = $"{type_name}";
             await writer.WriteLineAsync("\t\t[HttpPut($\"{nameof(RouteMethodsPrefixesEnum.UpdateRange)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest_upd)");
             await writer.WriteLineAsync("\t\t{");
@@ -258,14 +258,14 @@ namespace SharedLib.Services
 
         static async Task WriteRestServiceImplementation(StreamWriter writer, string type_name, bool is_body_document)
         {
-            string type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            string type_name_gen = $"{type_name}";
             await writer.WriteLineAsync($"\t\tprivate readonly I{type_name_gen}RefitService _service;");
             await writer.WriteLineAsync($"\t\tprivate readonly ILogger<{type_name_gen}RestService> _logger;");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync("\t\t/// Конструктор");
             await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\tpublic {type_name_gen}RestService(I{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}RefitService set_service, ILogger<{type_name_gen}RestService> set_logger)");
+            await writer.WriteLineAsync($"\t\tpublic {type_name_gen}RestService(I{type_name}RefitService set_service, ILogger<{type_name_gen}RestService> set_logger)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t_service = set_service;");
             await writer.WriteLineAsync("\t\t\t_logger = set_logger;");
@@ -280,21 +280,21 @@ namespace SharedLib.Services
             await WriteRestServiceBody(writer, "AddAsync", "object_rest", "ResponseBaseModel");
             await writer.WriteLineAsync();
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            type_name_gen = $"{type_name}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
             await WriteRestServiceBody(writer, "AddRangeAsync", "objects_range_rest", "ResponseBaseModel");
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
+            type_name_gen = $"{type_name}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> FirstAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\t{type_name_gen} result = new();");
             await WriteRestServiceBody(writer, "FirstAsync", "id", type_name_gen);
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
+            type_name_gen = $"{type_name}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> SelectAsync(IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
@@ -312,7 +312,7 @@ namespace SharedLib.Services
             }
             else
             {
-                type_name_gen = $"{type_name}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
+                type_name_gen = $"{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
                 await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
                 await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> SelectAsync(GetByIdPaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
@@ -320,14 +320,14 @@ namespace SharedLib.Services
                 await WriteRestServiceBody(writer, "SelectAsync", "request", type_name_gen);
             }
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            type_name_gen = $"{type_name}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateAsync({type_name_gen} object_rest_upd)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\tResponseBaseModel result = new();");
             await WriteRestServiceBody(writer, "UpdateAsync", "object_rest_upd", "ResponseBaseModel");
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            type_name_gen = $"{type_name}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest_upd)");
             await writer.WriteLineAsync("\t\t{");
@@ -363,14 +363,14 @@ namespace SharedLib.Services
         /// <param name="is_body_document">Если тело документа - true. Если табличная часть - false</param>
         static async Task WriteRefitProviderImplementation(StreamWriter writer, string type_name, bool is_body_document)
         {
-            string type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            string type_name_gen = $"{type_name}";
             await writer.WriteLineAsync($"\t\tprivate readonly I{type_name_gen}RefitService _api;");
             await writer.WriteLineAsync($"\t\tprivate readonly ILogger<{type_name_gen}RefitProvider> _logger;");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync("\t\t/// Конструктор");
             await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\tpublic {type_name_gen}RefitProvider(I{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}RefitService set_api, ILogger<{type_name_gen}RefitProvider> set_logger)");
+            await writer.WriteLineAsync($"\t\tpublic {type_name_gen}RefitProvider(I{type_name}RefitService set_api, ILogger<{type_name_gen}RefitProvider> set_logger)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t_api = set_api;");
             await writer.WriteLineAsync("\t\t\t_logger = set_logger;");
@@ -384,7 +384,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            type_name_gen = $"{type_name}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<ResponseBaseModel>> AddRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest)");
             await writer.WriteLineAsync("\t\t{");
@@ -392,7 +392,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
+            type_name_gen = $"{type_name}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<{type_name_gen}>> FirstAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
@@ -400,7 +400,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
+            type_name_gen = $"{type_name}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<{type_name_gen}>> SelectAsync(IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
@@ -421,7 +421,7 @@ namespace SharedLib.Services
             }
             else
             {
-                type_name_gen = $"{type_name}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
+                type_name_gen = $"{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
                 await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
                 await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<{type_name_gen}>> SelectAsync(GetByIdPaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
@@ -430,7 +430,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync();
             }
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            type_name_gen = $"{type_name}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<ResponseBaseModel>> UpdateAsync({type_name_gen} object_rest_upd)");
             await writer.WriteLineAsync("\t\t{");
@@ -438,7 +438,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            type_name_gen = $"{type_name}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<ResponseBaseModel>> UpdateRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest_upd)");
             await writer.WriteLineAsync("\t\t{");
@@ -481,7 +481,7 @@ namespace SharedLib.Services
         /// <returns></returns>
         static async Task WriteRestServiceInterface(StreamWriter writer, string type_name, bool is_body_document, bool is_refit, bool add_attr)
         {
-            string type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            string type_name_gen = $"{type_name}";
 
             if (add_attr)
             {
@@ -494,7 +494,7 @@ namespace SharedLib.Services
             {
                 await writer.WriteLineAsync($"\t\t[Post($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.AddRange)}}\")]");
             }
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            type_name_gen = $"{type_name}";
             await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> AddRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest);");
             await writer.WriteLineAsync();
 
@@ -502,7 +502,7 @@ namespace SharedLib.Services
             {
                 await writer.WriteLineAsync($"\t\t[Get($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetSingleById)}}/{{{{id}}}}\")]");
             }
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
+            type_name_gen = $"{type_name}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
             await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> FirstAsync(int id);");
             await writer.WriteLineAsync();
 
@@ -510,7 +510,7 @@ namespace SharedLib.Services
             {
                 await writer.WriteLineAsync($"\t\t[Get($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetRangeByIds)}}\")]");
             }
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
+            type_name_gen = $"{type_name}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
             await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> SelectAsync(IEnumerable<int> ids);");
             await writer.WriteLineAsync();
 
@@ -530,7 +530,7 @@ namespace SharedLib.Services
                 {
                     await writer.WriteLineAsync($"\t\t[Get($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetRangeByOwnerId)}}\")]");
                 }
-                type_name_gen = $"{type_name}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
+                type_name_gen = $"{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
                 await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> SelectAsync(GetByIdPaginationRequestModel request);");
                 await writer.WriteLineAsync();
             }
@@ -539,7 +539,7 @@ namespace SharedLib.Services
             {
                 await writer.WriteLineAsync($"\t\t[Put($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.UpdateSingle)}}\")]");
             }
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            type_name_gen = $"{type_name}";
             await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> UpdateAsync({type_name_gen} object_rest_upd);");
             await writer.WriteLineAsync();
 
@@ -547,7 +547,7 @@ namespace SharedLib.Services
             {
                 await writer.WriteLineAsync($"\t\t[Put($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.UpdateRange)}}\")]");
             }
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}";
+            type_name_gen = $"{type_name}";
             await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> UpdateRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest_upd);");
             await writer.WriteLineAsync();
 
@@ -585,7 +585,7 @@ namespace SharedLib.Services
             string type_name_gen;
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");//_TableModel
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} obj_rest)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddAsync({type_name} obj_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
@@ -595,7 +595,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> obj_range_rest)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name}> obj_range_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
@@ -604,7 +604,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
+            type_name_gen = $"{type_name}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}?> FirstAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
@@ -616,7 +616,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
-            type_name_gen = $"{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
+            type_name_gen = $"{type_name}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> SelectAsync(IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
@@ -641,7 +641,7 @@ namespace SharedLib.Services
             else
             {
                 await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request)");
+                await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
                 await writer.WriteLineAsync($"\t\t\treturn await _crud_accessor.SelectAsync(request);");
@@ -650,7 +650,7 @@ namespace SharedLib.Services
             }
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} obj_rest)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateAsync({type_name} obj_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
@@ -660,7 +660,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> obj_range_rest)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name}> obj_range_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
@@ -714,26 +714,26 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\t/// Создать новый объект{(is_body_document ? "" : " строки (табличной части)")} документа (запись БД): {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest\">Объект добавления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> AddAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} obj_rest);");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> AddAsync({type_name} obj_rest);");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Создать перечень новых объектов{(is_body_document ? "" : " строк табличной части")} документа: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest_range\">Объекты добавления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> obj_rest_range);");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name}> obj_rest_range);");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Прочитать {(is_body_document ? "документ" : "строку табличной части документа")}: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"id\">Идентификатор объекта</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}?> FirstAsync(int id);");
+            await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}?> FirstAsync(int id);");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Получить (набор){(is_body_document ? "" : " строк табличной части")} документов: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"ids\">Идентификаторы объектов</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}> SelectAsync(IEnumerable<int> ids);");
+            await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}> SelectAsync(IEnumerable<int> ids);");
             await writer.WriteLineAsync();
 
             if (is_body_document)
@@ -751,7 +751,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\t\t/// Получить (набор) строк табличной части документа: {doc_obj_name}");
                 await writer.WriteLineAsync("\t\t/// </summary>");
                 await writer.WriteLineAsync($"\t\t/// <param name=\"request\">Пагинация запроса</param>");
-                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request);");
+                await writer.WriteLineAsync($"\t\tpublic Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request);");
                 await writer.WriteLineAsync();
             }
 
@@ -759,13 +759,13 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\t/// Обновить объект{(is_body_document ? "" : " строки табличной части")} документа: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest\">Объект обновления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> UpdateAsync({type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)} obj_rest);");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> UpdateAsync({type_name} obj_rest);");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Обновить перечень объектов{(is_body_document ? "/документов" : " строк табличной части документа")}: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"obj_range_rest\">Объекты обновления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX)}> obj_range_rest);");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name}> obj_range_rest);");
             await writer.WriteLineAsync();
 
 
@@ -866,7 +866,7 @@ namespace SharedLib.Services
             }
             else
             {
-                string fk_owner_property_name = $"{type_name[..(type_name.Length - GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX.Length)]}OwnerId";
+                string fk_owner_property_name = $"{type_name}OwnerId";
                 await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
                 await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");

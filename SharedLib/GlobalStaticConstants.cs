@@ -127,11 +127,6 @@ public static class GlobalStaticConstants
     public const string TABLE_PROPERTY_NAME_PREFIX = "_TableProperty";
 
     /// <summary>
-    /// Префикс типа данных табличных данных документа
-    /// </summary>
-    public const string TABLE_TYPE_NAME_PREFIX = "_TableModel";
-
-    /// <summary>
     /// Префикс имени поля (имя таблицы БД) для контекста базы данных
     /// </summary>
     public const string CONTEXT_DATA_SET_PREFIX = "_DbSet";
