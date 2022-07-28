@@ -1239,8 +1239,8 @@ namespace SharedLib.Services
                 await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, true, true);
 
                 #endregion
-
-                if (!doc_obj.PropertiesGrid.Any(x => !x.IsDeleted && x.PropertyTypeMetadata?.IsDeleted != true))
+                /*
+                if (!doc_obj.Grids.Any(x => !x.IsDeleted && x.PropertyTypeMetadata?.IsDeleted != true))
                     continue;
 
                 #region модели ответов табличной части документа (rest/api)
@@ -1413,6 +1413,7 @@ namespace SharedLib.Services
                 await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, false, true, true);
 
                 #endregion
+            */
             }
         }
 
@@ -1440,7 +1441,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\t\t/// {doc_obj.Description}");
                 await writer.WriteLineAsync("\t\t/// </summary>");
                 writer.WriteLine($"\t\tpublic DbSet<{doc_obj.SystemCodeName}> {doc_obj.SystemCodeName}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX} {{ get; set; }}");
-
+                /*
                 if (doc_obj.PropertiesGrid.Any())
                 {
                     await writer.WriteLineAsync();
@@ -1449,6 +1450,7 @@ namespace SharedLib.Services
                     await writer.WriteLineAsync("\t\t/// </summary>");
                     await writer.WriteLineAsync($"\t\tpublic DbSet<{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}> {doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}{GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX} {{ get; set; }}");
                 }
+                */
             }
 
             await WriteEnd(writer);
@@ -1465,8 +1467,8 @@ namespace SharedLib.Services
             foreach (DocumentFitModel doc_obj in docs.Where(x => !x.IsDeleted))
             {
                 type_class_name = doc_obj.SystemCodeName;
-                if (class_names.Contains(type_class_name))
-                    goto space_1;
+                /*if (class_names.Contains(type_class_name))
+                    goto space_1;*/
                 class_names.Add(type_class_name);
 
                 enumEntry = archive.CreateEntry(Path.Combine(dir, $"{type_class_name}.cs"));
@@ -1516,7 +1518,7 @@ namespace SharedLib.Services
                             throw new Exception();
                     }
                 }
-
+                /*
                 if (doc_obj.PropertiesGrid.Any())
                 {
                     await writer.WriteLineAsync();
@@ -1525,11 +1527,13 @@ namespace SharedLib.Services
                     await writer.WriteLineAsync("\t\t/// </summary>");
                     await writer.WriteLineAsync($"\t\tpublic ICollection<{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}> {doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
                 }
+                */
                 await WriteEnd(writer);
+                /*
             space_1:
                 if (!doc_obj.PropertiesGrid.Any())
                     continue;
-
+            */
                 type_class_name = $"{doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_TYPE_NAME_PREFIX}";
                 if (class_names.Contains(type_class_name))
                     continue;
@@ -1551,7 +1555,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\t\t/// {doc_obj.Name}");
                 await writer.WriteLineAsync("\t\t/// </summary>");
                 await writer.WriteLineAsync($"\t\tpublic {doc_obj.SystemCodeName} {doc_obj.SystemCodeName}Owner {{ get; set; }}");
-
+                /*
                 foreach (DocumentPropertyFitModel property in doc_obj.PropertiesGrid.Where(x => !x.IsDeleted && x.PropertyTypeMetadata?.IsDeleted != true).OrderBy(x => x.SortIndex))
                 {
                     await writer.WriteLineAsync();
@@ -1585,7 +1589,7 @@ namespace SharedLib.Services
                             throw new Exception();
                     }
                 }
-
+                */
                 await WriteEnd(writer);
             }
         }
@@ -1631,7 +1635,7 @@ namespace SharedLib.Services
             List<string> stat = new()
             {
                 $"Перечислений: {dump.Enums.Count()} (элементов всего: {dump.Enums.Sum(x => x.EnumItems.Count())})",
-                $"Документов: {dump.Documents.Count()} (полей всего: {dump.Documents.Sum(x => x.PropertiesBody.Count()) + dump.Documents.Sum(x => x.PropertiesGrid.Count())})"
+                $"Документов: {dump.Documents.Count()} (полей всего: {dump.Documents.Sum(x => x.PropertiesBody.Count()) + dump.Documents.Sum(x => x.Grids.SelectMany(y => y.Properties).Count())})"
             };
             services_di = new Dictionary<string, string>();
             using MemoryStream zipToOpen = new();

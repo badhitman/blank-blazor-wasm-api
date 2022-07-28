@@ -180,7 +180,7 @@ namespace DbTablesLib
                 EnumsProxyAdapter = await _db_context.DesignEnums.Include(x => x.EnumItems).Where(x => x.ProjectId == project_id).ToArrayAsync(),
                 DocumentsProxyAdapter = await _db_context.DesignDocuments
                 .Include(x => x.PropertiesBody).ThenInclude(x => x.PropertyLink)
-                .Include(x => x.Grids).ThenInclude(x=>x.Properties).ThenInclude(x => x.PropertyLink)
+                .Include(x => x.Grids).ThenInclude(x => x.Properties).ThenInclude(x => x.PropertyLink)
                 .Where(x => x.ProjectId == project_id).ToArrayAsync()
             };
             return res;
