@@ -1524,7 +1524,7 @@ namespace SharedLib.Services
                     await writer.WriteLineAsync("\t\t/// <summary>");
                     await writer.WriteLineAsync($"\t\t/// '{grid.Name}': Табличная часть документа");
                     await writer.WriteLineAsync("\t\t/// </summary>");
-                    await writer.WriteLineAsync($"\t\tpublic ICollection<{grid.SystemCodeName}> {doc_obj.SystemCodeName}{GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
+                    await writer.WriteLineAsync($"\t\tpublic ICollection<{grid.SystemCodeName}> {grid.SystemCodeName}{GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX} {{ get; set; }}");
                 }
 
                 await WriteEnd(writer);
