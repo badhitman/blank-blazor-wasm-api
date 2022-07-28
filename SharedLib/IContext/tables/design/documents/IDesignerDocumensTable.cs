@@ -30,6 +30,15 @@ namespace SharedLib
         public Task<DocumentDesignModelDB?> GetDocumentAsync(int document_id, bool include_users_links_for_project = true, bool include_grids = false);
 
         /// <summary>
+        /// Получить объект документа по идентификатору табличной части документа
+        /// </summary>
+        /// <param name="grid_id">Идентификатор табличной части документа</param>
+        /// <param name="include_users_links_for_project">Загрузить данные по ссылкам пользователей на проект</param>
+        /// <param name="include_grids">Загрузить табличные части документа</param>
+        /// <returns>Объект документа</returns>
+        public Task<DocumentDesignModelDB?> GetDocumentByGridAsync(int grid_id, bool include_users_links_for_project, bool include_grids);
+
+        /// <summary>
         /// Получить объект документа по идентификатору поля "основного" тела 
         /// </summary>
         /// <param name="property_id">Идентификатор поля "основного" тела</param>

@@ -34,10 +34,8 @@ namespace DbTablesLib
             return await _db_context.SaveChangesAsync();
         }
 
-        /// <inheritdoc/>
-        public async Task<DocumentDesignModelDB?> GetDocumentAsync(int document_id, bool include_users_links_for_project = true, bool include_grids = false)
+        void GetDocumentPrepareQuery(ref IQueryable<DocumentDesignModelDB> query, bool include_users_links_for_project, bool include_grids)
         {
-            IQueryable<DocumentDesignModelDB> query = _db_context.DesignDocuments.AsQueryable();
             if (include_users_links_for_project)
             {
                 if (include_grids)
@@ -60,7 +58,22 @@ namespace DbTablesLib
                     query = query.Include(x => x.Project);
                 }
             }
-            return await query.FirstOrDefaultAsync(x => x.Id == document_id);
+        }
+
+        /// <inheritdoc/>
+        public async Task<DocumentDesignModelDB?> GetDocumentAsync(int document_id, bool include_users_links_for_project = true, bool include_grids = false)
+        {
+            IQueryable<DocumentDesignModelDB> query = _db_context.DesignDocuments.Where(x => x.Id == document_id).AsQueryable();
+            GetDocumentPrepareQuery(ref query, include_users_links_for_project, include_grids);
+            return await query.FirstOrDefaultAsync();
+        }
+
+        /// <inheritdoc/>
+        public async Task<DocumentDesignModelDB?> GetDocumentByGridAsync(int grid_id, bool include_users_links_for_project, bool include_grids)
+        {
+            IQueryable<DocumentDesignModelDB> query = _db_context.DesignDocuments.Where(x => _db_context.DesignDocumentsGrids.Any(y => x.Id == y.DocumentOwnerId && y.Id == grid_id)).AsQueryable();
+            GetDocumentPrepareQuery(ref query, include_users_links_for_project, include_grids);
+            return await query.FirstOrDefaultAsync();
         }
 
         /// <inheritdoc/>

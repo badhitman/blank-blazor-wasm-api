@@ -40,7 +40,7 @@ namespace ServerLib
                 return res;
             }
 
-            DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentAsync(grid_id, true, true);
+            DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentByGridAsync(grid_id, true, true);
             res.IsSuccess = document_db is not null;
             if (!res.IsSuccess)
             {
