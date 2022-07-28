@@ -85,7 +85,7 @@ else
                                 <h5 class="mb-1">
                                     <button @onclick="async () => { CurrentOffCanvasDocument = row; await ShowDocumentOffCanvas();}" class="button btn-sm btn-outline-@(row.IsDeleted ? "secondary" : "dark")" type="button">@(row.Name)</button>
                                 </h5>
-                                <small>≡@(row.PropertiesBody.Count()) ⁞@(row.PropertiesGrid.Count())</small>
+                                <small title="полей тела документа: @(row.PropertiesBody.Count()); табличных частей: @(row.Grids.Count()); реквизитов таб.частей: @(row.Grids.SelectMany(x=>x.Properties).Count());">≡@(row.PropertiesBody.Count()) ⁞@(row.Grids.SelectMany(x=>x.Properties).Count())►@(row.Grids.Count())</small>
                             </div>
                             <small>SystemCode: <mark>@(row.SystemCodeName)</mark></small>
                         </div>
@@ -115,7 +115,7 @@ else
             <ul class="list-group list-group-flush">
                 @foreach (var row in CurentOffCanvasEnum.EnumItems.OrderBy(x => x.SortIndex))
                 {
-                    <li class="list-group-item">@(row.Name)</li>
+                    <li class="list-group-item" title="@(row.Description)">@(row.Name)</li>
                 }
             </ul>
         </div>
@@ -145,19 +145,29 @@ else
                 <ul class="list-group list-group-flush">
                     @foreach (var row in CurrentOffCanvasDocument.PropertiesBody.OrderBy(x => x.SortIndex))
                     {
-                        <li class="list-group-item">@(row.Name)</li>
+                        <li class="list-group-item" title="@(row.Name)">@(row.SystemCodeName)</li>
                     }
                 </ul>
             </div>
             <br />
             <div class="card">
                 <div class="card-header">
-                    Таблица документа
+                    Табличные части документа
                 </div>
                 <ul class="list-group list-group-flush">
-                    @foreach (var row in CurrentOffCanvasDocument.PropertiesGrid.OrderBy(x => x.SortIndex))
+                    @foreach (GridFitModel row in CurrentOffCanvasDocument.Grids)
                     {
-                        <li class="list-group-item">@(row.Name)</li>
+                        <li class="list-group-item" title="@row.Name">
+                            @(row.SystemCodeName)
+                            <ul>
+                                @foreach (DocumentPropertyFitModel prop in row.Properties)
+                                {
+                                    <li title="@prop.Name">
+                                        @prop.SystemCodeName
+                                    </li>
+                                }
+                            </ul>
+                        </li>
                     }
                 </ul>
             </div>
