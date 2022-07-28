@@ -822,7 +822,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}?> FirstAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\treturn await _db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.FindAsync(id);");
+            await writer.WriteLineAsync($"\t\t\treturn await _db_context.{type_name}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.FindAsync(id);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
@@ -830,7 +830,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<IEnumerable<{type_name}>> SelectAsync(IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\treturn await _db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Where(x => ids.Contains(x.Id)).ToArrayAsync();");
+            await writer.WriteLineAsync($"\t\t\treturn await _db_context.{type_name}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Where(x => ids.Contains(x.Id)).ToArrayAsync();");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
@@ -840,7 +840,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(PaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-                await writer.WriteLineAsync($"\t\t\tIQueryable<{type_name}>? query = _db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.AsQueryable();");
+                await writer.WriteLineAsync($"\t\t\tIQueryable<{type_name}>? query = _db_context.{type_name}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.AsQueryable();");
                 await writer.WriteLineAsync($"\t\t\t{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX} result = new()");
                 await writer.WriteLineAsync("\t\t\t{");
                 await writer.WriteLineAsync("\t\t\t\tPagination = new PaginationResponseModel(request)");
@@ -871,7 +871,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\t\tpublic async Task<{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}> SelectAsync(GetByIdPaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
                 await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-                await writer.WriteLineAsync($"\t\t\tIQueryable<{type_name}>? query = _db_context.{type_name}{GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Where(x => x.{fk_owner_property_name} == request.FilterId).AsQueryable();");
+                await writer.WriteLineAsync($"\t\t\tIQueryable<{type_name}>? query = _db_context.{type_name}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Where(x => x.{fk_owner_property_name} == request.FilterId).AsQueryable();");
                 await writer.WriteLineAsync($"\t\t\t{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX} result = new()");
                 await writer.WriteLineAsync("\t\t\t{");
                 await writer.WriteLineAsync("\t\t\t\tPagination = new PaginationResponseModel(request)");
@@ -900,7 +900,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task UpdateAsync({type_name} obj_rest, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\t_db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Update(obj_rest);");
+            await writer.WriteLineAsync($"\t\t\t_db_context.{type_name}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.Update(obj_rest);");
             await writer.WriteLineAsync("\t\t\tif (auto_save)");
             await writer.WriteLineAsync("\t\t\t\tawait SaveChangesAsync();");
             await writer.WriteLineAsync("\t\t}");
@@ -910,7 +910,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task UpdateRangeAsync(IEnumerable<{type_name}> obj_range_rest, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\t_db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.UpdateRange(obj_range_rest);");
+            await writer.WriteLineAsync($"\t\t\t_db_context.{type_name}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}.UpdateRange(obj_range_rest);");
             await writer.WriteLineAsync("\t\t\tif (auto_save)");
             await writer.WriteLineAsync("\t\t\t\tawait SaveChangesAsync();");
             await writer.WriteLineAsync("\t\t}");
@@ -920,7 +920,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task IsDeleteMarkerToggleAsync(int id, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            string db_set_name = $"_db_context.{type_name}{(is_body_document ? "" : GlobalStaticConstants.TABLE_PROPERTY_NAME_PREFIX)}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}";
+            string db_set_name = $"_db_context.{type_name}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}";
             await writer.WriteLineAsync($"\t\t\t{type_name} db_{type_name}_object = await {db_set_name}.FindAsync(id);");
             await writer.WriteLineAsync($"\t\t\tdb_{type_name}_object.IsDeleted = !db_{type_name}_object.IsDeleted;");
             await writer.WriteLineAsync($"\t\t\t{db_set_name}.Update(db_{type_name}_object);");
