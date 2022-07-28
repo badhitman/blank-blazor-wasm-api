@@ -1451,7 +1451,7 @@ namespace SharedLib.Services
                     await writer.WriteLineAsync("\t\t/// <summary>");
                     await writer.WriteLineAsync($"\t\t/// {grid.Name} [Табличная часть: {doc_obj.Name}]");
                     await writer.WriteLineAsync("\t\t/// </summary>");
-                    await writer.WriteLineAsync($"\t\tpublic DbSet<{grid.SystemCodeName}> {grid.SystemCodeName} {{ get; set; }}");
+                    await writer.WriteLineAsync($"\t\tpublic DbSet<{grid.SystemCodeName}> {grid.SystemCodeName}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX} {{ get; set; }}");
                 }
             }
 
