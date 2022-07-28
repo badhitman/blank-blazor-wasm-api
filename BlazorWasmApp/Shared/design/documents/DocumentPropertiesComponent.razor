@@ -160,7 +160,7 @@ else
             Modal.Open("Ошибка!");
             return;
         }
-        IsBusyProgress = true;
+        //IsBusyProgress = true;
         RealTypeRowsResponseModel rest = await _documents_grids_design_refit_service.GetGridsAsync(id);
         if (!rest.IsSuccess)
         {
@@ -185,8 +185,9 @@ else
                 _selected_grid_id = Grids.First().Id;
             }
         }
-        IsBusyProgress = false;
-        StateHasChanged();
+        //IsBusyProgress = false;
+        //StateHasChanged();
+        await ReloadForm(_selected_grid_id);
     }
 
     async Task ReloadForm(int id)
