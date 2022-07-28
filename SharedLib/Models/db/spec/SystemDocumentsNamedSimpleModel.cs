@@ -20,16 +20,18 @@ namespace SharedLib.Models
 
 
         /// <summary>
-        /// Идентификатор документа
+        /// Идентификатор владельца.
+        /// Для реквизита тела документа - это документ.
+        /// Для реквизита табличной части - это табличная часть.
         /// </summary>
-        public int DocumentOwnerId { get; set; }
+        public int OwnerId { get; set; }
 
         public static explicit operator DocumentGridModelDB(SystemDocumentsNamedSimpleModel v)
         {
             return new DocumentGridModelDB()
             {
                 Description = string.Empty,
-                DocumentOwnerId = v.DocumentOwnerId,
+                DocumentOwnerId = v.OwnerId,
                 Name = v.Name,
                 SystemCodeName = v.SystemCodeName
             };

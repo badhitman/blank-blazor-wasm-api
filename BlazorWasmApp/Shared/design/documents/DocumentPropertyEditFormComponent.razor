@@ -4,8 +4,8 @@
 @using System.Text.RegularExpressions
 
 @inject SessionMarkerLiteModel _session_marker
-@inject IDocumentsPropertiesMainBodyDesignRestService _documents_properties_main_body_refit_service
-@inject IDocumentsPropertiesGridDesignRestService _documents_properties_main_grid_refit_service
+@inject IDocumentsBodyPropertiesDesignRestService _documents_body_properties_refit_service
+@inject IDocumentsPropertiesGridDesignRestService _documents_grid_properties_refit_service
 @inject ILogger<DocumentPropertyEditFormComponent> _logger
 
 @attribute [Authorize]
@@ -112,8 +112,8 @@
 
         GetPropertiesSimpleRealTypeResponseModel rest = AreaProperty switch
         {
-            AreasPropertiesEnum.Body => await _documents_properties_main_body_refit_service.UpdatePropertyAsync(obj),
-            AreasPropertiesEnum.Table => await _documents_properties_main_grid_refit_service.UpdatePropertyAsync(obj)
+            AreasPropertiesEnum.Body => await _documents_body_properties_refit_service.UpdatePropertyAsync(obj),
+            AreasPropertiesEnum.Table => await _documents_grid_properties_refit_service.UpdatePropertyAsync(obj)
         };
         if (!rest.IsSuccess)
         {
@@ -129,8 +129,8 @@
     {
         GetPropertiesSimpleRealTypeResponseModel rest = AreaProperty switch
         {
-            AreasPropertiesEnum.Body => await _documents_properties_main_body_refit_service.SetToggleDeletePropertyAsync(CurrentProperty.Id),
-            AreasPropertiesEnum.Table => await _documents_properties_main_grid_refit_service.SetToggleDeletePropertyAsync(CurrentProperty.Id)
+            AreasPropertiesEnum.Body => await _documents_body_properties_refit_service.SetToggleDeletePropertyAsync(CurrentProperty.Id),
+            AreasPropertiesEnum.Table => await _documents_grid_properties_refit_service.SetToggleDeletePropertyAsync(CurrentProperty.Id)
         };
         if (!rest.IsSuccess)
         {
@@ -147,8 +147,8 @@
     {
         GetPropertiesSimpleRealTypeResponseModel rest = AreaProperty switch
         {
-            AreasPropertiesEnum.Body => await _documents_properties_main_body_refit_service.TrashPropertyAsync(CurrentProperty.Id),
-            AreasPropertiesEnum.Table => await _documents_properties_main_grid_refit_service.TrashPropertyAsync(CurrentProperty.Id)
+            AreasPropertiesEnum.Body => await _documents_body_properties_refit_service.TrashPropertyAsync(CurrentProperty.Id),
+            AreasPropertiesEnum.Table => await _documents_grid_properties_refit_service.TrashPropertyAsync(CurrentProperty.Id)
         };
         if (!rest.IsSuccess)
         {

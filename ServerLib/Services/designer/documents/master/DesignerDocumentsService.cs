@@ -309,7 +309,7 @@ namespace ServerLib
                 return res;
             }
 
-            DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentAsync(added_grid.DocumentOwnerId, true, true);
+            DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentAsync(added_grid.OwnerId, true, true);
             res.IsSuccess = document_db != null;
             if (!res.IsSuccess)
             {
@@ -424,7 +424,7 @@ namespace ServerLib
             await _documens_dt.UpdateGridAsync(grid_db, true);
             DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentAsync(grid_db.DocumentOwnerId, true, true);
             res.Rows = document_db.Grids;
-            res.Message = $"Документ: {(grid_db.IsDeleted ? "помечен на удаление" : "пометка на удаления отключена")}";
+            res.Message = $"Табличная часть: {(grid_db.IsDeleted ? "помечена на удаление" : "пометка на удаления отключена")}";
             return res;
         }
 

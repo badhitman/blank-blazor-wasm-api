@@ -3,11 +3,12 @@
 @using SharedLib.Services
 
 @inject SessionMarkerLiteModel _session_marker
-@inject IDocumentsPropertiesMainBodyDesignRestService _documents_properties_main_body_refit_service
-@inject IDocumentsPropertiesGridDesignRestService _documents_properties_main_grid_refit_service
+@inject IDocumentsBodyPropertiesDesignRestService _documents_body_properties_refit_service
+@inject IDocumentsPropertiesGridDesignRestService _documents_grid_properties_refit_service
 @inject ILogger<DocumentBodyPropertiesComponent> _logger
 
 @attribute [Authorize]
+
 <style>
     .is-delete {
         text-decoration: line-through;

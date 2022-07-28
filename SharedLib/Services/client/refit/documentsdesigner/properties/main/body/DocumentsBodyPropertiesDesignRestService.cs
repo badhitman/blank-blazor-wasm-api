@@ -10,15 +10,15 @@ using SharedLib.Models;
 namespace SharedLib.Services
 {
     /// <inheritdoc/>
-    public class DocumentsPropertiesMainBodyDesignRestService : IDocumentsPropertiesMainBodyDesignRestService
+    public class DocumentsBodyPropertiesDesignRestService : IDocumentsBodyPropertiesDesignRestService
     {
-        private readonly IDocumentsPropertiesMainBodyDesignRefitService _documents_service;
-        private readonly ILogger<DocumentsPropertiesMainBodyDesignRestService> _logger;
+        private readonly IDocumentsBodyPropertiesDesignRefitService _documents_service;
+        private readonly ILogger<DocumentsBodyPropertiesDesignRestService> _logger;
 
         /// <summary>
         /// Конструктор
         /// </summary>
-        public DocumentsPropertiesMainBodyDesignRestService(IDocumentsPropertiesMainBodyDesignRefitService set_documents_service, ILogger<DocumentsPropertiesMainBodyDesignRestService> set_logger)
+        public DocumentsBodyPropertiesDesignRestService(IDocumentsBodyPropertiesDesignRefitService set_documents_service, ILogger<DocumentsBodyPropertiesDesignRestService> set_logger)
         {
             _documents_service = set_documents_service;
             _logger = set_logger;

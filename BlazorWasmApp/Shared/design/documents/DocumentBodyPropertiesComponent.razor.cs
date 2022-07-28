@@ -9,12 +9,23 @@ namespace BlazorWasmApp.Shared.design.documents
 {
     public partial class DocumentBodyPropertiesComponent
     {
+        /// <summary>
+        /// Область подчинения реквизитов (тело документа или его табличная часть)
+        /// </summary>
         [Parameter, EditorRequired]
         public AreasPropertiesEnum AreaProperty { get; set; }
 
+        /// <summary>
+        /// Идентификатор владельца.
+        /// Для реквизита тела документа - это документ.
+        /// Для реквизита табличной части - это табличная часть.
+        /// </summary>
         [Parameter, EditorRequired]
-        public int? DocumentId { get; set; }
+        public int? OwnertId { get; set; }
 
+        /// <summary>
+        /// Строки данных - реквизиты
+        /// </summary>
         [Parameter, EditorRequired]
         public IEnumerable<SimplePropertyRealTypeModel> DataRows { get; set; }
 
@@ -69,15 +80,15 @@ namespace BlazorWasmApp.Shared.design.documents
                 case DesignObjectsItemsActionsEnum.MoveDownAction:
                     rest = AreaProperty switch
                     {
-                        AreasPropertiesEnum.Body => await _documents_properties_main_body_refit_service.MoveDownAsync(property_id),
-                        AreasPropertiesEnum.Table => await _documents_properties_main_grid_refit_service.MoveDownAsync(property_id)
+                        AreasPropertiesEnum.Body => await _documents_body_properties_refit_service.MoveDownAsync(property_id),
+                        AreasPropertiesEnum.Table => await _documents_grid_properties_refit_service.MoveDownAsync(property_id)
                     };
                     break;
                 case DesignObjectsItemsActionsEnum.MoveUpAction:
                     rest = AreaProperty switch
                     {
-                        AreasPropertiesEnum.Body => await _documents_properties_main_body_refit_service.MoveUpAsync(property_id),
-                        AreasPropertiesEnum.Table => await _documents_properties_main_grid_refit_service.MoveUpAsync(property_id)
+                        AreasPropertiesEnum.Body => await _documents_body_properties_refit_service.MoveUpAsync(property_id),
+                        AreasPropertiesEnum.Table => await _documents_grid_properties_refit_service.MoveUpAsync(property_id)
                     };
                     break;
             }

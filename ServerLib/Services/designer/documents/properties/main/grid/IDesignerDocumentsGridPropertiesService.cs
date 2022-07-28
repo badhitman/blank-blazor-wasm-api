@@ -9,14 +9,14 @@ namespace ServerLib
     /// <summary>
     /// Сервис работы с полями табличной части документа
     /// </summary>
-    public interface IDesignerDocumentsPropertiesMainGridService
+    public interface IDesignerDocumentsGridPropertiesService
     {
         /// <summary>
         /// Получить поля табличной части документа
         /// </summary>
-        /// <param name="document_id">Идентификатор документа</param>
+        /// <param name="grid_id">Идентификатор табличной части документа</param>
         /// <returns>Результат выполнения запроса</returns>
-        public Task<GetDocumentDataResponseModel> GetPropertiesAsync(int document_id);
+        public Task<GetDocumentDataResponseModel> GetPropertiesAsync(int grid_id);
 
         /// <summary>
         /// Создать новое поле табличной части документа

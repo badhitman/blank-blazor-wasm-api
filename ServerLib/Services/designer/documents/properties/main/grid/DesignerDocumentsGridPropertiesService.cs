@@ -8,18 +8,18 @@ using SharedLib.Models;
 namespace ServerLib
 {
     /// <inheritdoc/>
-    public class DesignerDocumentsPropertiesMainGridService : IDesignerDocumentsPropertiesMainGridService
+    public class DesignerDocumentsGridPropertiesService : IDesignerDocumentsGridPropertiesService
     {
         readonly ISessionService _session_service;
         readonly IProjectsTable _projects_dt;
         readonly IDesignerSharedService _shared_service;
-        readonly IDesignerDocumensPropertiesMainGridTable _documens_main_grid_dt;
+        readonly IDesignerDocumensGridPropertiesTable _documens_main_grid_dt;
         readonly IDesignerDocumensTable _documens_dt;
 
         /// <summary>
         /// Конструткор
         /// </summary>
-        public DesignerDocumentsPropertiesMainGridService(ISessionService set_session_service, IProjectsTable set_projects_dt, IDesignerSharedService shared_service, IDesignerDocumensPropertiesMainGridTable documens_main_grid_dt, IDesignerDocumensTable documens_dt)
+        public DesignerDocumentsGridPropertiesService(ISessionService set_session_service, IProjectsTable set_projects_dt, IDesignerSharedService shared_service, IDesignerDocumensGridPropertiesTable documens_main_grid_dt, IDesignerDocumensTable documens_dt)
         {
             _projects_dt = set_projects_dt;
             _session_service = set_session_service;
@@ -28,9 +28,8 @@ namespace ServerLib
             _documens_dt = documens_dt;
         }
 
-
         /// <inheritdoc/>
-        public async Task<GetDocumentDataResponseModel> GetPropertiesAsync(int document_id)
+        public async Task<GetDocumentDataResponseModel> GetPropertiesAsync(int grid_id)
         {
             UserProjectResponseModel check = await _shared_service.CheckLiteAsync();
 
@@ -41,11 +40,11 @@ namespace ServerLib
                 return res;
             }
 
-            DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentAsync(document_id, true);
+            DocumentDesignModelDB? document_db = await _documens_dt.GetDocumentAsync(grid_id, true, true);
             res.IsSuccess = document_db is not null;
             if (!res.IsSuccess)
             {
-                res.Message = $"Документ [{document_id}] не существует";
+                res.Message = $"Документ [{grid_id}] не существует";
                 return res;
             }
 
@@ -58,7 +57,7 @@ namespace ServerLib
 
             try
             {
-                res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(document_id);
+                res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(grid_id);
                 IEnumerable<(PropertyTypesEnum PropertyType, string SystemCodeName, int Id, string Name, bool IsDeleted)> types_of_project = await _projects_dt.GetTypesOfProjectAsync(check.Project.Id, _session_service.SessionMarker.Id);
                 res.EnumsTypesOfProject = types_of_project.Where(x => x.PropertyType == PropertyTypesEnum.SimpleEnum).Select(x => new RealTypeLiteModel() { SystemCodeName = x.SystemCodeName, Id = x.Id, Name = x.Name, IsDeleted = x.IsDeleted });
                 res.DocumentsTypesOfProject = types_of_project.Where(x => x.PropertyType == PropertyTypesEnum.Document).Select(x => new RealTypeLiteModel() { SystemCodeName = x.SystemCodeName, Id = x.Id, Name = x.Name, IsDeleted = x.IsDeleted });
@@ -78,7 +77,7 @@ namespace ServerLib
             property_object.SystemCodeName = property_object.SystemCodeName.Trim();
 
             UserProjectResponseModel check = await _shared_service.CheckComplexAsync(0, property_object.Name, property_object.SystemCodeName, typeof(DocumentPropertyMainBodyModelDB));
-            GetPropertiesSimpleRealTypeResponseModel res = new GetPropertiesSimpleRealTypeResponseModel()
+            GetPropertiesSimpleRealTypeResponseModel res = new()
             {
                 IsSuccess = check.IsSuccess
             };
@@ -89,7 +88,7 @@ namespace ServerLib
             }
 
             DocumentPropertyGridModelDB property_new = (DocumentPropertyGridModelDB)property_object;
-            property_new.SortIndex = await _documens_main_grid_dt.NextSortIndexAsync(property_object.DocumentOwnerId);
+            property_new.SortIndex = await _documens_main_grid_dt.NextSortIndexAsync(property_object.OwnerId);
             try
             {
                 await _documens_main_grid_dt.AddPropertyAsync(property_new, true);
@@ -100,7 +99,7 @@ namespace ServerLib
                 res.Message = ex.Message;
             }
 
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(property_object.DocumentOwnerId);
+            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(property_object.OwnerId);
             res.IsSuccess = res.DataRows?.Any() == true;
             if (!res.IsSuccess)
             {
@@ -145,14 +144,14 @@ namespace ServerLib
         public async Task<GetPropertiesSimpleRealTypeResponseModel> PropertyMoveUpAsync(int id)
         {
             GetPropertyMainGridResponseModel? check = await CheckExistingPropertyDocumentObjectAsync(id);
-            GetPropertiesSimpleRealTypeResponseModel res = new GetPropertiesSimpleRealTypeResponseModel() { IsSuccess = check.IsSuccess };
+            GetPropertiesSimpleRealTypeResponseModel res = new() { IsSuccess = check.IsSuccess };
             if (!res.IsSuccess)
             {
                 res.Message = check.Message;
                 return res;
             }
 
-            List<SimplePropertyRealTypeModel> properties_items = new List<SimplePropertyRealTypeModel>(await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.DocumentOwnerId));
+            List<SimplePropertyRealTypeModel> properties_items = new(await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.Id));
             int index_at = properties_items.FindIndex(e => e.Id == id);
             res.IsSuccess = index_at > 0;
             if (!res.IsSuccess)
@@ -166,7 +165,7 @@ namespace ServerLib
             upd_items[1].SortIndex--;
 
             await _documens_main_grid_dt.UpdatePropertiesRangeAsync(upd_items, true);
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.DocumentOwnerId);
+            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.Id);
             return res;
         }
 
@@ -174,14 +173,14 @@ namespace ServerLib
         public async Task<GetPropertiesSimpleRealTypeResponseModel> PropertyMoveDownAsync(int id)
         {
             GetPropertyMainGridResponseModel? check = await CheckExistingPropertyDocumentObjectAsync(id);
-            GetPropertiesSimpleRealTypeResponseModel res = new GetPropertiesSimpleRealTypeResponseModel() { IsSuccess = check.IsSuccess };
+            GetPropertiesSimpleRealTypeResponseModel res = new() { IsSuccess = check.IsSuccess };
             if (!res.IsSuccess)
             {
                 res.Message = check.Message;
                 return res;
             }
 
-            List<SimplePropertyRealTypeModel> properties_items = new List<SimplePropertyRealTypeModel>(await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.DocumentOwnerId));
+            List<SimplePropertyRealTypeModel> properties_items = new(await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.Id));
             int index_at = properties_items.FindIndex(e => e.Id == id);
             res.IsSuccess = index_at < properties_items.Count - 1;
             if (!res.IsSuccess)
@@ -195,14 +194,14 @@ namespace ServerLib
             upd_items[1].SortIndex--;
 
             await _documens_main_grid_dt.UpdatePropertiesRangeAsync(upd_items, true);
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.DocumentOwnerId);
+            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.Id);
             return res;
         }
 
         private async Task<GetPropertyMainGridResponseModel> CheckExistingPropertyDocumentObjectAsync(int property_document_id)
         {
             UserProjectResponseModel check = await _shared_service.CheckLiteAsync();
-            GetPropertyMainGridResponseModel res = new GetPropertyMainGridResponseModel()
+            GetPropertyMainGridResponseModel res = new()
             {
                 IsSuccess = check.IsSuccess,
             };
@@ -245,7 +244,7 @@ namespace ServerLib
             action.SystemCodeName = action.SystemCodeName.Trim();
 
             UserProjectResponseModel check = await _shared_service.CheckComplexAsync(action.Id, action.Name, action.SystemCodeName, typeof(DocumentPropertyMainBodyModelDB));
-            GetPropertiesSimpleRealTypeResponseModel res = new GetPropertiesSimpleRealTypeResponseModel()
+            GetPropertiesSimpleRealTypeResponseModel res = new()
             {
                 IsSuccess = check.IsSuccess
             };
@@ -317,7 +316,7 @@ namespace ServerLib
                 res.Message = ex.Message;
                 return res;
             }
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(property_db.Grid.DocumentOwnerId);
+            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(property_db.Grid.Id);
             res.Message = "Изменения записаны.";
             return res;
         }
@@ -326,7 +325,7 @@ namespace ServerLib
         public async Task<GetPropertiesSimpleRealTypeResponseModel> SetToggleDeletePropertyAsync(int id)
         {
             GetPropertyMainGridResponseModel? check = await CheckExistingPropertyDocumentObjectAsync(id);
-            GetPropertiesSimpleRealTypeResponseModel res = new GetPropertiesSimpleRealTypeResponseModel() { IsSuccess = check.IsSuccess };
+            GetPropertiesSimpleRealTypeResponseModel res = new() { IsSuccess = check.IsSuccess };
             if (!res.IsSuccess)
             {
                 res.Message = check.Message;
@@ -334,7 +333,7 @@ namespace ServerLib
             }
             check.Property.IsDeleted = !check.Property.IsDeleted;
             await _documens_main_grid_dt.UpdatePropertyAsync(check.Property, true);
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.DocumentOwnerId);
+            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.Id);
             return res;
         }
 
@@ -342,7 +341,7 @@ namespace ServerLib
         public async Task<GetPropertiesSimpleRealTypeResponseModel> PropertyTrashAsync(int id)
         {
             GetPropertyMainGridResponseModel? check = await CheckExistingPropertyDocumentObjectAsync(id);
-            GetPropertiesSimpleRealTypeResponseModel res = new GetPropertiesSimpleRealTypeResponseModel() { IsSuccess = check.IsSuccess };
+            GetPropertiesSimpleRealTypeResponseModel res = new() { IsSuccess = check.IsSuccess };
             if (!res.IsSuccess)
             {
                 res.Message = check.Message;
@@ -355,9 +354,8 @@ namespace ServerLib
                 return res;
             }
             await _documens_main_grid_dt.RemovePropertyAsync(check.Property, true);
-            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.DocumentOwnerId);
+            res.DataRows = await _documens_main_grid_dt.GetPropertiesAsync(check.Property.Grid.Id);
             return res;
         }
-
     }
 }

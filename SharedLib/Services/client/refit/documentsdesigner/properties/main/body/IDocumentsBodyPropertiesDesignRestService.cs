@@ -9,7 +9,7 @@ namespace SharedLib.Services
     /// <summary>
     /// REST служба работы с API полей основного тела документа
     /// </summary>
-    public interface IDocumentsPropertiesMainBodyDesignRestService
+    public interface IDocumentsBodyPropertiesDesignRestService
     {
         /// <summary>
         /// Получить поля "основного" тела документа

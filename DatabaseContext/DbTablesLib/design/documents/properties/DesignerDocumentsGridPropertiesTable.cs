@@ -12,16 +12,16 @@ using Microsoft.EntityFrameworkCore;
 namespace DbTablesLib
 {
     /// <inheritdoc/>
-    public class DesignerDocumentsPropertiesMainGridTable : IDesignerDocumensPropertiesMainGridTable
+    public class DesignerDocumentsGridPropertiesTable : IDesignerDocumensGridPropertiesTable
     {
         readonly DbAppContext _db_context;
-        readonly ILogger<DesignerDocumentsPropertiesMainGridTable> _logger;
+        readonly ILogger<DesignerDocumentsGridPropertiesTable> _logger;
         readonly IOptions<ServerConfigModel> _config;
 
         /// <summary>
         /// Конструктор
         /// </summary>
-        public DesignerDocumentsPropertiesMainGridTable(DbAppContext set_db_context, ILogger<DesignerDocumentsPropertiesMainGridTable> set_logger, IOptions<ServerConfigModel> set_config)
+        public DesignerDocumentsGridPropertiesTable(DbAppContext set_db_context, ILogger<DesignerDocumentsGridPropertiesTable> set_logger, IOptions<ServerConfigModel> set_config)
         {
             _db_context = set_db_context;
             _logger = set_logger;
@@ -29,10 +29,10 @@ namespace DbTablesLib
         }
 
         /// <inheritdoc/>
-        public async Task<SimplePropertyRealTypeModel[]> GetPropertiesAsync(int document_id)
+        public async Task<SimplePropertyRealTypeModel[]> GetPropertiesAsync(int grid_id)
         {
             IQueryable<DocumentPropertyGridModelDB> query = _db_context.DesignDocumentsGridProperties
-                .Where(x => x.Grid.DocumentOwnerId == document_id)
+                .Where(x => x.Grid.Id == grid_id)
                 .OrderBy(x => x.SortIndex)
                 .Include(x => x.PropertyLink).ThenInclude(x => x.TypedDocument)
                 .Include(x => x.PropertyLink).ThenInclude(x => x.TypedEnum)
@@ -64,13 +64,13 @@ namespace DbTablesLib
         {
             IQueryable<DocumentPropertyGridModelDB> query = _db_context.DesignDocumentsGridProperties.AsQueryable();
             query = include_users_links_for_project
-                ? query.Include(x=>x.Grid).ThenInclude(x => x.DocumentOwner).ThenInclude(x => x.Project).ThenInclude(x => x.UsersLinks)
+                ? query.Include(x => x.Grid).ThenInclude(x => x.DocumentOwner).ThenInclude(x => x.Project).ThenInclude(x => x.UsersLinks)
                 : query.Include(x => x.Grid).ThenInclude(x => x.DocumentOwner).ThenInclude(x => x.Project);
             return await query.FirstOrDefaultAsync(x => x.Id == property_id);
         }
 
         /// <inheritdoc/>
-        public async Task<DocumentPropertyGridModelDB> GetPropertyAsync(string property_system_code, int document_id, bool include_users_links_for_project = true)
+        public async Task<DocumentPropertyGridModelDB> GetPropertyAsync(string property_system_code, int project_id, bool include_users_links_for_project = true)
         {
             throw new NotImplementedException();
         }
@@ -90,10 +90,10 @@ namespace DbTablesLib
         }
 
         /// <inheritdoc/>
-        public async Task<uint> NextSortIndexAsync(int document_id)
+        public async Task<uint> NextSortIndexAsync(int grid_id)
         {
-            if (await _db_context.DesignDocumentsGridProperties.AnyAsync(x => x.Grid.DocumentOwnerId == document_id))
-                return (await _db_context.DesignDocumentsGridProperties.Where(x => x.Grid.DocumentOwnerId == document_id).MaxAsync(x => x.SortIndex)) + 1;
+            if (await _db_context.DesignDocumentsGridProperties.AnyAsync(x => x.Grid.Id == grid_id))
+                return (await _db_context.DesignDocumentsGridProperties.Where(x => x.Grid.Id == grid_id).MaxAsync(x => x.SortIndex)) + 1;
 
             return 0;
         }

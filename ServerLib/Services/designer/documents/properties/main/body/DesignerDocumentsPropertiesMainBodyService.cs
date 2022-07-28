@@ -13,7 +13,7 @@ namespace ServerLib
     {
         readonly ISessionService _session_service;
         readonly IDesignerSharedService _shared_service;
-        readonly IDesignerDocumensPropertiesMainBodyTable _documens_properties_main_body_dt;
+        readonly IDesignerDocumensMainBodyPropertiesTable _documens_properties_main_body_dt;
         readonly IDesignerDocumensTable _documens_dt;
         readonly IProjectsTable _projects_dt;
         readonly ILogChangeTable _logs_dt;
@@ -22,7 +22,7 @@ namespace ServerLib
         /// <summary>
         /// Конструткор
         /// </summary>
-        public DesignerDocumentsPropertiesMainBodyService(ISessionService set_session_service, IDesignerSharedService shared_service, IDesignerDocumensPropertiesMainBodyTable documens_main_body_dt, IDesignerDocumensTable set_documens_dt, IProjectsTable set_projects_dt, ILogChangeTable logs_dt, IDesignerEnumsTable enums_dt)
+        public DesignerDocumentsPropertiesMainBodyService(ISessionService set_session_service, IDesignerSharedService shared_service, IDesignerDocumensMainBodyPropertiesTable documens_main_body_dt, IDesignerDocumensTable set_documens_dt, IProjectsTable set_projects_dt, ILogChangeTable logs_dt, IDesignerEnumsTable enums_dt)
         {
             _session_service = set_session_service;
             _shared_service = shared_service;
@@ -95,7 +95,7 @@ namespace ServerLib
             }
 
             DocumentPropertyMainBodyModelDB property_new = (DocumentPropertyMainBodyModelDB)property_object;
-            property_new.SortIndex = await _documens_properties_main_body_dt.NextSortIndexAsync(property_object.DocumentOwnerId);
+            property_new.SortIndex = await _documens_properties_main_body_dt.NextSortIndexAsync(property_object.OwnerId);
             try
             {
                 await _documens_properties_main_body_dt.AddPropertyAsync(property_new, true);
@@ -119,7 +119,7 @@ namespace ServerLib
                 res.Message = ex.Message;
             }
 
-            res.DataRows = await _documens_properties_main_body_dt.GetPropertiesAsync(property_object.DocumentOwnerId);
+            res.DataRows = await _documens_properties_main_body_dt.GetPropertiesAsync(property_object.OwnerId);
             res.IsSuccess = res.DataRows?.Any() == true;
             if (!res.IsSuccess)
             {

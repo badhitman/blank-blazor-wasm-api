@@ -25,7 +25,7 @@ namespace SharedLib.Models
             {
                 SystemCodeName = v.SystemCodeName,
                 PropertyType = v.PropertyType.Value,
-                DocumentOwnerId = v.DocumentOwnerId,
+                OwnerId = v.OwnerId,
                 Name = v.Name,
             };
         }

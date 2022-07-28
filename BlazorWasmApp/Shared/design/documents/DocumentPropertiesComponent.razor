@@ -8,7 +8,7 @@
 @using System.Collections.ObjectModel
 
 @inject SessionMarkerLiteModel _session_marker
-@inject IDocumentsPropertiesMainBodyDesignRestService _documents_properties_body_refit_service
+@inject IDocumentsBodyPropertiesDesignRestService _documents_properties_body_refit_service
 @inject IDocumentsGridsDesignRestService _documents_grids_design_refit_service
 @inject IDocumentsPropertiesGridDesignRestService _documents_grid_properties_refit_service
 @inject ILogger<DocumentPropertiesComponent> _logger
@@ -33,10 +33,10 @@
     </h4>
     @if (AreaProperty == AreasPropertiesEnum.Table)
     {
-        <select class="col form-select" aria-label="Default select example">
+        <select @bind="selected_grid_id" class="col form-select" aria-label="Default select example">
             @foreach (RealTypeModel grid_row in Grids)
             {
-                <option disabled="@(grid_row.IsDeleted)" value="@(grid_row.Id)">@(grid_row.Name)[@(grid_row.SystemCodeName)]</option>
+                <option disabled="@(grid_row.IsDeleted)" value="@(grid_row.Id)">@(grid_row.Name) [@(grid_row.SystemCodeName)]</option>
             }
         </select>
     }
@@ -49,10 +49,6 @@
             <span class="visually-hidden">Загрузка...</span>
         </div>
     </div>
-}
-else if (AreaProperty == AreasPropertiesEnum.Table)
-{
-    <text>Раздел в переработке...</text>
 }
 else
 {
@@ -86,7 +82,7 @@ else
         </div>
     </EditForm>
     <hr />
-    <DocumentBodyPropertiesComponent AreaProperty="AreaProperty" DocumentId="Id" DataRows="DataRows" DocumentsTypesOfProject="DocumentsTypesOfProject" EnumsTypesOfProject="EnumsTypesOfProject" />
+    <DocumentBodyPropertiesComponent AreaProperty="AreaProperty" OwnertId="Id" DataRows="DataRows" DocumentsTypesOfProject="DocumentsTypesOfProject" EnumsTypesOfProject="EnumsTypesOfProject" />
 }
 <ModalWindowComponent @ref="Modal">
     <p>
@@ -107,6 +103,21 @@ else
     private string ModalBodyText { get; set; } = string.Empty;
 
     IEnumerable<RealTypeModel> Grids = Enumerable.Empty<RealTypeModel>();
+
+    int _selected_grid_id = 0;
+    int selected_grid_id
+    {
+        get
+        {
+            return _selected_grid_id;
+        }
+        set
+        {
+            _selected_grid_id = value;
+            if (_selected_grid_id > 0)
+                ReloadForm(_selected_grid_id);
+        }
+    }
 
     /// <summary>
     /// Данные
@@ -169,12 +180,16 @@ else
         else
         {
             Grids = rest.Rows;
+            if (Grids.Any())
+            {
+                _selected_grid_id = Grids.First().Id;
+            }
         }
         IsBusyProgress = false;
         StateHasChanged();
     }
 
-    public async Task ReloadForm(int id)
+    async Task ReloadForm(int id)
     {
         if (id <= 0)
         {
@@ -188,7 +203,7 @@ else
         GetDocumentDataResponseModel rest = AreaProperty switch
         {
             AreasPropertiesEnum.Body => await _documents_properties_body_refit_service.GetPropertiesAsync(id),
-            AreasPropertiesEnum.Table => await _documents_grid_properties_refit_service.GetPropertiesAsync(id)
+            AreasPropertiesEnum.Table => await _documents_grid_properties_refit_service.GetPropertiesAsync(_selected_grid_id)
         };
 
         if (!rest.IsSuccess)
@@ -219,7 +234,7 @@ else
     /// <summary>
     /// Создать/добавить поле основного тела документа
     /// </summary>
-    private async Task HandleSubmitAddingPropertyAsync()
+    async Task HandleSubmitAddingPropertyAsync()
     {
         if (Id <= 0)
         {
@@ -245,7 +260,11 @@ else
         }
 
         PropertySimpleRealTypeModel obj = (PropertySimpleRealTypeModel)newPropertyMainBodyItemElement;
-        obj.DocumentOwnerId = Id;
+        if (AreaProperty == AreasPropertiesEnum.Body)
+            obj.OwnerId = Id;
+        else
+            obj.OwnerId = _selected_grid_id;
+
         obj.DocumentPropertyLink = newPropertyMainBodyItemElement.DocumentPropertyLink;
 
         GetPropertiesSimpleRealTypeResponseModel rest = AreaProperty switch

@@ -9,7 +9,7 @@ namespace SharedLib
     /// <summary>
     /// Свойства тела документа: Доступ к таблице базы данных
     /// </summary>
-    public interface IDesignerDocumensPropertiesMainBodyTable : ISavingChanges
+    public interface IDesignerDocumensMainBodyPropertiesTable : ISavingChanges
     {
         /// <summary>
         /// Получить свойства тела документа

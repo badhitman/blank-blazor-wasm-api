@@ -11,23 +11,23 @@ using SharedLib.Models;
 namespace ApiRestApp.Controllers
 {
     /// <summary>
-    /// Доступ к полям табличной части документов
+    /// Доступ к полям "основного" тела документа
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class DocumentsPropertiesMainGridDesignerController : ControllerBase
+    public class DocumentsBodyPropertiesDesignerController : ControllerBase
     {
         readonly IOptions<ServerConfigModel> _config;
-        readonly IDesignerDocumentsPropertiesMainGridService _documents_properties_service;
+        readonly IDesignerDocumentsPropertiesMainBodyService _documents_properties_service;
 
-        public DocumentsPropertiesMainGridDesignerController(IOptions<ServerConfigModel> set_config, IDesignerDocumentsPropertiesMainGridService set_documents_properties_service)
+        public DocumentsBodyPropertiesDesignerController(IOptions<ServerConfigModel> set_config, IDesignerDocumentsPropertiesMainBodyService set_documents_properties_service)
         {
             _config = set_config;
             _documents_properties_service = set_documents_properties_service;
         }
 
         /// <summary>
-        /// Получить поля "основной" табличной части документа
+        /// Получить поля "основного" тела документа
         /// </summary>
         /// <param name="id">Идентификатор документа</param>
         /// <returns>Результат обработки запроса</returns>
@@ -38,9 +38,9 @@ namespace ApiRestApp.Controllers
         }
 
         /// <summary>
-        /// Создать свойство "основной" табличной части документа
+        /// Создать свойство "основного" тела документа
         /// </summary>
-        /// <param name="property_for_document_object">Объект свойства табличной части документа</param>
+        /// <param name="property_for_document_object">Объект свойства тела документа</param>
         /// <returns>Результат обработки запроса</returns>
         [HttpPost]
         public async Task<GetPropertiesSimpleRealTypeResponseModel> Post(PropertySimpleRealTypeModel property_for_document_object)
@@ -58,9 +58,9 @@ namespace ApiRestApp.Controllers
         }
 
         /// <summary>
-        /// Обновить свойство "основной" табличной части документа
+        /// Обновить свойство "основного" тела документа
         /// </summary>
-        /// <param name="property_for_document_obj">Объект свойства табличной части документа</param>
+        /// <param name="property_for_document_obj">Объект свойства основного тела документа</param>
         /// <returns>Результат обработки запроса</returns>
         [HttpPut]
         public async Task<GetPropertiesSimpleRealTypeResponseModel> Put(PropertyOfDocumentModel property_for_document_obj)
@@ -78,9 +78,9 @@ namespace ApiRestApp.Controllers
         }
 
         /// <summary>
-        /// Сдвинуть левее (в сторону начала) поле табличной части документа
+        /// Поднять (сдвинуть выше) поле основного тела документа
         /// </summary>
-        /// <param name="id">Идентификатор поля табличной части документа</param>
+        /// <param name="id">Идентификатор поля основного тела документа</param>
         /// <returns>Результат обработки запроса</returns>
         [HttpPatch($"{nameof(DesignObjectsItemsActionsEnum.MoveUpAction)}/{{id}}")]
         public async Task<GetPropertiesSimpleRealTypeResponseModel> MoveUp([FromRoute] int id)
@@ -89,9 +89,9 @@ namespace ApiRestApp.Controllers
         }
 
         /// <summary>
-        /// Сдвинуть правее (к концу) поле табличной части документа
+        /// Опустить (сдвинуть ниже) поле основного тела документа
         /// </summary>
-        /// <param name="id">Идентификатор поля табличной части документа</param>
+        /// <param name="id">Идентификатор поля основного тела документа</param>
         /// <returns>Результат обработки запроса</returns>
         [HttpPatch($"{nameof(DesignObjectsItemsActionsEnum.MoveDownAction)}/{{id}}")]
         public async Task<GetPropertiesSimpleRealTypeResponseModel> MoveDown([FromRoute] int id)
@@ -100,9 +100,9 @@ namespace ApiRestApp.Controllers
         }
 
         /// <summary>
-        /// Удалить (безвовзартно) поле/свойство табличной части документа
+        /// Удалить (безвовзартно) поле/свойство основного тела документа
         /// </summary>
-        /// <param name="id">Идентификатор поля/свойства табличной части документа</param>
+        /// <param name="id">Идентификатор поля/свойства основного тела документа</param>
         /// <returns>Результат обработки запроса</returns>
         [HttpPatch($"{nameof(DesignObjectsItemsActionsEnum.TrashAction)}/{{id}}")]
         public async Task<GetPropertiesSimpleRealTypeResponseModel> TrashElement([FromRoute] int id)
@@ -111,9 +111,9 @@ namespace ApiRestApp.Controllers
         }
 
         /// <summary>
-        /// Инвертировать пометку удаления свойства "основной" табличной части документа
+        /// Инвертировать пометку удаления свойства "основного" тела документа
         /// </summary>
-        /// <param name="id">Идентификатор свойства табличной части документа</param>
+        /// <param name="id">Идентификатор свойства основного тела документа</param>
         /// <returns>Результат обработки запроса</returns>
         [HttpDelete("{id}")]
         public async Task<GetPropertiesSimpleRealTypeResponseModel> Delete([FromRoute] int id)

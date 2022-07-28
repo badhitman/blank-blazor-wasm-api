@@ -12,16 +12,16 @@ using Microsoft.EntityFrameworkCore;
 namespace DbTablesLib
 {
     /// <inheritdoc/>
-    public class DesignerDocumentsPropertiesMainBodyTable : IDesignerDocumensPropertiesMainBodyTable
+    public class DesignerDocumentsMainBodyPropertiesTable : IDesignerDocumensMainBodyPropertiesTable
     {
         readonly DbAppContext _db_context;
-        readonly ILogger<DesignerDocumentsPropertiesMainBodyTable> _logger;
+        readonly ILogger<DesignerDocumentsMainBodyPropertiesTable> _logger;
         readonly IOptions<ServerConfigModel> _config;
 
         /// <summary>
         /// Конструктор
         /// </summary>
-        public DesignerDocumentsPropertiesMainBodyTable(DbAppContext set_db_context, ILogger<DesignerDocumentsPropertiesMainBodyTable> set_logger, IOptions<ServerConfigModel> set_config)
+        public DesignerDocumentsMainBodyPropertiesTable(DbAppContext set_db_context, ILogger<DesignerDocumentsMainBodyPropertiesTable> set_logger, IOptions<ServerConfigModel> set_config)
         {
             _db_context = set_db_context;
             _logger = set_logger;

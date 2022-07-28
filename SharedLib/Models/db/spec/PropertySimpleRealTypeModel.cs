@@ -25,7 +25,7 @@ namespace SharedLib.Models
             {
                 SystemCodeName = v.SystemCodeName,
                 PropertyType = v.PropertyType,
-                DocumentOwnerId = v.DocumentOwnerId,
+                DocumentOwnerId = v.OwnerId,
                 Name = v.Name,
                 IsDeleted = false,
                 PropertyLink = v.DocumentPropertyLink
@@ -36,6 +36,7 @@ namespace SharedLib.Models
         {
             return new DocumentPropertyGridModelDB()
             {
+                GridId = v.OwnerId,
                 SystemCodeName = v.SystemCodeName,
                 PropertyType = v.PropertyType,
                 Name = v.Name,

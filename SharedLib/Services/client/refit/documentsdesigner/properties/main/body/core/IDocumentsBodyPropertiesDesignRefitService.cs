@@ -2,21 +2,23 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using SharedLib.Models;
 using Refit;
+using SharedLib.Models;
 
 namespace SharedLib.Services
 {
     /// <summary>
     /// Refit коннектор к API/DocumentsPropertiesMainBodyDesigner
     /// </summary>
-    public interface IDocumentsPropertiesMainBodyDesignRefitProvider
+    [Headers("Content-Type: application/json")]
+    public interface IDocumentsBodyPropertiesDesignRefitService
     {
         /// <summary>
         /// Получить поля "основного" тела документа
         /// </summary>
         /// <param name="document_id">Идентификатор документа</param>
         /// <returns>поля "основного" тела документа</returns>
+        [Get("/api/documentsbodypropertiesdesigner/{document_id}")]
         public Task<ApiResponse<GetDocumentDataResponseModel>> GetPropertiesAsync(int document_id);
 
         /// <summary>
@@ -24,6 +26,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="property_for_document_object">Объект свойства основного тела документа</param>
         /// <returns>Результат обработки запроса</returns>
+        [Post("/api/documentsbodypropertiesdesigner/")]
         public Task<ApiResponse<GetPropertiesSimpleRealTypeResponseModel>> AddPropertyAsync(PropertySimpleRealTypeModel property_for_document_object);
 
         /// <summary>
@@ -31,6 +34,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="property_for_document_obj">Объект свойства основного тела документа</param>
         /// <returns>Результат обработки запроса</returns>
+        [Put("/api/documentsbodypropertiesdesigner/")]
         public Task<ApiResponse<GetPropertiesSimpleRealTypeResponseModel>> UpdatePropertyAsync(PropertyOfDocumentModel property_for_document_obj);
 
         /// <summary>
@@ -38,6 +42,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="id">Идентификатор свойства основного тела документа</param>
         /// <returns>Результат обработки запроса</returns>
+        [Delete("/api/documentsbodypropertiesdesigner/{id}")]
         public Task<ApiResponse<GetPropertiesSimpleRealTypeResponseModel>> SetToggleDeletePropertyAsync(int id);
 
         /// <summary>
@@ -45,6 +50,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="id">Идентификатор поля основного тела документа</param>
         /// <returns>Результат обработки запроса</returns>
+        [Patch($"/api/documentsbodypropertiesdesigner/{nameof(DesignObjectsItemsActionsEnum.TrashAction)}/{{id}}")]
         public Task<ApiResponse<GetPropertiesSimpleRealTypeResponseModel>> TrashPropertyAsync(int id);
 
         /// <summary>
@@ -52,6 +58,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="id">Идентификатор поля основного тела документа</param>
         /// <returns>Результат обработки запроса</returns>
+        [Patch($"/api/documentsbodypropertiesdesigner/{nameof(DesignObjectsItemsActionsEnum.MoveUpAction)}/{{id}}")]
         public Task<ApiResponse<GetPropertiesSimpleRealTypeResponseModel>> MoveUpAsync(int id);
 
         /// <summary>
@@ -59,6 +66,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="id">Идентификатор поля основного тела документа</param>
         /// <returns>Результат обработки запроса</returns>
+        [Patch($"/api/documentsbodypropertiesdesigner/{nameof(DesignObjectsItemsActionsEnum.MoveDownAction)}/{{id}}")]
         public Task<ApiResponse<GetPropertiesSimpleRealTypeResponseModel>> MoveDownAsync(int id);
     }
 }

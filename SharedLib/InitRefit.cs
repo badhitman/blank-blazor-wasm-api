@@ -48,12 +48,12 @@ namespace SharedLib
             services.AddScoped<IDocumentsDesignRefitProvider, DocumentsDesignRefitProvider>();
             services.AddScoped<IDocumentsDesignRestService, DocumentsDesignRestService>();
             //
-            services.AddRefitClient<IDocumentsPropertiesMainBodyDesignRefitService>()
+            services.AddRefitClient<IDocumentsBodyPropertiesDesignRefitService>()
                 .ConfigureHttpClient(c => c.BaseAddress = conf.ApiConfig.Url)
                 .AddHttpMessageHandler<RefitHeadersDelegatingHandler>()
                 .SetHandlerLifetime(handler_lifetime);
-            services.AddScoped<IDocumentsPropertiesMainBodyDesignRefitProvider, DocumentsPropertiesMainBodyDesignRefitProvider>();
-            services.AddScoped<IDocumentsPropertiesMainBodyDesignRestService, DocumentsPropertiesMainBodyDesignRestService>();
+            services.AddScoped<IDocumentsBodyPropertiesDesignRefitProvider, DocumentsBodyPropertiesDesignRefitProvider>();
+            services.AddScoped<IDocumentsBodyPropertiesDesignRestService, DocumentsBodyPropertiesDesignRestService>();
             //
             services.AddRefitClient<IDocumentsPropertiesGridDesignRefitService>()
                 .ConfigureHttpClient(c => c.BaseAddress = conf.ApiConfig.Url)

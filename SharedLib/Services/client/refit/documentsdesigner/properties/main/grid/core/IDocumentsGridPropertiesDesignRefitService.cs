@@ -8,7 +8,7 @@ using SharedLib.Models;
 namespace SharedLib.Services
 {
     /// <summary>
-    /// Refit коннектор к API/DocumentsPropertiesMainGridDesigner
+    /// Refit коннектор к API/DocumentsGridPropertiesDesigner
     /// </summary>
     [Headers("Content-Type: application/json")]
     public interface IDocumentsPropertiesGridDesignRefitService
@@ -18,7 +18,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="document_id">Идентификатор документа</param>
         /// <returns>поля "основной" табличной части документа</returns>
-        [Get("/api/documentspropertiesmaingriddesigner/{document_id}")]
+        [Get("/api/documentsgridpropertiesdesigner/{document_id}")]
         public Task<ApiResponse<GetDocumentDataResponseModel>> GetPropertiesAsync(int document_id);
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="property_for_document_object">Объект свойства табличной части документа</param>
         /// <returns>Результат обработки запроса</returns>
-        [Post("/api/documentspropertiesmaingriddesigner/")]
+        [Post("/api/documentsgridpropertiesdesigner/")]
         public Task<ApiResponse<GetPropertiesSimpleRealTypeResponseModel>> AddPropertyAsync(PropertySimpleRealTypeModel property_for_document_object);
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="property_for_document_obj">Объект свойства табличной части документа</param>
         /// <returns>Результат обработки запроса</returns>
-        [Put("/api/documentspropertiesmaingriddesigner/")]
+        [Put("/api/documentsgridpropertiesdesigner/")]
         public Task<ApiResponse<GetPropertiesSimpleRealTypeResponseModel>> UpdatePropertyAsync(PropertyOfDocumentModel property_for_document_obj);
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="id">Идентификатор свойства табличной части документа</param>
         /// <returns>Результат обработки запроса</returns>
-        [Delete("/api/documentspropertiesmaingriddesigner/{id}")]
+        [Delete("/api/documentsgridpropertiesdesigner/{id}")]
         public Task<ApiResponse<GetPropertiesSimpleRealTypeResponseModel>> SetToggleDeletePropertyAsync(int id);
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="id">Идентификатор поля табличной части документа</param>
         /// <returns>Результат обработки запроса</returns>
-        [Patch($"/api/documentspropertiesmaingriddesigner/{nameof(DesignObjectsItemsActionsEnum.TrashAction)}/{{id}}")]
+        [Patch($"/api/documentsgridpropertiesdesigner/{nameof(DesignObjectsItemsActionsEnum.TrashAction)}/{{id}}")]
         public Task<ApiResponse<GetPropertiesSimpleRealTypeResponseModel>> TrashPropertyAsync(int id);
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="id">Идентификатор поля табличной части документа</param>
         /// <returns>Результат обработки запроса</returns>
-        [Patch($"/api/documentspropertiesmaingriddesigner/{nameof(DesignObjectsItemsActionsEnum.MoveUpAction)}/{{id}}")]
+        [Patch($"/api/documentsgridpropertiesdesigner/{nameof(DesignObjectsItemsActionsEnum.MoveUpAction)}/{{id}}")]
         public Task<ApiResponse<GetPropertiesSimpleRealTypeResponseModel>> MoveUpAsync(int id);
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="id">Идентификатор поля табличной части документа</param>
         /// <returns>Результат обработки запроса</returns>
-        [Patch($"/api/documentspropertiesmaingriddesigner/{nameof(DesignObjectsItemsActionsEnum.MoveDownAction)}/{{id}}")]
+        [Patch($"/api/documentsgridpropertiesdesigner/{nameof(DesignObjectsItemsActionsEnum.MoveDownAction)}/{{id}}")]
         public Task<ApiResponse<GetPropertiesSimpleRealTypeResponseModel>> MoveDownAsync(int id);
     }
 }
