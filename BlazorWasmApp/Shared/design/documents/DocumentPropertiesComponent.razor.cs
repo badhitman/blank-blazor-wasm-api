@@ -82,7 +82,7 @@ namespace BlazorWasmApp.Shared.design.documents
                 Modal.Open("Ошибка!");
                 return;
             }
-            //IsBusyProgress = true;
+            
             RealTypeRowsResponseModel rest = await _documents_grids_design_refit_service.GetGridsAsync(id);
             if (!rest.IsSuccess)
             {
@@ -109,7 +109,6 @@ namespace BlazorWasmApp.Shared.design.documents
             }
             if (_selected_grid_id > 0)
                 await ReloadForm(_selected_grid_id);
-            //IsBusyProgress = false;
         }
 
         async Task ReloadForm(int id)
