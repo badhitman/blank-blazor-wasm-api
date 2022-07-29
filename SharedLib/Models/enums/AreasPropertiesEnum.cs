@@ -5,7 +5,7 @@
 namespace SharedLib.Models
 {
     /// <summary>
-    /// Расположения/размещения свойств
+    /// Расположения/размещения свойств: тело документа или табличная часть документа
     /// </summary>
     public enum AreasPropertiesEnum
     {

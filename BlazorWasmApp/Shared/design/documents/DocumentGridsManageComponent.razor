@@ -38,9 +38,9 @@ else
         <ValidationSummary />
         <div class="input-group">
             <span class="input-group-text">Новая таб.часть</span>
-            <input type="text" @bind="create_grid.Name" @bind:event="oninput" aria-label="Название" placeholder="Название" title="Наименование табличной части в интерфейсе" class="form-control">
-            <input type="text" @bind="create_grid.SystemCodeName" @bind:event="oninput" aria-label="Системное кодовое имя" placeholder="Системное/кодовое имя" title="Имя класса C#" class="form-control">
-            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Создать</button>
+            <input type="text" @bind="create_grid.Name" @bind:event="oninput" disabled="@(!canEditObject || Id == 0)" aria-label="Название" placeholder="Название" title="Наименование табличной части в интерфейсе" class="form-control">
+            <input type="text" @bind="create_grid.SystemCodeName" @bind:event="oninput" disabled="@(!canEditObject || Id == 0)" aria-label="Системное кодовое имя" placeholder="Системное/кодовое имя" title="Имя класса C#" class="form-control">
+            <button class="btn btn-outline-secondary" type="submit" disabled="@(!canEditObject || Id == 0)" id="button-addon2">Создать</button>
         </div>
     </EditForm>
     <br />
@@ -107,6 +107,9 @@ else
     [Parameter, EditorRequired]
     public int Id { get; set; }
 
+    [Parameter, EditorRequired]
+    public UserToProjectLinkModelDb CurrentUserLinkProject { get; set; }
+
     private ModalWindowComponent Modal { get; set; }
     private string ModalBodyText { get; set; } = string.Empty;
 
@@ -114,6 +117,8 @@ else
 
     RealTypeModel? _control_current_grid = new();
     RealTypeModel? current_grid = new();
+
+    bool canEditObject => _session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed && CurrentUserLinkProject.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Editor);
 
     bool IsEdited
     {

@@ -33,7 +33,7 @@
     </h4>
     @if (AreaProperty == AreasPropertiesEnum.Table)
     {
-        <select @bind="selected_grid_id" class="col form-select" aria-label="Default select example">
+        <select disabled="@(Grids?.Any()!= true)" @bind="selected_grid_id" class="col form-select" aria-label="Default select example">
             @foreach (RealTypeModel grid_row in Grids)
             {
                 <option disabled="@(grid_row.IsDeleted)" value="@(grid_row.Id)">@(grid_row.Name) [@(grid_row.SystemCodeName)]</option>
@@ -52,7 +52,7 @@
 }
 else
 {
-    <EditForm autocomplete="off" Model="newPropertyMainBodyItemElement" OnSubmit="HandleSubmitAddingPropertyAsync" class="row row-cols-lg-auto g-3 align-items-center justify-content-end">
+    <EditForm autocomplete="off" Model="new_property_body_item_element" OnSubmit="HandleSubmitAddingPropertyAsync" class="row row-cols-lg-auto g-3 align-items-center justify-content-end">
         <DataAnnotationsValidator />
         <div class="col-12">
             <div class="row mb-12">
@@ -62,23 +62,23 @@ else
         <div class="col-8">
             <label class="visually-hidden" for="inlineFormInputGroupName">Наименование</label>
             <div class="input-group">
-                <InputText @bind-Value="newPropertyMainBodyItemElement.Name" type="text" class="form-control" id="inlineFormInputGroupName" placeholder="Заголовок" />
+                <InputText @bind-Value="new_property_body_item_element.Name" type="text" class="form-control" disabled="@(AreaProperty == AreasPropertiesEnum.Table && _selected_grid_id == 0)" id="inlineFormInputGroupName" placeholder="Заголовок" />
             </div>
         </div>
         <div class="col-8">
             <label class="visually-hidden" for="inlineFormInputGroupSystemCodeName">Системное/кодовое имя</label>
             <div class="input-group">
-                <InputText @bind-Value="newPropertyMainBodyItemElement.SystemCodeName" type="text" class="form-control" id="inlineFormInputGroupSystemCodeName" placeholder="Системное имя" />
+                <InputText @bind-Value="new_property_body_item_element.SystemCodeName" type="text" class="form-control" disabled="@(AreaProperty == AreasPropertiesEnum.Table && _selected_grid_id == 0)" id="inlineFormInputGroupSystemCodeName" placeholder="Системное имя" />
             </div>
         </div>
         <div class="col-8">
             <label class="visually-hidden" for="specificSelect">Preference</label>
-            <InputSelect @bind-Value="newPropertyMainBodyItemElement.SelectedTypeTemplate" class="form-select" id="specificSelect">
+            <InputSelect @bind-Value="new_property_body_item_element.SelectedTypeTemplate" class="form-select" disabled="@(AreaProperty == AreasPropertiesEnum.Table && _selected_grid_id == 0)" id="specificSelect">
                 <OptionsForTypePropertySelectComponent DocumentsTypesOfProject="DocumentsTypesOfProject" EnumsTypesOfProject="EnumsTypesOfProject" />
             </InputSelect>
         </div>
         <div class="col-8">
-            <button type="submit" class="btn btn-primary">Добавить</button>
+            <button type="submit" class="btn btn-primary" disabled="@(AreaProperty == AreasPropertiesEnum.Table && _selected_grid_id == 0)">Добавить</button>
         </div>
     </EditForm>
     <hr />
@@ -89,199 +89,3 @@ else
         @ModalBodyText
     </p>
 </ModalWindowComponent>
-
-@code {
-    [Parameter, EditorRequired]
-    public int Id { get; set; }
-
-    [Parameter, EditorRequired]
-    public AreasPropertiesEnum AreaProperty { get; set; }
-
-    PropertyCreateRealTypeModel newPropertyMainBodyItemElement { get; set; } = new PropertyCreateRealTypeModel();
-
-    private ModalWindowComponent Modal { get; set; }
-    private string ModalBodyText { get; set; } = string.Empty;
-
-    IEnumerable<RealTypeModel> Grids = Enumerable.Empty<RealTypeModel>();
-
-    int _selected_grid_id = 0;
-    int selected_grid_id
-    {
-        get
-        {
-            return _selected_grid_id;
-        }
-        set
-        {
-            _selected_grid_id = value;
-            if (_selected_grid_id > 0)
-                ReloadForm(_selected_grid_id);
-        }
-    }
-
-    /// <summary>
-    /// Данные
-    /// </summary>
-    public IEnumerable<SimplePropertyRealTypeModel> DataRows { get; set; } = Enumerable.Empty<SimplePropertyRealTypeModel>();
-
-    /// <summary>
-    /// Перечисления проекта
-    /// </summary>
-    public IEnumerable<RealTypeLiteModel> EnumsTypesOfProject { get; set; }
-
-    /// <summary>
-    /// Документы проекта
-    /// </summary>
-    public IEnumerable<RealTypeLiteModel> DocumentsTypesOfProject { get; set; }
-
-    protected override async void OnInitialized()
-    {
-        if (Id == 0)
-        {
-            return;
-        }
-
-        if (AreaProperty == AreasPropertiesEnum.Table)
-        {
-            await GetGridsAsync(Id);
-        }
-        else
-        {
-            await ReloadForm(Id);
-        }
-    }
-
-    async Task GetGridsAsync(int id)
-    {
-        if (id <= 0)
-        {
-            ModalBodyText = "Идентификатор документа не может быть 0";
-            _logger.LogError(ModalBodyText);
-            Modal.Open("Ошибка!");
-            return;
-        }
-        //IsBusyProgress = true;
-        RealTypeRowsResponseModel rest = await _documents_grids_design_refit_service.GetGridsAsync(id);
-        if (!rest.IsSuccess)
-        {
-            if (!string.IsNullOrEmpty(rest.Message))
-            {
-                _logger.LogError(rest.Message);
-                ModalBodyText = rest.Message;
-                Modal.Open("Ошибка!");
-            }
-            else
-            {
-                ModalBodyText = $"Ошибка API: {nameof(_documents_grids_design_refit_service.GetGridsAsync)}";
-                _logger.LogError(ModalBodyText);
-                Modal.Open("Ошибка!");
-            }
-        }
-        else
-        {
-            Grids = rest.Rows;
-            if (Grids.Any())
-            {
-                _selected_grid_id = Grids.First().Id;
-            }
-        }
-        //IsBusyProgress = false;
-        //StateHasChanged();
-        await ReloadForm(_selected_grid_id);
-    }
-
-    async Task ReloadForm(int id)
-    {
-        if (id <= 0)
-        {
-            ModalBodyText = "Идентификатор не может быть 0";
-            _logger.LogError(ModalBodyText);
-            Modal.Open("Ошибка!");
-            return;
-        }
-
-        IsBusyProgress = true;
-        GetDocumentDataResponseModel rest = AreaProperty switch
-        {
-            AreasPropertiesEnum.Body => await _documents_properties_body_refit_service.GetPropertiesAsync(id),
-            AreasPropertiesEnum.Table => await _documents_grid_properties_refit_service.GetPropertiesAsync(_selected_grid_id)
-        };
-
-        if (!rest.IsSuccess)
-        {
-            if (!string.IsNullOrEmpty(rest.Message))
-            {
-                _logger.LogError(rest.Message);
-                ModalBodyText = rest.Message;
-                Modal.Open("Ошибка!");
-            }
-            else
-            {
-                ModalBodyText = $"Ошибка API: {nameof(_documents_properties_body_refit_service.GetPropertiesAsync)}";
-                _logger.LogError(ModalBodyText);
-                Modal.Open("Ошибка!");
-            }
-        }
-        else
-        {
-            DataRows = rest.DataRows;
-            EnumsTypesOfProject = rest.EnumsTypesOfProject;
-            DocumentsTypesOfProject = rest.DocumentsTypesOfProject.Select(x => { if (x.Id == Id) { x.IsDeleted = true; } return x; });
-        }
-        IsBusyProgress = false;
-        StateHasChanged();
-    }
-
-    /// <summary>
-    /// Создать/добавить поле основного тела документа
-    /// </summary>
-    async Task HandleSubmitAddingPropertyAsync()
-    {
-        if (Id <= 0)
-        {
-            return;
-        }
-        if (!Regex.IsMatch(newPropertyMainBodyItemElement.SystemCodeName, GlobalStaticConstants.SYSTEM_CODE_NAME_TEMPLATE))
-        {
-            ModalBodyText = $"Системное кодовое имя должно состоять из букв латинского алфавита не менее трёх символов.";
-            Modal.Open("Ошибка!");
-            return;
-        }
-        if (!newPropertyMainBodyItemElement.PropertyType.HasValue)
-        {
-            ModalBodyText = $"Укажите тип реквизита";
-            Modal.Open("Ошибка!");
-            return;
-        }
-        if (string.IsNullOrWhiteSpace(newPropertyMainBodyItemElement.Name) || newPropertyMainBodyItemElement.Name.Trim().Length < 3)
-        {
-            ModalBodyText = $"Наименование реквизита должно иметь минимум 3 символа";
-            Modal.Open("Ошибка!");
-            return;
-        }
-
-        PropertySimpleRealTypeModel obj = (PropertySimpleRealTypeModel)newPropertyMainBodyItemElement;
-        if (AreaProperty == AreasPropertiesEnum.Body)
-            obj.OwnerId = Id;
-        else
-            obj.OwnerId = _selected_grid_id;
-
-        obj.DocumentPropertyLink = newPropertyMainBodyItemElement.DocumentPropertyLink;
-
-        GetPropertiesSimpleRealTypeResponseModel rest = AreaProperty switch
-        {
-            AreasPropertiesEnum.Body => await _documents_properties_body_refit_service.AddPropertyAsync(obj),
-            AreasPropertiesEnum.Table => await _documents_grid_properties_refit_service.AddPropertyAsync(obj)
-        };
-
-        if (!rest.IsSuccess)
-        {
-            ModalBodyText = rest.Message;
-            Modal.Open("Ошибка!");
-            return;
-        }
-        DataRows = rest.DataRows;
-        newPropertyMainBodyItemElement.Reset();
-        StateHasChanged();
-    }
-}
