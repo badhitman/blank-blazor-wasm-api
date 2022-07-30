@@ -77,14 +77,12 @@
     public override void OnReCaptchaSuccess(string response_code) { user_auth_obj.ResponseReCAPTCHA = response_code; Logger.LogDebug(nameof(OnReCaptchaSuccess)); }
     public override void OnReCaptchaFailure(string response_code) { user_auth_obj.ResponseReCAPTCHA = string.Empty; Logger.LogError($"{nameof(OnReCaptchaFailure)}! response code: {response_code}"); }
 
-#if DEMO
     async Task LoginDemo()
     {
     user_auth_obj = new UserAuthorizationModel() { Login = "222222222", Password = "222222222" };
     await HandleValidSubmitAsync();
 
     }
-#endif
 
     private async Task HandleValidSubmitAsync()
     {
