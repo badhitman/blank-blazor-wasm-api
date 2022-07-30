@@ -60,7 +60,16 @@
     "SyncTimeout": 10000
   },
   "WebConfig": {
-    "ClientOrignsCORS": [ "https://localhost:7222" ],
+    "ClientOrignsCORS": [
+      "https://iq-s.pro",
+      "https://iq-s.pro:443",
+      "https://www.iq-s.pro",
+      "https://www.iq-s.pro:443",
+      "https://api.iq-s.pro",
+      "https://api.iq-s.pro:443",
+      "https://www.api.iq-s.pro",
+      "https://www.api.iq-s.pro:443"
+    ],
     "AllowedHosts": "*",
     "MaxConcurrentConnections": 100,
     "MaxRequestBodySize": 30000000,
@@ -70,14 +79,14 @@
     "Port": 5501
   },
   "ApiConfig": {
-    "Host": "localhost",
-    "Port": 5501,
-    "HttpSheme": "http"
+    "Host": "api.iq-s.pro",
+    "Port": 443,
+    "HttpSheme": "https"
   },
   "ClientConfig": {
-    "Host": "localhost",
-    "Port": 7222,
-    "HttpSheme": "http"
+    "Host": "iq-s.pro",
+    "Port": 443,
+    "HttpSheme": "https"
   },
   "UserManageConfig": {
     "RegistrationUserConfirmDeadlineMinutes": 180,
