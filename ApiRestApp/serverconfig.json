@@ -92,17 +92,17 @@
     "RegistrationUserConfirmDeadlineMinutes": 180,
     "RestoreUserConfirmDeadlineMinutes": 30,
     "DenyRegistration": {
-      "IsDeny": false,
-      "Message": ""
+      "IsDeny": true,
+      "Message": "Технические работы"
     },
     "DenyAuthorisation": {
       "IsDeny": false,
-      "Message": ""
+      "Message": "Технические работы"
     },
-    "ConfirmHistoryDays": 60,
-    "RootUsersEmails": [ "badhitman@yandex.ru", "ru.usa@mail.ru" ]
+    "ConfirmHistoryDays": 60
   },
   "RefitHandlerLifetimeMinutes": 0,
   "PaginationPageSizeMin": 20,
-  "PaginationDefaultSorting": "Down"
+  "PaginationDefaultSorting": "Down",
+  "RootUsersEmails": [ "badhitman@yandex.ru", "ru.usa@mail.ru" ]
 }

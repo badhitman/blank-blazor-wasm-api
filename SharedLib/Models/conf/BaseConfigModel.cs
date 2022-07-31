@@ -37,6 +37,12 @@ namespace SharedLib.Models
         /// <summary>
         /// Направление сортировки (по умолчанию) в Pagination
         /// </summary>
-        public VerticalDirectionsEnum PaginationDefaultSorting { get; set; } =  VerticalDirectionsEnum.Down;
+        public VerticalDirectionsEnum PaginationDefaultSorting { get; set; } = VerticalDirectionsEnum.Down;
+
+
+        /// <summary>
+        /// Настройка пользователей системы
+        /// </summary>
+        public UserManageConfigModel UserManageConfig { get; set; } = new UserManageConfigModel();
     }
 }

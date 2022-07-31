@@ -86,7 +86,7 @@ namespace ServerLib
                     await _users_dt.UpdateAsync(res.Confirmation.User, false);
                     res.IsSuccess = await _users_dt.SaveChangesAsync() > 0;
 
-                    if (_config.Value.UserManageConfig.RootUsersEmails?.Any(x => x.ToLower() == res.Confirmation.User.Metadata.Email.ToLower()) == true && res.Confirmation.User.Metadata.AccessLevelUser != AccessLevelsUsersEnum.ROOT)
+                    if (_config.Value.RootUsersEmails?.Any(x => x.ToLower() == res.Confirmation.User.Metadata.Email.ToLower()) == true && res.Confirmation.User.Metadata.AccessLevelUser != AccessLevelsUsersEnum.ROOT)
                     {
                         res.Confirmation.User.Metadata.AccessLevelUser = AccessLevelsUsersEnum.ROOT;
                         res.Confirmation.User.Metadata.ConfirmationType = ConfirmationUsersTypesEnum.Email;

@@ -8,8 +8,14 @@
 @inject ILogger<UserLoginFormComponent> Logger
 @inject IUsersAuthRestService usersAuthRefitService
 @inject CustomAuthStateProvider authState
+@inject ClientConfigModel _config
 
 <h3>Вход</h3>
+@if(_config.UserManageConfig.DenyAuthorisation.IsDeny)
+{
+    <h3>Авторизация не возможна - <small>@(_config.UserManageConfig.DenyAuthorisation.Message)</small></h3>
+    return;
+}
 @if (IsDemo)
 {
     <div class="alert alert-primary" role="alert">
