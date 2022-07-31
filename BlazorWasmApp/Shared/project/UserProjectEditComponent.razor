@@ -62,7 +62,7 @@ else
     /// <summary>
     /// Наличие прав у текущего пользователя к администрированию проекта
     /// </summary>
-    bool canAdminProject => _session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (currentUserLink is not null && !currentUserLink.IsDeleted && currentUserLink.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Owner);
+    bool canAdminProject => _session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (currentUserLink is null || !currentUserLink.IsDeleted && currentUserLink.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Owner);
 
     ProjectModelDB project { get; set; } = new ProjectModelDB();
     UserToProjectLinkModelDb currentUserLink { get; set; } = null;
