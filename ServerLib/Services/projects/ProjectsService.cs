@@ -332,7 +332,8 @@ namespace ServerLib
             {
                 res.Project = await _projects_dt.FirstRandomActualProjectForUserAsync(_session_service.SessionMarker.Id);
                 res.Message = "Текущий проект не определён.";
-                await _mem_cashe.UpdateValueAsync(CurrentProjectMemKey, res.Project.Id.ToString());
+                if (res.Project is not null)
+                    await _mem_cashe.UpdateValueAsync(CurrentProjectMemKey, res.Project.Id.ToString());
             }
             res.CurrentUserLinkProject = res.Project.UsersLinks.FirstOrDefault(x => x.UserId == _session_service.SessionMarker.Id);
 
