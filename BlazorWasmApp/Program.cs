@@ -41,7 +41,13 @@ http.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
     NoCache = true
 };
 
+#if DEBUG
+HttpResponseMessage? response = await http.GetAsync("clientconfig.Development.json");
+#else
 HttpResponseMessage? response = await http.GetAsync("clientconfig.json");
+#endif
+
+
 string json_raw;
 
 Stream? stream = await response.Content.ReadAsStreamAsync();
