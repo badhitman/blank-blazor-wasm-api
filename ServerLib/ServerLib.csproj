@@ -21,7 +21,7 @@
 		<PackageReference Include="MimeKit" Version="3.3.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="NLog" Version="5.0.1" />
-		<PackageReference Include="NLog.Web.AspNetCore" Version="5.0.0" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="5.1.0" />
 		<PackageReference Include="StackExchange.Redis" Version="2.6.48" />
 	</ItemGroup>
 
