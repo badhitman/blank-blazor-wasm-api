@@ -74,7 +74,7 @@ namespace DbTablesLib
             else
                 res = new ProjectsForUserPaginationResponseModel(pagination);
 
-            if (res.PageSize <= _config.Value.PaginationPageSizeMin)
+            if (res.PageSize < _config.Value.PaginationPageSizeMin)
             {
                 _logger.LogError(new ArgumentOutOfRangeException(nameof(res.PageSize)), $"Размер страницы пагинатора ={res.PageSize}. Этот параметр не может быть меньше {_config.Value.PaginationPageSizeMin}");
                 res.PageSize = _config.Value.PaginationPageSizeMin;

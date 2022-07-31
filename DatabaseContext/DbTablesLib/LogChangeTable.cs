@@ -66,7 +66,7 @@ namespace DbTablesLib
                 }
             };
 
-            if (res.Pagination.PageSize <= _config.Value.PaginationPageSizeMin)
+            if (res.Pagination.PageSize < _config.Value.PaginationPageSizeMin)
             {
                 _logger.LogError(new ArgumentOutOfRangeException(nameof(res.Pagination.PageSize)), $"Размер страницы пагинатора ={res.Pagination.PageSize}. Этот параметр не может быть меньше {_config.Value.PaginationPageSizeMin}");
                 res.Pagination.PageSize = _config.Value.PaginationPageSizeMin;
@@ -115,7 +115,7 @@ namespace DbTablesLib
                 }
             };
 
-            if (res.Pagination.PageSize <= _config.Value.PaginationPageSizeMin)
+            if (res.Pagination.PageSize < _config.Value.PaginationPageSizeMin)
             {
                 _logger.LogError(new ArgumentOutOfRangeException(nameof(res.Pagination.PageSize)), $"Размер страницы пагинатора ={res.Pagination.PageSize}. Этот параметр не может быть меньше {_config.Value.PaginationPageSizeMin}");
                 res.Pagination.PageSize = _config.Value.PaginationPageSizeMin;
@@ -163,7 +163,7 @@ namespace DbTablesLib
                 }
             };
 
-            if (res.Pagination.PageSize <= _config.Value.PaginationPageSizeMin)
+            if (res.Pagination.PageSize < _config.Value.PaginationPageSizeMin)
             {
                 _logger.LogError(new ArgumentOutOfRangeException(nameof(res.Pagination.PageSize)), $"Размер страницы пагинатора ={res.Pagination.PageSize}. Этот параметр не может быть меньше {_config.Value.PaginationPageSizeMin}");
                 res.Pagination.PageSize = _config.Value.PaginationPageSizeMin;
@@ -215,7 +215,7 @@ namespace DbTablesLib
                 }
             };
 
-            if (res.Pagination.PageSize <= _config.Value.PaginationPageSizeMin)
+            if (res.Pagination.PageSize < _config.Value.PaginationPageSizeMin)
             {
                 _logger.LogError(new ArgumentOutOfRangeException(nameof(res.Pagination.PageSize)), $"Размер страницы пагинатора ={res.Pagination.PageSize}. Этот параметр не может быть меньше {_config.Value.PaginationPageSizeMin}");
                 res.Pagination.PageSize = _config.Value.PaginationPageSizeMin;
