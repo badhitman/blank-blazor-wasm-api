@@ -10,6 +10,7 @@
 
 @inject SessionMarkerLiteModel _session_marker
 @inject IDocumentsDesignRestService _documents_design_refit_service
+@inject IProjectsRestService _project_refit_service;
 @inject NavigationManager _navigation_manager
 @inject ILogger<DocumentEditPage> _logger
 
@@ -82,7 +83,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Коллекции</h5>
                             <h6 class="card-subtitle mb-2 text-muted">Табличные части документа</h6>
-                            <hr/>
+                            <hr />
                             <DocumentGridsManageComponent Id="Id.GetValueOrDefault(0)" CurrentUserLinkProject="currentUserLinkProject" />
                         </div>
                     </div>
@@ -117,12 +118,33 @@
 
     DocumentDesignModelDB docomentObject = new();
     UserToProjectLinkModelDb currentUserLinkProject;
-    bool canEditObject => _session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed && currentUserLinkProject.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Editor);
+    bool canEditObject => currentUserLinkProject is not null && (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed && currentUserLinkProject.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Editor));
 
     protected override async Task OnInitializedAsync()
     {
         if (Id.GetValueOrDefault(0) == 0)
         {
+            UserProjectResponseModel rest = await _project_refit_service.GetMyCurrentProjectAsync();
+            if (!rest.IsSuccess)
+            {
+                if (!string.IsNullOrEmpty(rest.Message))
+                {
+                    _logger.LogError(rest.Message);
+                    ModalBodyText = rest.Message;
+                    Modal.Open("Ошибка!");
+                }
+                else
+                {
+                    ModalBodyText = $"Ошибка API: {nameof(_project_refit_service.GetMyCurrentProjectAsync)}";
+                    _logger.LogError(ModalBodyText);
+                    Modal.Open("Ошибка!");
+                }
+            }
+            else
+            {
+                currentUserLinkProject = rest.CurrentUserLinkProject;
+                StateHasChanged();
+            }
             return;
         }
         await ReloadForm(Id.Value);
