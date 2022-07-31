@@ -335,7 +335,8 @@ namespace ServerLib
                 if (res.Project is not null)
                     await _mem_cashe.UpdateValueAsync(CurrentProjectMemKey, res.Project.Id.ToString());
             }
-            res.CurrentUserLinkProject = res.Project.UsersLinks.FirstOrDefault(x => x.UserId == _session_service.SessionMarker.Id);
+            if (res.Project is not null)
+                res.CurrentUserLinkProject = res.Project.UsersLinks.FirstOrDefault(x => x.UserId == _session_service.SessionMarker.Id);
 
             return res;
         }
