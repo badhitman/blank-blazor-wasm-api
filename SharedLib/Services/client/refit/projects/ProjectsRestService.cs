@@ -26,6 +26,36 @@ namespace SharedLib.Services
         }
 
         /// <inheritdoc/>
+        public async Task<UserProjectResponseModel> GetMyCurrentProjectAsync()
+        {
+            UserProjectResponseModel result = new();
+
+            try
+            {
+                ApiResponse<UserProjectResponseModel> rest = await _users_projects_service.GetMyCurrentProjectAsync();
+
+                if (rest.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    result.IsSuccess = false;
+                    result.Message = $"HTTP error: [code={rest.StatusCode}] {rest?.Error?.Content}";
+                    _logger.LogError(result.Message);
+
+                    return result;
+                }
+                result.IsSuccess = rest.Content.IsSuccess;
+                result = rest.Content;
+            }
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                result.Message = $"Exception {nameof(_users_projects_service.GetMyCurrentProjectAsync)}";
+                _logger.LogError(ex, result.Message);
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc/>
         public async Task<GetUsersProjectsResponsePaginationModel> GetMyProjectsAsync(PaginationRequestModel pagination)
         {
             GetUsersProjectsResponsePaginationModel result = new();

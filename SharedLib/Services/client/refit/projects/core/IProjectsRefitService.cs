@@ -14,6 +14,13 @@ namespace SharedLib.Services
     public interface IProjectsRefitService
     {
         /// <summary>
+        /// Получить текущий проект пользователя
+        /// </summary>
+        /// <returns>Проект пользователя - установленный как текущий</returns>
+        [Get("/api/usersprojects/GetCurrentProject")]
+        public Task<ApiResponse<UserProjectResponseModel>> GetMyCurrentProjectAsync();
+
+        /// <summary>
         /// Получить проекты текущего пользователя
         /// </summary>
         /// <param name="pagination">Настройка пагинации</param>

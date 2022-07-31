@@ -12,6 +12,12 @@ namespace SharedLib.Services
     public interface IProjectsRestService
     {
         /// <summary>
+        /// Получить текущий проект пользователя
+        /// </summary>
+        /// <returns>Проект пользователя - установленный как текущий</returns>
+        public Task<UserProjectResponseModel> GetMyCurrentProjectAsync();
+
+        /// <summary>
         /// Получить проекты текущего пользователя
         /// </summary>
         /// <param name="pagination">Настройка пагинации</param>

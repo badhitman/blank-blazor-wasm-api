@@ -24,6 +24,12 @@ namespace SharedLib.Services
         }
 
         /// <inheritdoc/>
+        public async Task<ApiResponse<UserProjectResponseModel>> GetMyCurrentProjectAsync()
+        {
+            return await _api.GetMyCurrentProjectAsync();
+        }
+
+        /// <inheritdoc/>
         public async Task<ApiResponse<GetUsersProjectsResponsePaginationModel>> GetMyProjectsAsync(PaginationRequestModel pagination)
         {
             return await _api.GetMyProjectsAsync(pagination);

@@ -28,8 +28,8 @@ namespace ApiRestApp.Controllers
         /// Получить текущий проект пользователя
         /// </summary>
         /// <returns>Проект пользователя - установленный как текущий</returns>
-        [HttpGet]
-        public async Task<UserProjectResponseModel> Get()
+        [HttpGet(nameof(GetCurrentProject))]
+        public async Task<UserProjectResponseModel> GetCurrentProject()
         {
             return await _users_projects_service.GetCurrentProjectForCurrentUserAsync();
         }

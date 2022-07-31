@@ -11,6 +11,7 @@
 
 @inject SessionMarkerLiteModel _session_marker
 @inject IEnumsDesignRestService _enums_design_refit_service
+@inject IProjectsRestService _project_refit_service;
 @inject ILogger<EnumEditPage> _logger
 @inject NavigationManager _navigation_manager
 
@@ -169,7 +170,7 @@
     private ModalWindowComponent Modal { get; set; }
     private string ModalBodyText { get; set; } = string.Empty;
 
-    bool canEditEnumObject => _session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed && currentUserLinkProject.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Editor);
+    bool canEditEnumObject => currentUserLinkProject is not null && (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed && currentUserLinkProject.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Editor));
 
     NameDescriptionSimpleModel newEnumItemElement = new NameDescriptionSimpleModel();
 
@@ -177,6 +178,27 @@
     {
         if (Id.GetValueOrDefault(0) == 0)
         {
+            UserProjectResponseModel rest = await _project_refit_service.GetMyCurrentProjectAsync();
+            if (!rest.IsSuccess)
+            {
+                if (!string.IsNullOrEmpty(rest.Message))
+                {
+                    _logger.LogError(rest.Message);
+                    ModalBodyText = rest.Message;
+                    Modal.Open("Ошибка!");
+                }
+                else
+                {
+                    ModalBodyText = $"Ошибка API: {nameof(_project_refit_service.GetMyCurrentProjectAsync)}";
+                    _logger.LogError(ModalBodyText);
+                    Modal.Open("Ошибка!");
+                }
+            }
+            else
+            {
+                currentUserLinkProject = rest.CurrentUserLinkProject;
+                StateHasChanged();
+            }
             return;
         }
         await ReloadForm(Id.Value);
