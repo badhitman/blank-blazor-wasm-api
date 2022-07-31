@@ -33,6 +33,26 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbSqliteLib", "DatabaseCont
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbPostgreLib", "DatabaseContext\DbPostgreLib\DbPostgreLib.csproj", "{D126A6E1-00E5-4BE7-8076-669BB3C36607}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "devops", "devops", "{D41C46D1-1729-41D6-A5D0-447AE00B9301}"
+	ProjectSection(SolutionItems) = preProject
+		devops\iq-s.pro readme.txt = devops\iq-s.pro readme.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "etc", "etc", "{1E14FFF7-5D42-446C-852F-7EE1A3C6DD1E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nginx", "nginx", "{433CA43F-F4C8-49A8-99E6-D5259B14E90C}"
+	ProjectSection(SolutionItems) = preProject
+		devops\etc\nginx\api.iq-s.pro.conf = devops\etc\nginx\api.iq-s.pro.conf
+		devops\etc\nginx\iq-s.pro.conf = devops\etc\nginx\iq-s.pro.conf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "systemd", "systemd", "{CD4553D4-EA06-4CD4-9BDA-EE3707AC5017}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{EF7B2FA0-E609-4249-932E-6D760DAFD400}"
+	ProjectSection(SolutionItems) = preProject
+		devops\etc\systemd\system\api.iq-s.pro.service = devops\etc\systemd\system\api.iq-s.pro.service
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +109,11 @@ Global
 		{66EA6642-65E4-4A0D-9450-A192F5428B5F} = {F99D68C0-4AD8-4EB1-848D-87731B8E6E16}
 		{3C93EFBF-8F5C-4E6D-AB65-67E72115AFB2} = {B2981357-A5B9-4C42-B003-A6054A36A110}
 		{D126A6E1-00E5-4BE7-8076-669BB3C36607} = {B2981357-A5B9-4C42-B003-A6054A36A110}
+		{D41C46D1-1729-41D6-A5D0-447AE00B9301} = {A681F079-260D-46E3-80A6-373622247D80}
+		{1E14FFF7-5D42-446C-852F-7EE1A3C6DD1E} = {D41C46D1-1729-41D6-A5D0-447AE00B9301}
+		{433CA43F-F4C8-49A8-99E6-D5259B14E90C} = {1E14FFF7-5D42-446C-852F-7EE1A3C6DD1E}
+		{CD4553D4-EA06-4CD4-9BDA-EE3707AC5017} = {1E14FFF7-5D42-446C-852F-7EE1A3C6DD1E}
+		{EF7B2FA0-E609-4249-932E-6D760DAFD400} = {CD4553D4-EA06-4CD4-9BDA-EE3707AC5017}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {04854DE6-CA50-4C98-AB54-EF015E5CF3E7}
