@@ -19,7 +19,3 @@
 Для удобства отладки в UI **BlazorWasmApp** поддерживается тот же символ, но для отображения упрощённого входа в аккаунт (вход одним кликом по кнопке):
 ![demo login](./img/demo-login.png)
 Этот акаунт (login:222222222 passw:222222222) создаётся в **DbLayerLib**, если ему назначить этот препроцессор **DEMO**
-
-swagger ui
-![swagger ui](./img/swagger-ui.png)
-![swagger models](./img/swagger-models.png)
