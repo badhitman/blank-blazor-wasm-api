@@ -248,6 +248,7 @@ namespace ServerLib
                 new LogChangeModelDB() { AuthorId = _session_service.SessionMarker.Id, OwnerType = ContextesChangeLogEnum.Project, OwnerId = project_db.Id, Name = "Добавлен пользователь", Description = "Автоматическая ссылка на автора" }
             });
             await _links_dt.AddLinkProject(AccessLevelsUsersToProjectsEnum.Owner, project_db.Id, _session_service.SessionMarker.Id);
+            await _mem_cashe.UpdateValueAsync(CurrentProjectMemKey, project_db.Id.ToString());
             return res;
         }
 
