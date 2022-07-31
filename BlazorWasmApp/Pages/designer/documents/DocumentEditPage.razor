@@ -118,7 +118,7 @@
 
     DocumentDesignModelDB docomentObject = new();
     UserToProjectLinkModelDb currentUserLinkProject;
-    bool canEditObject => currentUserLinkProject is not null && (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed && currentUserLinkProject.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Editor));
+    bool canEditObject => currentUserLinkProject is not null || (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed && currentUserLinkProject.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Editor));
 
     protected override async Task OnInitializedAsync()
     {
