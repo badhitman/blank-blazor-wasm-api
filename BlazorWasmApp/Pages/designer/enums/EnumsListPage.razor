@@ -8,8 +8,6 @@
 @using BlazorWasmApp.Shared.datatable
 @using BlazorWasmApp.Shared.project
 
-@*@inject NavigationManager _navigation_manager
-@inject ClientConfigModel _conf*@
 @inject IEnumsDesignRestService _design_enums_refit_service
 @inject ILogger<EnumsListPage> _logger
 
@@ -32,7 +30,10 @@
                     <a class="navbar-brand">Перечисления</a>
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="btn btn-outline-success oi oi-plus" role="button" href="@($"/{GlobalStaticConstants.ENUMS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}/")"></a>
+                            @if (CurrentEditProject > 0)
+                            {
+                                <a class="btn btn-outline-success oi oi-plus" role="button" href="@($"/{GlobalStaticConstants.ENUMS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}/")"></a>
+                            }
                         </li>
                     </ul>
                     <ProjectSelectorComponent SelectProjectHandler="Reload" />
@@ -43,7 +44,7 @@
             {
                 <h4>Не указан текущий проект. <small class="text-muted">Если нужного проекта не существует - <a href="@($"{GlobalStaticConstants.PROJECTS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}")">создаёте его</a></small></h4>
             }
-            else if(ProjectEnums.TotalRowsCount == 0)
+            else if (ProjectEnums.TotalRowsCount == 0)
             {
                 <h4>Нет ни одного перечисления <small class="text-muted">в текущем проекте перечислений ещё не создано - <a href="@($"{GlobalStaticConstants.ENUMS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}")">создаёте его</a></small></h4>
             }

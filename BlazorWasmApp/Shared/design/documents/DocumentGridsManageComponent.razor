@@ -118,7 +118,7 @@ else
     RealTypeModel? _control_current_grid = new();
     RealTypeModel? current_grid = new();
 
-    bool canEditObject => _session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed && CurrentUserLinkProject.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Editor);
+    bool canEditObject => CurrentUserLinkProject is not null && (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Admin || (_session_marker.AccessLevelUser >= AccessLevelsUsersEnum.Confirmed && CurrentUserLinkProject.AccessLevelUser >= AccessLevelsUsersToProjectsEnum.Editor));
 
     bool IsEdited
     {

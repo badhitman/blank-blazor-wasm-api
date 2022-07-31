@@ -30,14 +30,28 @@
                     <a class="navbar-brand">Докумнты</a>
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="btn btn-outline-success oi oi-plus" role="button" href="@($"/{GlobalStaticConstants.DOCUMENTS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}/")"></a>
+                            @if (projectId > 0)
+                            {
+                                <a class="btn btn-outline-success oi oi-plus" role="button" href="@($"/{GlobalStaticConstants.DOCUMENTS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}/")"></a>
+                            }
                         </li>
                     </ul>
                     <ProjectSelectorComponent SelectProjectHandler="Reload" />
                 </div>
             </nav>
             <hr />
-            <DataTableComponent DataProvider="@designEnumsDataTable" TotalRowsCount="@(project_documents.TotalRowsCount)" PageNum="@(project_documents.PageNum)" PageSize="@(project_documents.PageSize)" />
+            @if (projectId <= 0)
+            {
+                <h4>Не указан текущий проект. <small class="text-muted">Если нужного проекта не существует - <a href="@($"{GlobalStaticConstants.PROJECTS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}")">создаёте его</a></small></h4>
+            }
+            else if (project_documents.TotalRowsCount == 0)
+            {
+                <h4>Нет ни одного документа <small class="text-muted">в текущем проекте документов ещё не создано - <a href="@($"{GlobalStaticConstants.DOCUMENTS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}")">создаёте его</a></small></h4>
+            }
+            else
+            {
+                <DataTableComponent DataProvider="@designEnumsDataTable" TotalRowsCount="@(project_documents.TotalRowsCount)" PageNum="@(project_documents.PageNum)" PageSize="@(project_documents.PageSize)" />
+            }
         </div>
         <ModalWindowComponent @ref="Modal">
             <p>@ModalBodyText</p>
