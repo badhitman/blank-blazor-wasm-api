@@ -40,11 +40,6 @@ namespace SharedLib.Models
         public RedisConfigModel RedisConfig { get; set; } = new RedisConfigModel();
 
         /// <summary>
-        /// Настройка пользователей системы
-        /// </summary>
-        public UserManageConfigModel UserManageConfig { get; set; } = new UserManageConfigModel();
-
-        /// <summary>
         /// Задает период времени, в течение которого экземпляр Refit HttpMessageHandler можно использовать повторно.
         /// Реализация Refit IHttpClientFactory по умолчанию объединяет экземпляры System.Net.Http.HttpMessageHandler, созданные фабрикой, для снижения потребления ресурсов.
         /// Этот параметр настраивает количество времени, в течение которого обработчик может находиться в пуле, прежде чем он будет запланирован для удаления из пула и утилизации.
@@ -55,5 +50,13 @@ namespace SharedLib.Models
         /// Использование долгоживущих экземпляров System.Net.Http.HttpClient предотвратит удаление базового System.Net.Http.HttpMessageHandler до тех пор, пока все ссылки не будут удалены сборщиком мусора.
         /// </summary>
         public int RefitHandlerLifetimeMinutes { get; set; } = 2;
+
+        /// <summary>
+        /// Email`s пользователей в статусе ROOT.
+        /// В процессе восстановления доступа (сброс пароля) пользователь сверяется с этим списком.
+        /// * Если пользователь в списке, то ему автоматически назначаются права ROOT.
+        /// ** В тех случаях, когда правило будет применяться (если пользователь из этого списка на момент проверки не имеет статуса ROOT и ему будет назначен/изменён его статус на ROOT) администрация (из списка SmtpConfigModel.EmailNotificationRecipients) будет уведомлена об этом 
+        /// </summary>
+        public string[] RootUsersEmails { get; set; }
     }
 }

@@ -60,7 +60,16 @@
     "SyncTimeout": 10000
   },
   "WebConfig": {
-    "ClientOrignsCORS": [ "https://localhost:7222" ],
+    "ClientOrignsCORS": [
+      "https://iq-s.pro",
+      "https://iq-s.pro:443",
+      "https://www.iq-s.pro",
+      "https://www.iq-s.pro:443",
+      "https://api.iq-s.pro",
+      "https://api.iq-s.pro:443",
+      "https://www.api.iq-s.pro",
+      "https://www.api.iq-s.pro:443"
+    ],
     "AllowedHosts": "*",
     "MaxConcurrentConnections": 100,
     "MaxRequestBodySize": 30000000,
@@ -70,30 +79,30 @@
     "Port": 5501
   },
   "ApiConfig": {
-    "Host": "localhost",
-    "Port": 5501,
-    "HttpSheme": "http"
+    "Host": "api.iq-s.pro",
+    "Port": 443,
+    "HttpSheme": "https"
   },
   "ClientConfig": {
-    "Host": "localhost",
-    "Port": 7222,
-    "HttpSheme": "http"
+    "Host": "iq-s.pro",
+    "Port": 443,
+    "HttpSheme": "https"
   },
   "UserManageConfig": {
     "RegistrationUserConfirmDeadlineMinutes": 180,
     "RestoreUserConfirmDeadlineMinutes": 30,
     "DenyRegistration": {
-      "IsDeny": false,
-      "Message": ""
+      "IsDeny": true,
+      "Message": "Технические работы"
     },
     "DenyAuthorisation": {
       "IsDeny": false,
-      "Message": ""
+      "Message": "Технические работы"
     },
-    "ConfirmHistoryDays": 60,
-    "RootUsersEmails": [ "badhitman@yandex.ru", "ru.usa@mail.ru" ]
+    "ConfirmHistoryDays": 60
   },
   "RefitHandlerLifetimeMinutes": 0,
   "PaginationPageSizeMin": 20,
-  "PaginationDefaultSorting": "Down"
+  "PaginationDefaultSorting": "Down",
+  "RootUsersEmails": [ "badhitman@yandex.ru", "ru.usa@mail.ru" ]
 }

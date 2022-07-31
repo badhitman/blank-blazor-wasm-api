@@ -7,13 +7,18 @@
 @using SharedLib.Services
 @inherits BlazorReCaptchaComponentBaseModel
 
-@inject CustomAuthStateProvider authState
-@inject IUsersAuthRestService usersAuthRefitService
-@inject ILogger<UserRegistrationFormComponent> Logger
-@inject ClientConfigModel Config
+@inject CustomAuthStateProvider _auth_state
+@inject IUsersAuthRestService _users_auth_refit_service
+@inject ILogger<UserRegistrationFormComponent> _logger
+@inject ClientConfigModel _config
 @*@inject NavigationManager Navigation*@
 
 <h3>Регистрация</h3>
+@if(_config.UserManageConfig.DenyRegistration.IsDeny)
+{
+    <h3>Функция регистрации временно отключена - <small>@(_config.UserManageConfig.DenyRegistration.Message)</small></h3>
+    return;
+}
 <EditForm Model="@user_registration_obj" OnValidSubmit="@HandleValidSubmit">
     <fieldset disabled="@IsBusyProgress">
         <DataAnnotationsValidator />
@@ -73,24 +78,24 @@
     private UserRegistrationModel user_registration_obj = new();
     private AuthUserResponseModel? user_registration_result = null;
 
-    public override void OnReCaptchaExpired() { user_registration_obj.ResponseReCAPTCHA = string.Empty; Logger.LogDebug(nameof(OnReCaptchaExpired)); }
-    public override void OnReCaptchaSuccess(string response_code) { user_registration_obj.ResponseReCAPTCHA = response_code; Logger.LogDebug(nameof(OnReCaptchaSuccess)); }
-    public override void OnReCaptchaFailure(string response_code) { Logger.LogError($"{nameof(OnReCaptchaFailure)}! response code: {response_code}"); }
+    public override void OnReCaptchaExpired() { user_registration_obj.ResponseReCAPTCHA = string.Empty; _logger.LogDebug(nameof(OnReCaptchaExpired)); }
+    public override void OnReCaptchaSuccess(string response_code) { user_registration_obj.ResponseReCAPTCHA = response_code; _logger.LogDebug(nameof(OnReCaptchaSuccess)); }
+    public override void OnReCaptchaFailure(string response_code) { _logger.LogError($"{nameof(OnReCaptchaFailure)}! response code: {response_code}"); }
 
     private async Task HandleValidSubmit()
     {
         IsBusyProgress = true;
 
-        user_registration_result = await usersAuthRefitService.RegistrationNewUserAsync(user_registration_obj);
+        user_registration_result = await _users_auth_refit_service.RegistrationNewUserAsync(user_registration_obj);
         if (!user_registration_result.IsSuccess)
         {
             if (!string.IsNullOrEmpty(user_registration_result.Message))
-                Logger.LogError(user_registration_result.Message);
+                _logger.LogError(user_registration_result.Message);
             else
-                Logger.LogError($"Ошибка API: {nameof(usersAuthRefitService.LoginUserAsync)}");
+                _logger.LogError($"Ошибка API: {nameof(_users_auth_refit_service.LoginUserAsync)}");
         }
 
-        authState.AuthenticationStateChanged();
+        _auth_state.AuthenticationStateChanged();
 
         IsBusyProgress = false;
         this.StateHasChanged();

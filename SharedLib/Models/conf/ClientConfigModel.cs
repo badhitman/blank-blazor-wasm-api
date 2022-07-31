@@ -32,7 +32,7 @@ namespace SharedLib.Models
         /// <param name="v"></param>
         public static explicit operator ClientConfigModel(ServerConfigModel v)
         {
-            ClientConfigModel res = new ClientConfigModel()
+            ClientConfigModel res = new()
             {
                 ApiConfig = v.ApiConfig,
                 ClientConfig = v.ClientConfig,
@@ -41,7 +41,8 @@ namespace SharedLib.Models
                 EmailSenderAddress = v.SmtpConfig.Email,
                 CookiesConfig = v.CookiesConfig,
                 PaginationPageSizeMin = v.PaginationPageSizeMin,
-                PaginationDefaultSorting= v.PaginationDefaultSorting
+                PaginationDefaultSorting = v.PaginationDefaultSorting,
+                UserManageConfig = v.UserManageConfig
             };
 
             return res;
