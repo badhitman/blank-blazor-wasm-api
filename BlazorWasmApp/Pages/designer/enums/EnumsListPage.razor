@@ -39,7 +39,18 @@
                 </div>
             </nav>
             <hr />
-            <DataTableComponent DataProvider="@designEnumsDataTable" TotalRowsCount="@(ProjectEnums.TotalRowsCount)" PageNum="@(ProjectEnums.PageNum)" PageSize="@(ProjectEnums.PageSize)" />
+            @if (CurrentEditProject <= 0)
+            {
+                <h4>Не указан текущий проект. <small class="text-muted">Если нужного проекта не существует - <a href="@($"{GlobalStaticConstants.PROJECTS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}")">создаёте его</a></small></h4>
+            }
+            else if(ProjectEnums.TotalRowsCount == 0)
+            {
+                <h4>Нет ни одного перечисления <small class="text-muted">в текущем проекте перечислений ещё не создано - <a href="@($"{GlobalStaticConstants.ENUMS_CONTROLLER_NAME}/{GlobalStaticConstants.EDIT_ACTION_NAME}")">создаёте его</a></small></h4>
+            }
+            else
+            {
+                <DataTableComponent DataProvider="@designEnumsDataTable" TotalRowsCount="@(ProjectEnums.TotalRowsCount)" PageNum="@(ProjectEnums.PageNum)" PageSize="@(ProjectEnums.PageSize)" />
+            }
         </div>
         <ModalWindowComponent @ref="Modal">
             <p>@ModalBodyText</p>
@@ -87,5 +98,5 @@
 
         IsBusyProgress = false;
         StateHasChanged();
-    }    
+    }
 }
