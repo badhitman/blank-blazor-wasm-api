@@ -25,6 +25,16 @@ namespace ApiRestApp.Controllers
         }
 
         /// <summary>
+        /// Получить текущий проект пользователя
+        /// </summary>
+        /// <returns>Проект пользователя - установленный как текущий</returns>
+        [HttpGet]
+        public async Task<UserProjectResponseModel> Get()
+        {
+            return await _users_projects_service.GetCurrentProjectForCurrentUserAsync();
+        }
+
+        /// <summary>
         /// Получить проекты пользователя
         /// </summary>
         /// <param name="filter">Пагинация</param>
