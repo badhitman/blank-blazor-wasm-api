@@ -171,7 +171,7 @@ namespace ServerLib
             if (send_email && !await _email.SendUserConfirmationEmail(confirmation))
             {
                 res.Message = "Системная ошибка. Произошёл сбой отправки Email.";
-                _logger.LogError($"{res.Message} - confirmation: {JsonConvert.SerializeObject(confirmation)}");
+                _logger.LogError($"{res.Message} - confirmation: {JsonConvert.SerializeObject(confirmation, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Serialize })}");
                 confirmation.ErrorMessage = res.Message;
                 await _confirmations_dt.UpdateConfirmationAsync(confirmation);
                 res.IsSuccess = false;
