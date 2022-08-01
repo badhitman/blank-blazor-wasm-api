@@ -5,6 +5,7 @@
 using ApiRestApp.Filters;
 using Microsoft.AspNetCore.Mvc;
 using ServerLib;
+using SharedLib;
 using SharedLib.Models;
 
 namespace ApiRestApp.Controllers
@@ -28,7 +29,7 @@ namespace ApiRestApp.Controllers
         /// Получить текущий проект пользователя
         /// </summary>
         /// <returns>Проект пользователя - установленный как текущий</returns>
-        [HttpGet(nameof(GetCurrentProject))]
+        [HttpGet(GlobalStaticConstants.GET_CURRENT_PROJECT_ROUTE)]
         public async Task<UserProjectResponseModel> GetCurrentProject()
         {
             return await _users_projects_service.GetCurrentProjectForCurrentUserAsync();
@@ -39,8 +40,8 @@ namespace ApiRestApp.Controllers
         /// </summary>
         /// <param name="filter">Пагинация</param>
         /// <returns>Пользовательские проекты текущего пользователя</returns>
-        [HttpGet]
-        public async Task<GetUsersProjectsResponsePaginationModel> Get([FromQuery] PaginationRequestModel filter)
+        [HttpGet(GlobalStaticConstants.GET_PAGINATION_PROJECTS_ROUTE)]
+        public async Task<GetUsersProjectsResponsePaginationModel> GetPagination([FromQuery] PaginationRequestModel filter)
         {
             return await _users_projects_service.GetMyProjectsAsync(filter);
         }

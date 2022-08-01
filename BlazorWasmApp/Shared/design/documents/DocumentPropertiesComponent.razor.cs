@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
+using SharedLib;
 using SharedLib.Models;
 using System.Text.RegularExpressions;
 

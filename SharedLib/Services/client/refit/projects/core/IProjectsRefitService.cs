@@ -17,7 +17,7 @@ namespace SharedLib.Services
         /// Получить текущий проект пользователя
         /// </summary>
         /// <returns>Проект пользователя - установленный как текущий</returns>
-        [Get("/api/usersprojects/GetCurrentProject")]
+        [Get($"/api/usersprojects/{GlobalStaticConstants.GET_CURRENT_PROJECT_ROUTE}")]
         public Task<ApiResponse<UserProjectResponseModel>> GetMyCurrentProjectAsync();
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="pagination">Настройка пагинации</param>
         /// <returns>Проекты текущего пользователя</returns>
-        [Get("/api/usersprojects")]
+        [Get($"/api/usersprojects/{GlobalStaticConstants.GET_PAGINATION_PROJECTS_ROUTE}")]
         public Task<ApiResponse<GetUsersProjectsResponsePaginationModel>> GetMyProjectsAsync(PaginationRequestModel pagination);
 
         /// <summary>
