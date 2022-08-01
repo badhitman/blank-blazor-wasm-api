@@ -17,10 +17,9 @@
   },
   "DatabaseConfig": {
     "Connect": {
-      "SqLiteFileName": "designer_meta_app.db",
-      "ConnectionString": "Server=localhost;Port=3306;Database=dbname;Uid=root;Pwd=root;connect timeout=100;default command timeout=200;"
+      //"ConnectionString": "Server=localhost;Port=3306;Database=dbname;Uid=root;Pwd=root;connect timeout=100;default command timeout=200;"
       //"ConnectionString": "Host=localhost;Port=5432;Database=edb;Username=postgres;Password=555555555"
-      //"ConnectionString": "Data Source=./bin/mydb.db;"
+      "ConnectionString": "Data Source=./bin/mydb.db;"
     },
     "SqlLogDebug": true,
     "EnableSensitiveDataLoggingDebug": true
