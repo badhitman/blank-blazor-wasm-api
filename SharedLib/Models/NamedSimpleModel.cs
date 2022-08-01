@@ -15,7 +15,7 @@ namespace SharedLib.Models
         /// Наименование
         /// </summary>
         [Required]
-        [StringLength(50, MinimumLength = 3)]
+        [StringLength(128, MinimumLength = 3)]
         public string Name { get; set; } = string.Empty;        
     }
 }
