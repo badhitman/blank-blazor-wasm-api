@@ -47,19 +47,20 @@ Web настройки для хоста Kestrel (в т.ч. Listen Port):
 > например, для переключения на Postgree - достаточно сменить строку подключения в конфигах **ApiRestApp** и заменить зависимости в двух проектах.
 
 ### Три простых шага для переключения на нужную СУБД!
-На данны момент протестировано две СУБД: SQLite и Postgre. Для включения той или иной СУБД требуется три действия:
+На данны момент протестировано три СУБД: SQLite, MySql и Postgre. Для включения той или иной СУБД требуется три действия:
  - Установите строку подключения к БД в конфигах ApiRestApp. В зависимости от желаемой СУБД вы должны прописать необходимый коннект.
  ```json
  "DatabaseConfig": {
     "Connect": {
       "ConnectionString": "Host=localhost;Port=5432;Database=edb;Username=postgres;Password=555555555"
       //"ConnectionString": "Data Source=./bin/mydb.db;"
+      //"ConnectionString": "Server=localhost;Port=3306;Database=dbname;Uid=root;Pwd=root;connect timeout=100;default command timeout=200;"
     },
     "SqlLogDebug": true,
     "EnableSensitiveDataLoggingDebug": true
   }
  ```
- - Для проекта **DbTablesLib** установите одну из зависимостей от целевого проекта. Если выбрана *SQLite*, то необходима зависимость от проекта **DbSqliteLib**. В то же время, убедитесь что бы небыло зависимости на проект **DbPostgreLib**. Если же выбрана *Postgre*, то проекту (DbTablesLib) потребуется зависимость на **DbPostgreLib**, НО НЕ **DbSqliteLib** (зависимость от двух сразу не допускается)
+ - Для проекта **DbTablesLib** установите одну из зависимостей от целевого проекта. Если выбрана *SQLite*, то необходима зависимость от проекта **DbSqliteLib**. В то же время, убедитесь что бы небыло зависимости на проект **DbPostgreLib** или **DbMySQLLib**. Если же выбрана *Postgre*, то проекту (DbTablesLib) потребуется зависимость на **DbPostgreLib**, НО НЕ **DbSqliteLib** и НЕ **DbMySQLLib** (зависимость от двух или более сразу не допускается)
  - Для проекта **ServerLib** установите зависимости так же и для проекта **DbTablesLib**
 
 ## Запуск
