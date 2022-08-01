@@ -27,7 +27,28 @@ namespace SharedLib.Models
         /// <summary>
         /// Uri конфигурации хоста
         /// </summary>
-        public Uri Url => new Uri($"{HttpSheme}://{Host}:{Port}/");
+        public Uri Url
+        {
+            get
+            {
+                string url = $"{HttpSheme}://{Host}";
+
+                if (HttpSheme.ToLower() == "http" && Port == 80)
+                {
+
+                }
+                else if (HttpSheme.ToLower() == "https" && Port == 443)
+                {
+
+                }
+                else
+                {
+                    url += $":{Port}";
+                }
+                url += "/";
+                return new Uri(url);
+            }
+        }
 
         /// <summary>
         /// Преобразовать в строку конфигурации хоста
