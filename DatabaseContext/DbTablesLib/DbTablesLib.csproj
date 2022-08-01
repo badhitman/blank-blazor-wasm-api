@@ -9,7 +9,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\SharedLib\SharedLib.csproj" />
-		<ProjectReference Include="..\DbSqliteLib\DbSqliteLib.csproj" />
+		<ProjectReference Include="..\DbMySQLLib\DbMySQLLib.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

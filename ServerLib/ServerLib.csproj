@@ -26,7 +26,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\DatabaseContext\DbSqliteLib\DbSqliteLib.csproj" />
+		<ProjectReference Include="..\DatabaseContext\DbMySQLLib\DbMySQLLib.csproj" />
 		<ProjectReference Include="..\reCaptchaLib\reCaptchaLib.csproj" />
 	</ItemGroup>
 

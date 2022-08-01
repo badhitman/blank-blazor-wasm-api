@@ -53,6 +53,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{EF7B2F
 		devops\etc\systemd\system\api.iq-s.pro.service = devops\etc\systemd\system\api.iq-s.pro.service
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbMySQLLib", "DatabaseContext\DbMySQLLib\DbMySQLLib.csproj", "{787CC71C-8200-4132-8604-4C697C5EC7EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{D126A6E1-00E5-4BE7-8076-669BB3C36607}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D126A6E1-00E5-4BE7-8076-669BB3C36607}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D126A6E1-00E5-4BE7-8076-669BB3C36607}.Release|Any CPU.Build.0 = Release|Any CPU
+		{787CC71C-8200-4132-8604-4C697C5EC7EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{787CC71C-8200-4132-8604-4C697C5EC7EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{787CC71C-8200-4132-8604-4C697C5EC7EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{787CC71C-8200-4132-8604-4C697C5EC7EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,6 +120,7 @@ Global
 		{433CA43F-F4C8-49A8-99E6-D5259B14E90C} = {1E14FFF7-5D42-446C-852F-7EE1A3C6DD1E}
 		{CD4553D4-EA06-4CD4-9BDA-EE3707AC5017} = {1E14FFF7-5D42-446C-852F-7EE1A3C6DD1E}
 		{EF7B2FA0-E609-4249-932E-6D760DAFD400} = {CD4553D4-EA06-4CD4-9BDA-EE3707AC5017}
+		{787CC71C-8200-4132-8604-4C697C5EC7EE} = {B2981357-A5B9-4C42-B003-A6054A36A110}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {04854DE6-CA50-4C98-AB54-EF015E5CF3E7}
