@@ -14,8 +14,8 @@ namespace SharedLib.Models
         /// <summary>
         /// Наименование
         /// </summary>
-        [Required(ErrorMessage = "Обязательно укажите название")]
-        [StringLength(50, MinimumLength = 3, ErrorMessage = "Длинна названия должна быть в диапазоне 3-50")]
-        public string Name { get; set; } = string.Empty;
+        [Required]
+        [StringLength(128, MinimumLength = 3)]
+        public string Name { get; set; } = string.Empty;        
     }
 }
