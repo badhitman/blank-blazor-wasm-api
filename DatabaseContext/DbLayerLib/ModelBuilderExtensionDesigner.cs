@@ -183,7 +183,7 @@ namespace DbLayerLib
             }));
 
             index_id = 0;
-            DocumentDesignModelDB[] documents_demo_data = demo_projects.SelectMany(project => Enumerable.Range(1, rand.Next(34, 40)).Select(enum_num => new DocumentDesignModelDB()
+            DocumentDesignModelDB[] documents_demo_data = demo_projects.SelectMany(project => Enumerable.Range(1, rand.Next(14, 40)).Select(enum_num => new DocumentDesignModelDB()
             {
                 Id = ++index_id,
                 Description = $"Description document {index_id}",
@@ -322,7 +322,7 @@ namespace DbLayerLib
                 });
 
                 uint sort_index2 = 0;
-                return Enumerable.Range(3, rand.Next(3, 5)).Select(y => new DocumentPropertyGridModelDB()
+                return Enumerable.Range(3, rand.Next(2, 3)).Select(y => new DocumentPropertyGridModelDB()
                 {
                     PropertyType = enums_types[rand.Next(0, enums_types.Length)],
                     Id = ++index_id,
