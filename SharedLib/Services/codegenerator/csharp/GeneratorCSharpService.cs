@@ -140,7 +140,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"object_rest\">Новый объект '{name}' для записи/добавления в БД</param>");
             await writer.WriteLineAsync("\t\t[HttpPost($\"{nameof(RouteMethodsPrefixesEnum.AddSingle)}\")]");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddAsync({type_name_gen} object_rest)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<IdResponseModel> AddAsync({type_name_gen} object_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.AddAsync(object_rest);");
@@ -331,10 +331,10 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddAsync({type_name_gen} object_rest)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<IdResponseModel> AddAsync({type_name_gen} object_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
-            await WriteRestServiceBody(writer, "AddAsync", "object_rest", "ResponseBaseModel");
+            await WriteRestServiceBody(writer, "AddAsync", "object_rest", "IdResponseModel");
             await writer.WriteLineAsync();
 
             type_name_gen = $"{type_name}";
@@ -435,7 +435,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<ResponseBaseModel>> AddAsync({type_name_gen} object_rest)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<IdResponseModel>> AddAsync({type_name_gen} object_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\treturn await _api.AddAsync(object_rest);");
             await writer.WriteLineAsync("\t\t}");
@@ -548,7 +548,7 @@ namespace SharedLib.Services
             {
                 await writer.WriteLineAsync($"\t\t[Post($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.AddSingle)}}\")]");
             }
-            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> AddAsync({type_name_gen} object_rest);");
+            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}IdResponseModel{(is_refit ? ">" : "")}> AddAsync({type_name_gen} object_rest);");
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync($"\t\t/// <summary>");
@@ -676,13 +676,14 @@ namespace SharedLib.Services
             string type_name_gen;
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddAsync({type_name} obj_rest)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<IdResponseModel> AddAsync({type_name} obj_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new() { IsSuccess = true };");
             await writer.WriteLineAsync("\t\t\ttry");
             await writer.WriteLineAsync("\t\t\t{");
             await writer.WriteLineAsync($"\t\t\t\tawait _crud_accessor.AddAsync(obj_rest);");
+            await writer.WriteLineAsync($"\t\t\t\tresult.Id = obj_rest.Id;");
             await writer.WriteLineAsync("\t\t\t}");
             await writer.WriteLineAsync("\t\t\tcatch (Exception ex)");
             await writer.WriteLineAsync("\t\t\t{");
@@ -899,7 +900,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\t/// Создать новый объект{(is_body_document ? "" : " строки (табличной части)")} документа (запись БД): {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"obj_rest\">Объект добавления в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> AddAsync({type_name} obj_rest);");
+            await writer.WriteLineAsync($"\t\tpublic Task<IdResponseModel> AddAsync({type_name} obj_rest);");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Создать перечень новых объектов{(is_body_document ? "" : " строк табличной части")} документа: {doc_obj_name}");
