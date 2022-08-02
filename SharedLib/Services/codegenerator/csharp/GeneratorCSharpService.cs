@@ -680,7 +680,6 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new(){ IsSuccess = true };");
-
             await writer.WriteLineAsync("\t\t\ttry");
             await writer.WriteLineAsync("\t\t\t{");
             await writer.WriteLineAsync($"\t\t\t\tawait _crud_accessor.AddAsync(obj_rest);");
@@ -690,8 +689,6 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t\t\tresult.IsSuccess = false;");
             await writer.WriteLineAsync("\t\t\t\tresult.Message = ex.Message;");
             await writer.WriteLineAsync("\t\t\t}");
-
-
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
@@ -701,18 +698,15 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new(){ IsSuccess = true };");
-
-            //await writer.WriteLineAsync("\t\t\ttry");
-            //await writer.WriteLineAsync("\t\t\t{");
-            await writer.WriteLineAsync("\t\t\t\t");
-            //await writer.WriteLineAsync("\t\t\t}");
-            //await writer.WriteLineAsync("\t\t\tcatch (Exception ex)");
-            //await writer.WriteLineAsync("\t\t\t{");
-            //await writer.WriteLineAsync("\t\t\t\tresult.IsSuccess = false;");
-            //await writer.WriteLineAsync("\t\t\t\tresult.Message = ex.Message;");
-            //await writer.WriteLineAsync("\t\t\t}");
-
-            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.AddRangeAsync(obj_range_rest);");
+            await writer.WriteLineAsync("\t\t\ttry");
+            await writer.WriteLineAsync("\t\t\t{");
+            await writer.WriteLineAsync($"\t\t\t\tawait _crud_accessor.AddRangeAsync(obj_range_rest);");
+            await writer.WriteLineAsync("\t\t\t}");
+            await writer.WriteLineAsync("\t\t\tcatch (Exception ex)");
+            await writer.WriteLineAsync("\t\t\t{");
+            await writer.WriteLineAsync("\t\t\t\tresult.IsSuccess = false;");
+            await writer.WriteLineAsync("\t\t\t\tresult.Message = ex.Message;");
+            await writer.WriteLineAsync("\t\t\t}");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
@@ -722,21 +716,17 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}?> FirstAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-
-            //await writer.WriteLineAsync("\t\t\ttry");
-            //await writer.WriteLineAsync("\t\t\t{");
-            await writer.WriteLineAsync("\t\t\t\t");
-            //await writer.WriteLineAsync("\t\t\t}");
-            //await writer.WriteLineAsync("\t\t\tcatch (Exception ex)");
-            //await writer.WriteLineAsync("\t\t\t{");
-            //await writer.WriteLineAsync("\t\t\t\tresult.IsSuccess = false;");
-            //await writer.WriteLineAsync("\t\t\t\tresult.Message = ex.Message;");
-            //await writer.WriteLineAsync("\t\t\t}");
-
-            await writer.WriteLineAsync($"\t\t\treturn new {type_name_gen}()");
+            await writer.WriteLineAsync($"\t\t\t{type_name_gen} result = new(){{ IsSuccess = true }};");
+            await writer.WriteLineAsync("\t\t\ttry");
             await writer.WriteLineAsync("\t\t\t{");
-            await writer.WriteLineAsync($"\t\t\t\t{GlobalStaticConstants.RESULT_PROPERTY_NAME} = await _crud_accessor.FirstAsync(id)");
-            await writer.WriteLineAsync("\t\t\t};");
+            await writer.WriteLineAsync($"\t\t\t\tresult.{GlobalStaticConstants.RESULT_PROPERTY_NAME} = await _crud_accessor.FirstAsync(id)");
+            await writer.WriteLineAsync("\t\t\t}");
+            await writer.WriteLineAsync("\t\t\tcatch (Exception ex)");
+            await writer.WriteLineAsync("\t\t\t{");
+            await writer.WriteLineAsync("\t\t\t\tresult.IsSuccess = false;");
+            await writer.WriteLineAsync("\t\t\t\tresult.Message = ex.Message;");
+            await writer.WriteLineAsync("\t\t\t}");
+            await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
