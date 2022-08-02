@@ -798,7 +798,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateAsync({type_name} obj_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new(){ IsSuccess = true };");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new() { IsSuccess = true };");
             await writer.WriteLineAsync("\t\t\ttry");
             await writer.WriteLineAsync("\t\t\t{");
             await writer.WriteLineAsync($"\t\t\t\tawait _crud_accessor.UpdateAsync(obj_rest);");
@@ -816,7 +816,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name}> obj_range_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new(){ IsSuccess = true };");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new() { IsSuccess = true };");
             await writer.WriteLineAsync("\t\t\ttry");
             await writer.WriteLineAsync("\t\t\t{");
             await writer.WriteLineAsync("\t\t\t\tawait _crud_accessor.UpdateRangeAsync(obj_range_rest);");
@@ -834,7 +834,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> MarkDeleteToggleAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new(){ IsSuccess = true };");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new() { IsSuccess = true };");
             await writer.WriteLineAsync("\t\t\ttry");
             await writer.WriteLineAsync("\t\t\t{");
             await writer.WriteLineAsync("\t\t\t\tawait _crud_accessor.MarkDeleteToggleAsync(id);");
@@ -852,7 +852,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new(){ IsSuccess = true };");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new() { IsSuccess = true };");
             await writer.WriteLineAsync("\t\t\ttry");
             await writer.WriteLineAsync("\t\t\t{");
             await writer.WriteLineAsync("\t\t\t\tawait _crud_accessor.RemoveRangeAsync(new int[] { id });");
@@ -870,7 +870,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveRangeAsync(IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new(){ IsSuccess = true };");
+            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new() { IsSuccess = true };");
             await writer.WriteLineAsync("\t\t\ttry");
             await writer.WriteLineAsync("\t\t\t{");
             await writer.WriteLineAsync("\t\t\t\tawait _crud_accessor.RemoveRangeAsync(ids);");
