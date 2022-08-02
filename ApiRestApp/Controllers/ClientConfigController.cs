@@ -25,7 +25,7 @@ namespace ApiRestApp.Controllers
         /// <summary>
         /// Получить настройки клиента Blazor
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Клиентская конфигурация</returns>
         [HttpGet]
         public ClientConfigModel Get()
         {
