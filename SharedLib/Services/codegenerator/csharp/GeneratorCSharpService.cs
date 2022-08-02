@@ -679,7 +679,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic async Task<IdResponseModel> AddAsync({type_name} obj_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new() { IsSuccess = true };");
+            await writer.WriteLineAsync("\t\t\tIdResponseModel result = new() { IsSuccess = true };");
             await writer.WriteLineAsync("\t\t\ttry");
             await writer.WriteLineAsync("\t\t\t{");
             await writer.WriteLineAsync($"\t\t\t\tawait _crud_accessor.AddAsync(obj_rest);");
