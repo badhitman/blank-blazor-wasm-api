@@ -130,10 +130,14 @@ namespace SharedLib.Services
         /// <param name="writer">Поток записи ZIP архива</param>
         /// <param name="service_instance">Имя интерфейса промежуточной службы доступа к данным</param>
         /// <param name="type_name">Имя типа данных (SystemCodeName)</param>
+        /// <param name="name">Наименование типа данных</param>
         /// <param name="is_body_document">Если тело документа - true. Если табличная часть - false</param>
-        static async Task WriteDocumentControllers(StreamWriter writer, string service_instance, string type_name, bool is_body_document)
+        static async Task WriteDocumentControllers(StreamWriter writer, string service_instance, string type_name, string name, bool is_body_document)
         {
             string type_name_gen = $"{type_name}";
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Добавить/создать документ: {name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync("\t\t[HttpPost($\"{nameof(RouteMethodsPrefixesEnum.AddSingle)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddAsync({type_name_gen} object_rest)");
             await writer.WriteLineAsync("\t\t{");
@@ -143,6 +147,9 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             type_name_gen = $"{type_name}";
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Добавить/создать коллекию документов: {name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync("\t\t[HttpPost($\"{nameof(RouteMethodsPrefixesEnum.AddRange)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest)");
             await writer.WriteLineAsync("\t\t{");
@@ -152,6 +159,9 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             type_name_gen = $"{type_name}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Получить документ по идентификатору: {name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetSingleById)}/{{id}}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> FirstAsync([FromRoute] int id)");
             await writer.WriteLineAsync("\t\t{");
@@ -161,6 +171,9 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             type_name_gen = $"{type_name}{GlobalStaticConstants.MULTI_REPONSE_MODEL_PREFIX}";
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Получить коллекцию документов по идентификаторам: {name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangeByIds)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> SelectAsync([FromQuery] IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
@@ -172,6 +185,9 @@ namespace SharedLib.Services
             if (is_body_document)
             {
                 type_name_gen = $"{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
+                await writer.WriteLineAsync("\t\t/// <summary>");
+                await writer.WriteLineAsync($"\t\t/// Получить порцию (пагинатор) документов: {name}");
+                await writer.WriteLineAsync("\t\t/// </summary>");
                 await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangePagination)}\")]");
                 await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> SelectAsync([FromQuery] PaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
@@ -183,6 +199,9 @@ namespace SharedLib.Services
             else
             {
                 type_name_gen = $"{type_name}{GlobalStaticConstants.PAGINATION_REPONSE_MODEL_PREFIX}";
+                await writer.WriteLineAsync("\t\t/// <summary>");
+                await writer.WriteLineAsync($"\t\t/// Получить порцию (пагинатор) строк табличной части документоа по идентификатору: {name}");
+                await writer.WriteLineAsync("\t\t/// </summary>");
                 await writer.WriteLineAsync("\t\t[HttpGet($\"{nameof(RouteMethodsPrefixesEnum.GetRangeByOwnerId)}\")]");
                 await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> SelectAsync([FromQuery] GetByIdPaginationRequestModel request)");
                 await writer.WriteLineAsync("\t\t{");
@@ -193,6 +212,9 @@ namespace SharedLib.Services
             }
 
             type_name_gen = $"{type_name}";
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Обновить документ в БД: {name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync("\t\t[HttpPut($\"{nameof(RouteMethodsPrefixesEnum.UpdateSingle)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateAsync({type_name_gen} object_rest_upd)");
             await writer.WriteLineAsync("\t\t{");
@@ -202,6 +224,9 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             type_name_gen = $"{type_name}";
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Обновить коллекцию документов в БД: {name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync("\t\t[HttpPut($\"{nameof(RouteMethodsPrefixesEnum.UpdateRange)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> UpdateRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest_upd)");
             await writer.WriteLineAsync("\t\t{");
@@ -210,6 +235,9 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Инвертировать маркер удаления объекта: {name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync("\t\t[HttpPatch($\"{nameof(RouteMethodsPrefixesEnum.MarkAsDeleteById)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> MarkDeleteToggleAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
@@ -218,6 +246,9 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Удалить объект из БД по идентификатору: {name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync("\t\t[HttpDelete($\"{nameof(RouteMethodsPrefixesEnum.RemoveSingleById)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
@@ -226,6 +257,9 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
+            await writer.WriteLineAsync("\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Удалить объекты из БД по идентификаторам: {name}");
+            await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync("\t\t[HttpDelete($\"{nameof(RouteMethodsPrefixesEnum.RemoveRangeByIds)}\")]");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveRangeAsync(IEnumerable<int> ids)");
             await writer.WriteLineAsync("\t\t{");
@@ -1239,7 +1273,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync($"\t\t\t{service_instance} = set{service_instance};");
                 await writer.WriteLineAsync("\t\t}");
                 await writer.WriteLineAsync();
-                await WriteDocumentControllers(writer, service_instance, doc_obj.SystemCodeName, true);
+                await WriteDocumentControllers(writer, service_instance, doc_obj.SystemCodeName, $"Документ: {doc_obj.Name}", true);
 
                 #endregion
 
@@ -1416,7 +1450,7 @@ namespace SharedLib.Services
                     await writer.WriteLineAsync($"\t\t\t{service_instance} = set_{service_instance};");
                     await writer.WriteLineAsync("\t\t}");
                     await writer.WriteLineAsync();
-                    await WriteDocumentControllers(writer, service_instance, grid.SystemCodeName, false);
+                    await WriteDocumentControllers(writer, service_instance, grid.SystemCodeName, $"Табличная часть: {grid.Name} // для документа: {doc_obj.Name}", false);
 
                     #endregion
 
