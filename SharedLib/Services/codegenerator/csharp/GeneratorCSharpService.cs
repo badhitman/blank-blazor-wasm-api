@@ -692,7 +692,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t\t}");
 
 
-            await writer.WriteLineAsync("\t\t\t\treturn result;");
+            await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
