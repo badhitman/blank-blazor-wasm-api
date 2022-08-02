@@ -96,6 +96,12 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
+        /// <summary>
+        /// Генерация регистратора служб Refit для клиента
+        /// </summary>
+        /// <param name="archive">Пакет сжатых файлов в формате zip-архива.</param>
+        /// <param name="project_info">Информация о проекте</param>
+        /// <param name="types">Типы для регистрации</param>
         static async Task GenRefitDI(ZipArchive archive, NameSpacedModel project_info, IEnumerable<string> types)
         {
             ZipArchiveEntry readmeEntry = archive.CreateEntry("refit_di.cs");
@@ -230,6 +236,13 @@ namespace SharedLib.Services
             await WriteEnd(writer);
         }
 
+        /// <summary>
+        /// Запись тела метода Rest/Refit сервиса
+        /// </summary>
+        /// <param name="writer">Поток записи ZIP архива</param>
+        /// <param name="method_name">Имя Rest/Refit метода</param>
+        /// <param name="rest_parameter_name">Имя Rest/Refit параметра</param>
+        /// <param name="response_type_name">Имя Rest/Refit метода</param>
         static async Task WriteRestServiceBody(StreamWriter writer, string method_name, string rest_parameter_name, string response_type_name)
         {
             await writer.WriteLineAsync("\t\t\ttry");
@@ -271,7 +284,6 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t\t_logger = set_logger;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
-
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddAsync({type_name_gen} object_rest)");
