@@ -1697,6 +1697,7 @@ namespace SharedLib.Services
                             await writer.WriteLineAsync($"\t\tpublic {property.PropertyTypeMetadata.SystemCodeName} {property.SystemCodeName} {{ get; set; }}");
                             break;
                         case PropertyTypesEnum.Document:
+                            await writer.WriteLineAsync($"\t\tpublic int {property.SystemCodeName}Id {{ get; set; }}");
                             await writer.WriteLineAsync($"\t\tpublic {property.PropertyTypeMetadata.SystemCodeName} {property.SystemCodeName} {{ get; set; }}");
                             break;
                         default:
