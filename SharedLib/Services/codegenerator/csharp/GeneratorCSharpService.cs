@@ -719,7 +719,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\t\t{type_name_gen} result = new(){{ IsSuccess = true }};");
             await writer.WriteLineAsync("\t\t\ttry");
             await writer.WriteLineAsync("\t\t\t{");
-            await writer.WriteLineAsync($"\t\t\t\tresult.{GlobalStaticConstants.RESULT_PROPERTY_NAME} = await _crud_accessor.FirstAsync(id)");
+            await writer.WriteLineAsync($"\t\t\t\tresult.{GlobalStaticConstants.RESULT_PROPERTY_NAME} = await _crud_accessor.FirstAsync(id);");
             await writer.WriteLineAsync("\t\t\t}");
             await writer.WriteLineAsync("\t\t\tcatch (Exception ex)");
             await writer.WriteLineAsync("\t\t\t{");
