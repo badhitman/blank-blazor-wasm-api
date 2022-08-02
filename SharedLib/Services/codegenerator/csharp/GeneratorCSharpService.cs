@@ -333,7 +333,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<IdResponseModel> AddAsync({type_name_gen} object_rest)");
             await writer.WriteLineAsync("\t\t{");
-            await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
+            await writer.WriteLineAsync("\t\t\tIdResponseModel result = new();");
             await WriteRestServiceBody(writer, "AddAsync", "object_rest", "IdResponseModel");
             await writer.WriteLineAsync();
 
