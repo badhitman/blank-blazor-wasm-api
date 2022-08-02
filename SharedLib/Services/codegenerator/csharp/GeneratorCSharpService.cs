@@ -666,7 +666,7 @@ namespace SharedLib.Services
         }
 
         /// <summary>
-        /// Записать реализацию интерфейса промежуточной службы доступа к данным
+        /// Записать реализации интерфейса промежуточной службы доступа к данным
         /// </summary>
         /// <param name="writer">Поток записи ZIP архива</param>
         /// <param name="type_name">Имя типа данных (SystemCodeName)</param>
