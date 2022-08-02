@@ -211,10 +211,10 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t[HttpPatch($\"{nameof(RouteMethodsPrefixesEnum.MarkAsDeleteById)}\")]");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> IsDeleteMarkerToggleAsync(int id)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> MarkDeleteToggleAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
-            await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.IsDeleteMarkerToggleAsync(id);");
+            await writer.WriteLineAsync($"\t\t\treturn await {service_instance}.MarkDeleteToggleAsync(id);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
@@ -265,7 +265,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t\t\t_logger.LogError(ex, result.Message);");
             await writer.WriteLineAsync("\t\t\t}");
             await writer.WriteLineAsync("\t\treturn result;");
-            await writer.WriteLineAsync("\t\t}");
+            await writer.WriteLineAsync("\t\t\t}");
             await writer.WriteLineAsync();
         }
 
@@ -347,10 +347,10 @@ namespace SharedLib.Services
             await WriteRestServiceBody(writer, "UpdateRangeAsync", "objects_range_rest_upd", "ResponseBaseModel");
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> IsDeleteMarkerToggleAsync(int id)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> MarkDeleteToggleAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync($"\t\t\tResponseBaseModel result = new();");
-            await WriteRestServiceBody(writer, "IsDeleteMarkerToggleAsync", "id", "ResponseBaseModel");
+            await WriteRestServiceBody(writer, "MarkDeleteToggleAsync", "id", "ResponseBaseModel");
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> RemoveAsync(int id)");
@@ -459,9 +459,9 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<ResponseBaseModel>> IsDeleteMarkerToggleAsync(int id)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ApiResponse<ResponseBaseModel>> MarkDeleteToggleAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
-            await writer.WriteLineAsync("\t\t\treturn await _api.IsDeleteMarkerToggleAsync(id);");
+            await writer.WriteLineAsync("\t\t\treturn await _api.MarkDeleteToggleAsync(id);");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
 
@@ -487,14 +487,18 @@ namespace SharedLib.Services
         /// </summary>
         /// <param name="writer">Поток записи ZIP архива</param>
         /// <param name="type_name">Имя типа данных (SystemCodeName)</param>
+        /// <param name="name">Название объекта</param>
         /// <param name="is_body_document">Если тело документа - true. Если табличная часть - false</param>
         /// <param name="is_refit">refit ответы (ApiResponse) - true. rest/json ответы - false</param>
         /// <param name="add_attr">Добавить заголовок запроса и refit атрибуты маршрута запросов</param>
         /// <returns></returns>
-        static async Task WriteRestServiceInterface(StreamWriter writer, string type_name, bool is_body_document, bool is_refit, bool add_attr)
+        static async Task WriteRestServiceInterface(StreamWriter writer, string type_name, string name, bool is_body_document, bool is_refit, bool add_attr)
         {
             string type_name_gen = $"{type_name}";
 
+            await writer.WriteLineAsync($"\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Добавить документ в БД: {name}");
+            await writer.WriteLineAsync($"\t\t/// </summary>");
             if (add_attr)
             {
                 await writer.WriteLineAsync($"\t\t[Post($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.AddSingle)}}\")]");
@@ -502,6 +506,9 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> AddAsync({type_name_gen} object_rest);");
             await writer.WriteLineAsync();
 
+            await writer.WriteLineAsync($"\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Добавить набор документов в БД: {name}");
+            await writer.WriteLineAsync($"\t\t/// </summary>");
             if (add_attr)
             {
                 await writer.WriteLineAsync($"\t\t[Post($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.AddRange)}}\")]");
@@ -510,6 +517,9 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> AddRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest);");
             await writer.WriteLineAsync();
 
+            await writer.WriteLineAsync($"\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Получить документ по идентификатору: {name}");
+            await writer.WriteLineAsync($"\t\t/// </summary>");
             if (add_attr)
             {
                 await writer.WriteLineAsync($"\t\t[Get($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetSingleById)}}/{{{{id}}}}\")]");
@@ -518,6 +528,9 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}{type_name_gen}{(is_refit ? ">" : "")}> FirstAsync(int id);");
             await writer.WriteLineAsync();
 
+            await writer.WriteLineAsync($"\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Получить коллекцию документов по идентификаторам: {name}");
+            await writer.WriteLineAsync($"\t\t/// </summary>");
             if (add_attr)
             {
                 await writer.WriteLineAsync($"\t\t[Get($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetRangeByIds)}}\")]");
@@ -528,6 +541,9 @@ namespace SharedLib.Services
 
             if (is_body_document)
             {
+                await writer.WriteLineAsync($"\t\t/// <summary>");
+                await writer.WriteLineAsync($"\t\t/// Получить порцию (пагинатор) документов: {name}");
+                await writer.WriteLineAsync($"\t\t/// </summary>");
                 if (add_attr)
                 {
                     await writer.WriteLineAsync($"\t\t[Get($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetRangePagination)}}\")]");
@@ -538,6 +554,9 @@ namespace SharedLib.Services
             }
             else
             {
+                await writer.WriteLineAsync($"\t\t/// <summary>");
+                await writer.WriteLineAsync($"\t\t/// Получить порцию (пагинатор) строк табличной части документа по идентификатору документа: {name}");
+                await writer.WriteLineAsync($"\t\t/// </summary>");
                 if (add_attr)
                 {
                     await writer.WriteLineAsync($"\t\t[Get($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.GetRangeByOwnerId)}}\")]");
@@ -547,6 +566,9 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync();
             }
 
+            await writer.WriteLineAsync($"\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Обновить документ в БД: {name}");
+            await writer.WriteLineAsync($"\t\t/// </summary>");
             if (add_attr)
             {
                 await writer.WriteLineAsync($"\t\t[Put($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.UpdateSingle)}}\")]");
@@ -555,6 +577,9 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> UpdateAsync({type_name_gen} object_rest_upd);");
             await writer.WriteLineAsync();
 
+            await writer.WriteLineAsync($"\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Обновить коллекцию документов в БД: {name}");
+            await writer.WriteLineAsync($"\t\t/// </summary>");
             if (add_attr)
             {
                 await writer.WriteLineAsync($"\t\t[Put($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.UpdateRange)}}\")]");
@@ -563,13 +588,19 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> UpdateRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest_upd);");
             await writer.WriteLineAsync();
 
+            await writer.WriteLineAsync($"\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Инверсия признака \"помечен на удаление\" на противоположное: {name}");
+            await writer.WriteLineAsync($"\t\t/// </summary>");
             if (add_attr)
             {
                 await writer.WriteLineAsync($"\t\t[Patch($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.MarkAsDeleteById)}}\")]");
             }
-            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> IsDeleteMarkerToggleAsync(int id);");
+            await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> MarkDeleteToggleAsync(int id);");
             await writer.WriteLineAsync();
 
+            await writer.WriteLineAsync($"\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Удалить документ из БД по идентификатору: {name}");
+            await writer.WriteLineAsync($"\t\t/// </summary>");
             if (add_attr)
             {
                 await writer.WriteLineAsync($"\t\t[Delete($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.RemoveSingleById)}}\")]");
@@ -577,6 +608,9 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\tpublic Task<{(is_refit ? "ApiResponse<" : "")}ResponseBaseModel{(is_refit ? ">" : "")}> RemoveAsync(int id);");
             await writer.WriteLineAsync();
 
+            await writer.WriteLineAsync($"\t\t/// <summary>");
+            await writer.WriteLineAsync($"\t\t/// Удалить документы из БД по идентификаторам: {name}");
+            await writer.WriteLineAsync($"\t\t/// </summary>");
             if (add_attr)
             {
                 await writer.WriteLineAsync($"\t\t[Delete($\"/api/{type_name.ToLower()}/{{nameof(RouteMethodsPrefixesEnum.RemoveRangeByIds)}}\")]");
@@ -682,11 +716,11 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> IsDeleteMarkerToggleAsync(int id)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> MarkDeleteToggleAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
-            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.IsDeleteMarkerToggleAsync(id);");
+            await writer.WriteLineAsync($"\t\t\tawait _crud_accessor.MarkDeleteToggleAsync(id);");
             await writer.WriteLineAsync("\t\t\treturn result;");
             await writer.WriteLineAsync("\t\t}");
             await writer.WriteLineAsync();
@@ -785,7 +819,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync($"\t\t/// Инверсия признака удаления{(is_body_document ? "" : " строки табличной части")} документа: {doc_obj_name}");
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"id\">Идентификатор объекта</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> IsDeleteMarkerToggleAsync(int id);");
+            await writer.WriteLineAsync($"\t\tpublic Task<ResponseBaseModel> MarkDeleteToggleAsync(int id);");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Удалить {(is_body_document ? "документ" : "строку табличной части")}: {doc_obj_name}");
@@ -929,7 +963,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task IsDeleteMarkerToggleAsync(int id, bool auto_save = true)");
+            await writer.WriteLineAsync($"\t\tpublic async Task MarkDeleteToggleAsync(int id, bool auto_save = true)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t//// TODO: Проверить сгенерированный код");
             string db_set_name = $"_db_context.{type_name}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}";
@@ -1048,7 +1082,7 @@ namespace SharedLib.Services
             await writer.WriteLineAsync("\t\t/// </summary>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"id\">Идентификатор объекта</param>");
             await writer.WriteLineAsync($"\t\t/// <param name=\"auto_save\">Автоматически/сразу сохранить изменения в БД</param>");
-            await writer.WriteLineAsync($"\t\tpublic Task IsDeleteMarkerToggleAsync(int id, bool auto_save = true);");
+            await writer.WriteLineAsync($"\t\tpublic Task MarkDeleteToggleAsync(int id, bool auto_save = true);");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync($"\t\t/// Удалить {(is_body_document ? "документ" : "строку табличной части")}: {doc_name}");
@@ -1217,7 +1251,7 @@ namespace SharedLib.Services
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, $"REST служба работы с API -> {project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
-                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, false, false);
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, doc_obj.Name, true, false, false);
 
                 enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), $"{rest_service_name[1..]}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
@@ -1232,7 +1266,7 @@ namespace SharedLib.Services
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Refit коннектор к API/{project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
-                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, true, false);
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, doc_obj.Name, true, true, false);
 
                 enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name[1..]}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
@@ -1248,7 +1282,7 @@ namespace SharedLib.Services
                 await writer.WriteLineAsync("\t[Headers(\"Content-Type: application/json\")]");
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
-                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, true, true, true);
+                await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, doc_obj.Name, true, true, true);
 
                 #endregion
 
@@ -1394,7 +1428,7 @@ namespace SharedLib.Services
                     await WriteHead(writer, project_info.Name, project_info.NameSpace, $"REST служба работы с API -> {project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                     await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                     await writer.WriteLineAsync("\t{");
-                    await WriteRestServiceInterface(writer, grid.SystemCodeName, false, false, false);
+                    await WriteRestServiceInterface(writer, grid.SystemCodeName, doc_obj.Name, false, false, false);
 
                     enumEntry = archive.CreateEntry(Path.Combine("refit", grid.SystemCodeName.ToLower(), $"{rest_service_name[1..]}.cs"));
                     writer = new(enumEntry.Open(), Encoding.UTF8);
@@ -1409,7 +1443,7 @@ namespace SharedLib.Services
                     await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Refit коннектор к API/{project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                     await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                     await writer.WriteLineAsync("\t{");
-                    await WriteRestServiceInterface(writer, grid.SystemCodeName, false, true, false);
+                    await WriteRestServiceInterface(writer, grid.SystemCodeName, doc_obj.Name, false, true, false);
 
                     enumEntry = archive.CreateEntry(Path.Combine("refit", grid.SystemCodeName.ToLower(), "core", $"{rest_service_name[1..]}.cs"));
                     writer = new(enumEntry.Open(), Encoding.UTF8);
@@ -1425,7 +1459,7 @@ namespace SharedLib.Services
                     await writer.WriteLineAsync("\t[Headers(\"Content-Type: application/json\")]");
                     await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                     await writer.WriteLineAsync("\t{");
-                    await WriteRestServiceInterface(writer, grid.SystemCodeName, false, true, true);
+                    await WriteRestServiceInterface(writer, grid.SystemCodeName, doc_obj.Name, false, true, true);
 
                     #endregion
                 }
