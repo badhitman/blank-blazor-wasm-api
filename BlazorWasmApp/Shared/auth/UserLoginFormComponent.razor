@@ -19,7 +19,7 @@
 @if (IsDemo)
 {
     <div class="alert alert-primary" role="alert">
-        Похоже вы в режиме DEMO. Это означает, что вам доступны DEMO аккаунты. Попробуйте, например <button @onclick="LoginDemo" type="button" class="btn btn-outline-success btn-sm">Этот</button>
+        Похоже вы в режиме DEMO. Это означает, что вам доступны DEMO аккаунты. Попробуйте, например <button disabled="@IsBusyProgress" @onclick="LoginDemo" type="button" class="btn btn-outline-success btn-sm">Этот</button>
         <p class="badge bg-success">
             Процесс входа может длиться значительное время (до 1-2 минут). Это нормально. В этот момент база данных заново загружается новыми DEMO данными. Дождитесь окончания.
         </p>
