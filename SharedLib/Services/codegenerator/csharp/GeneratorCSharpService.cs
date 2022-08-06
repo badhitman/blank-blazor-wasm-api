@@ -23,7 +23,7 @@ namespace SharedLib.Services
         /// <param name="name_space">Пространсвто имён проекта</param>
         /// <param name="type_name">Имя типа данных для комментария (если NULL, то документация наследуется: <inheritdoc/>)</param>
         /// <param name="using_ns">Подключаемые пространства имён (using)</param>
-        static async Task WriteHead(StreamWriter writer, string project_name, string name_space, string? type_name, IEnumerable<string>? using_ns = null)
+        static async Task WriteHead(StreamWriter writer, string project_name, string? name_space, string? type_name, IEnumerable<string>? using_ns = null)
         {
             await writer.WriteLineAsync("////////////////////////////////////////////////");
             await writer.WriteLineAsync($"// Project: {project_name} - by  © https://github.com/badhitman - @fakegov");
@@ -45,7 +45,7 @@ namespace SharedLib.Services
             }
             if (type_name is not null)
                 await writer.WriteLineAsync($"{(ns_is_empty ? "" : "\t")}/// <summary>");
-            await writer.WriteLineAsync($"\t/// {(type_name is null ? "<inheritdoc/>" : type_name)}");
+            await writer.WriteLineAsync($"/// {(type_name is null ? "<inheritdoc/>" : type_name)}");
             if (type_name is not null)
                 await writer.WriteLineAsync($"{(ns_is_empty ? "" : "\t")}/// </summary>");
         }
@@ -314,16 +314,21 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
         }
 
+        /// <summary>
+        /// Запись реализации Rest/refit сервиса
+        /// </summary>
+        /// <param name="writer">Поток записи ZIP архива</param>
+        /// <param name="type_name">Имя типа данных</param>
+        /// <param name="is_body_document">Если тело документа - true. Если табличная часть - false</param>
         static async Task WriteRestServiceImplementation(StreamWriter writer, string type_name, bool is_body_document)
         {
-            string type_name_gen = $"{type_name}";
-            await writer.WriteLineAsync($"\t\tprivate readonly I{type_name_gen}RefitService _service;");
-            await writer.WriteLineAsync($"\t\tprivate readonly ILogger<{type_name_gen}RestService> _logger;");
+            await writer.WriteLineAsync($"\t\tprivate readonly I{type_name}RefitService _service;");
+            await writer.WriteLineAsync($"\t\tprivate readonly ILogger<{type_name}RestService> _logger;");
             await writer.WriteLineAsync();
             await writer.WriteLineAsync("\t\t/// <summary>");
             await writer.WriteLineAsync("\t\t/// Конструктор");
             await writer.WriteLineAsync("\t\t/// </summary>");
-            await writer.WriteLineAsync($"\t\tpublic {type_name_gen}RestService(I{type_name}RefitService set_service, ILogger<{type_name_gen}RestService> set_logger)");
+            await writer.WriteLineAsync($"\t\tpublic {type_name}RestService(I{type_name}RefitService set_service, ILogger<{type_name}RestService> set_logger)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\t_service = set_service;");
             await writer.WriteLineAsync("\t\t\t_logger = set_logger;");
@@ -331,20 +336,19 @@ namespace SharedLib.Services
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<IdResponseModel> AddAsync({type_name_gen} object_rest)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<IdResponseModel> AddAsync({type_name} object_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\tIdResponseModel result = new();");
             await WriteRestServiceBody(writer, "AddAsync", "object_rest", "IdResponseModel");
             await writer.WriteLineAsync();
 
-            type_name_gen = $"{type_name}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
-            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name_gen}> objects_range_rest)");
+            await writer.WriteLineAsync($"\t\tpublic async Task<ResponseBaseModel> AddRangeAsync(IEnumerable<{type_name}> objects_range_rest)");
             await writer.WriteLineAsync("\t\t{");
             await writer.WriteLineAsync("\t\t\tResponseBaseModel result = new();");
             await WriteRestServiceBody(writer, "AddRangeAsync", "objects_range_rest", "ResponseBaseModel");
 
-            type_name_gen = $"{type_name}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
+            string type_name_gen = $"{type_name}{GlobalStaticConstants.SINGLE_REPONSE_MODEL_PREFIX}";
             await writer.WriteLineAsync("\t\t/// <inheritdoc/>");
             await writer.WriteLineAsync($"\t\tpublic async Task<{type_name_gen}> FirstAsync(int id)");
             await writer.WriteLineAsync("\t\t{");
@@ -1241,7 +1245,7 @@ namespace SharedLib.Services
         }
 
         /// <inheritdoc/>
-        public async Task DbTableAccessGen(IEnumerable<DocumentFitModel> docs, ZipArchive archive, string dir, NameSpacedModel project_info)
+        public async Task DbTableAccessGen(IEnumerable<DocumentFitModel> docs, ZipArchive archive, string dir, NameSpacedModel project_info, string controllers_directory_path, string refit_client_services_dir_name)
         {
             string crud_type_name, service_type_name, response_type_name, controller_name, service_instance, rest_service_name;
             ZipArchiveEntry enumEntry;
@@ -1365,7 +1369,7 @@ namespace SharedLib.Services
 
                 service_instance = $"_{service_type_name}".ToLower();
                 controller_name = $"{doc_obj.SystemCodeName}Controller";
-                enumEntry = archive.CreateEntry(Path.Combine("gen_controllers", $"{controller_name}.cs"));
+                enumEntry = archive.CreateEntry(Path.Combine(controllers_directory_path, $"{controller_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, doc_obj.Name, new string[] { "Microsoft.AspNetCore.Mvc", "SharedLib.Models" });
                 await writer.WriteLineAsync("\t[Route(\"api/[controller]\")]");
@@ -1386,14 +1390,14 @@ namespace SharedLib.Services
                 #region refit/rest (тело документа)
 
                 rest_service_name = $"I{doc_obj.SystemCodeName}RestService";
-                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), $"{rest_service_name}.cs"));
+                enumEntry = archive.CreateEntry(Path.Combine(refit_client_services_dir_name, doc_obj.SystemCodeName.ToLower(), $"{rest_service_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, $"REST служба работы с API -> {project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
                 await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, doc_obj.Name, true, false, false);
 
-                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), $"{rest_service_name[1..]}.cs"));
+                enumEntry = archive.CreateEntry(Path.Combine(refit_client_services_dir_name, doc_obj.SystemCodeName.ToLower(), $"{rest_service_name[1..]}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, null, new string[] { "SharedLib.Models", "Refit", "Microsoft.Extensions.Logging" });
                 await writer.WriteLineAsync($"\tpublic class {rest_service_name[1..]} : {rest_service_name}");
@@ -1401,14 +1405,14 @@ namespace SharedLib.Services
                 await WriteRestServiceImplementation(writer, doc_obj.SystemCodeName, true);
 
                 rest_service_name = $"I{doc_obj.SystemCodeName}RefitProvider";
-                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
+                enumEntry = archive.CreateEntry(Path.Combine(refit_client_services_dir_name, doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Refit коннектор к API/{project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                 await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                 await writer.WriteLineAsync("\t{");
                 await WriteRestServiceInterface(writer, doc_obj.SystemCodeName, doc_obj.Name, true, true, false);
 
-                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name[1..]}.cs"));
+                enumEntry = archive.CreateEntry(Path.Combine(refit_client_services_dir_name, doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name[1..]}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, null, new string[] { "SharedLib.Models", "Refit", "Microsoft.Extensions.Logging" });
                 await writer.WriteLineAsync($"\tpublic class {rest_service_name[1..]} : {rest_service_name}");
@@ -1416,7 +1420,7 @@ namespace SharedLib.Services
                 await WriteRefitProviderImplementation(writer, doc_obj.SystemCodeName, true);
 
                 rest_service_name = $"I{doc_obj.SystemCodeName}RefitService";
-                enumEntry = archive.CreateEntry(Path.Combine("refit", doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
+                enumEntry = archive.CreateEntry(Path.Combine(refit_client_services_dir_name, doc_obj.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
                 writer = new(enumEntry.Open(), Encoding.UTF8);
                 await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Refit коннектор к API/{project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                 await writer.WriteLineAsync("\t[Headers(\"Content-Type: application/json\")]");
@@ -1542,7 +1546,7 @@ namespace SharedLib.Services
 
                     service_instance = $"_{service_type_name}".ToLower();
                     controller_name = $"{grid.SystemCodeName}Controller";
-                    enumEntry = archive.CreateEntry(Path.Combine("gen_controllers", $"{controller_name}.cs"));
+                    enumEntry = archive.CreateEntry(Path.Combine(controllers_directory_path, $"{controller_name}.cs"));
                     writer = new(enumEntry.Open(), Encoding.UTF8);
                     await WriteHead(writer, project_info.Name, project_info.NameSpace, $"{grid.Name} (табличная часть)", new string[] { "Microsoft.AspNetCore.Mvc", "SharedLib.Models" });
                     await writer.WriteLineAsync("\t[Route(\"api/[controller]\")]");
@@ -1563,14 +1567,14 @@ namespace SharedLib.Services
                     #region refit табличная часть
 
                     rest_service_name = $"I{grid.SystemCodeName}RestService";
-                    enumEntry = archive.CreateEntry(Path.Combine("refit", grid.SystemCodeName.ToLower(), $"{rest_service_name}.cs"));
+                    enumEntry = archive.CreateEntry(Path.Combine(refit_client_services_dir_name, grid.SystemCodeName.ToLower(), $"{rest_service_name}.cs"));
                     writer = new(enumEntry.Open(), Encoding.UTF8);
                     await WriteHead(writer, project_info.Name, project_info.NameSpace, $"REST служба работы с API -> {project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                     await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                     await writer.WriteLineAsync("\t{");
                     await WriteRestServiceInterface(writer, grid.SystemCodeName, doc_obj.Name, false, false, false);
 
-                    enumEntry = archive.CreateEntry(Path.Combine("refit", grid.SystemCodeName.ToLower(), $"{rest_service_name[1..]}.cs"));
+                    enumEntry = archive.CreateEntry(Path.Combine(refit_client_services_dir_name, grid.SystemCodeName.ToLower(), $"{rest_service_name[1..]}.cs"));
                     writer = new(enumEntry.Open(), Encoding.UTF8);
                     await WriteHead(writer, project_info.Name, project_info.NameSpace, null, new string[] { "SharedLib.Models", "Refit", "Microsoft.Extensions.Logging" });
                     await writer.WriteLineAsync($"\tpublic class {rest_service_name[1..]} : {rest_service_name}");
@@ -1578,14 +1582,14 @@ namespace SharedLib.Services
                     await WriteRestServiceImplementation(writer, grid.SystemCodeName, false);
 
                     rest_service_name = $"I{grid.SystemCodeName}RefitProvider";
-                    enumEntry = archive.CreateEntry(Path.Combine("refit", grid.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
+                    enumEntry = archive.CreateEntry(Path.Combine(refit_client_services_dir_name, grid.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
                     writer = new(enumEntry.Open(), Encoding.UTF8);
                     await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Refit коннектор к API/{project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                     await writer.WriteLineAsync($"\tpublic interface {rest_service_name}");
                     await writer.WriteLineAsync("\t{");
                     await WriteRestServiceInterface(writer, grid.SystemCodeName, doc_obj.Name, false, true, false);
 
-                    enumEntry = archive.CreateEntry(Path.Combine("refit", grid.SystemCodeName.ToLower(), "core", $"{rest_service_name[1..]}.cs"));
+                    enumEntry = archive.CreateEntry(Path.Combine(refit_client_services_dir_name, grid.SystemCodeName.ToLower(), "core", $"{rest_service_name[1..]}.cs"));
                     writer = new(enumEntry.Open(), Encoding.UTF8);
                     await WriteHead(writer, project_info.Name, project_info.NameSpace, null, new string[] { "SharedLib.Models", "Refit", "Microsoft.Extensions.Logging" });
                     await writer.WriteLineAsync($"\tpublic class {rest_service_name[1..]} : {rest_service_name}");
@@ -1593,7 +1597,7 @@ namespace SharedLib.Services
                     await WriteRefitProviderImplementation(writer, grid.SystemCodeName, false);
 
                     rest_service_name = $"I{grid.SystemCodeName}RefitService";
-                    enumEntry = archive.CreateEntry(Path.Combine("refit", grid.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
+                    enumEntry = archive.CreateEntry(Path.Combine(refit_client_services_dir_name, grid.SystemCodeName.ToLower(), "core", $"{rest_service_name}.cs"));
                     writer = new(enumEntry.Open(), Encoding.UTF8);
                     await WriteHead(writer, project_info.Name, project_info.NameSpace, $"Refit коннектор к API/{project_info.Name}", new string[] { "Refit", "SharedLib.Models" });
                     await writer.WriteLineAsync("\t[Headers(\"Content-Type: application/json\")]");
@@ -1818,7 +1822,25 @@ namespace SharedLib.Services
             List<string> stat = new()
             {
                 $"Перечислений: {dump.Enums.Count()} (элементов всего: {dump.Enums.Sum(x => x.EnumItems.Count())})",
-                $"Документов: {dump.Documents.Count()} (полей всего: {dump.Documents.Sum(x => x.PropertiesBody.Count()) + dump.Documents.Sum(x => x.Grids.SelectMany(y => y.Properties).Count())})"
+                $"Документов: {dump.Documents.Count()} (полей всего: {dump.Documents.Sum(x => x.PropertiesBody.Count()) + dump.Documents.Sum(x => x.Grids.SelectMany(y => y.Properties).Count())})",
+                $"- ~ - ~ - ~ - ~ - ~ - ~ - ~ - ~ - ~ - ~ - ~ - ~ - ~ -",
+                $"{conf.EnumDirectoryPath} - папка размещения файлов перечислений",
+                $"",
+                $"{conf.AccessDataDirectoryPath} - папка размещения файлов сервисов backend служб доступа к данным (CRUD) и классов/моделей ответов rest контроллеров",
+                $"\t> crud_interfaces: интерфейсы низкоуровневого доступа к контексту таблиц базы данных",
+                $"\t\t> crud_implementations: реализация интерфейсов crud_interfaces",
+                $"······················································",
+                $"\t> service_interfaces: интерфейсы функционального/промежуточного (между контроллером и низкоуровневым DB доуступом) доступа к данным",
+                $"\t\t> service_implementations: реализация интерфейсов service_interfaces",
+                $"······················································",
+                $"\tresponse_models: модели ответов контроллеров, которые в свою очередь получают их от функциональных/промежуточных служб доступа",
+                $"××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××",
+                $"",
+                $"{conf.RefitClientServicesDirName} - папака размещения файлов клиентских/Refit служб для взаимодействия с api/rest контроллерами",
+                $"",
+                $"LayerContextPartGen.cs - разделяемый [public partial class LayerContext : DbContext] класс.",
+                $"refit_di.cs - [public static class RefitExtensionDesignerDI].[public static void BuildRefitServicesDI(this IServiceCollection services, ClientConfigModel conf, TimeSpan handler_lifetime)]",
+                $"services_di.cs - [public static class ServicesExtensionDesignerDI].[public static void BuildDesignerServicesDI(this IServiceCollection services)]"
             };
             services_di = new Dictionary<string, string>();
             using MemoryStream zipToOpen = new();
@@ -1828,7 +1850,7 @@ namespace SharedLib.Services
                 await EnumsGen(dump.Enums, archive, conf.EnumDirectoryPath, conf.ProjectInfo);
                 await DocumentsShemaGen(dump.Documents, archive, conf.DocumentsMastersDbDirectoryPath, conf.ProjectInfo);
                 await DbContextGen(dump.Documents, archive, conf.ProjectInfo);
-                await DbTableAccessGen(dump.Documents, archive, conf.AccessDbDirectoryPath, conf.ProjectInfo);
+                await DbTableAccessGen(dump.Documents, archive, conf.AccessDataDirectoryPath, conf.ProjectInfo, conf.ControllersDirectoryPath, conf.RefitClientServicesDirName);
                 await GenServicesDI(archive, conf.ProjectInfo);
                 await GenRefitDI(archive, conf.ProjectInfo, dump.Documents.Where(x => !x.IsDeleted).Select(x => x.SystemCodeName));
                 string json_raw = JsonConvert.SerializeObject(dump, Formatting.Indented);

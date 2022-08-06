@@ -58,6 +58,8 @@ namespace SharedLib.Services
         /// <param name="archive">Объект архива для записи данных</param>
         /// <param name="dir">Путь (папка) для размещения файлов</param>
         /// <param name="project_info">Информация о проекте</param>
-        public Task DbTableAccessGen(IEnumerable<DocumentFitModel> docs, ZipArchive archive, string dir, NameSpacedModel project_info);
+        /// <param name="controllers_directory_path">Папка размещения файлов api/rest контроллеров</param>
+        /// <param name="refit_client_services_dir_name">Имя папки размещения файлов клиентскийх refit сервисов</param>
+        public Task DbTableAccessGen(IEnumerable<DocumentFitModel> docs, ZipArchive archive, string dir, NameSpacedModel project_info, string controllers_directory_path, string refit_client_services_dir_name);
     }
 }
