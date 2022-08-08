@@ -20,6 +20,7 @@ apt-get update && \
 apt-get update && \
   apt-get install -y aspnetcore-runtime-6.0
 
+systemctl enable api.iq-s.pro
 systemctl start api.iq-s.pro
 journalctl -u api.iq-s.pro
 
