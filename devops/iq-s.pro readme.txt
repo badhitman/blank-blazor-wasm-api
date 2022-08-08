@@ -21,6 +21,7 @@ apt-get update && \
   apt-get install -y aspnetcore-runtime-6.0
 
 systemctl start api.iq-s.pro
+systemctl enable api.iq-s.pro
 journalctl -u api.iq-s.pro
 
 ln -s /etc/nginx/sites-available/api.iq-s.pro.conf /etc/nginx/sites-enabled/
