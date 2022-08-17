@@ -61,7 +61,7 @@
 
 @code {
     ProjectsForUserPaginationResponseModel UsersProjects = new ProjectsForUserPaginationResponseModel() { RowsData = Array.Empty<LinkToProjectForUserModel>() };
-    UserProjectsTableProvider userProjectsDataTable => new UserProjectsTableProvider(UsersProjects, GlobalStaticConstants.PROJECTS_CONTROLLER_NAME,CurrentEditProject);
+    UserProjectsTableProvider userProjectsDataTable => new UserProjectsTableProvider(UsersProjects, GlobalStaticConstants.PROJECTS_CONTROLLER_NAME, CurrentEditProject);
     int CurrentEditProject = -1;
 
     private ModalWindowComponent Modal { get; set; }
@@ -74,7 +74,7 @@
         base.OnInitialized();
         await Rest();
     }
-    
+
     protected override async Task Rest()
     {
         IsBusyProgress = true;
