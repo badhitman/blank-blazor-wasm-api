@@ -97,7 +97,7 @@ else
 }
 @if (CurentOffCanvasEnum is not null)
 {
-    <div data-bs-scroll="false" class="offcanvas offcanvas-start@(OffCanvasEnumIsShow?" show":"")" aria-hidden="@(OffCanvasEnumIsShow ? false : true)" aria-modal="@(OffCanvasEnumIsShow ? true : false)" style="visibility: @(OffCanvasEnumIsShow ? "visible" : "hidden");" tabindex="-1" aria-labelledby="offcanvasExampleEnumLabel">
+    <div data-bs-scroll="false" class="offcanvas offcanvas-start@(OffCanvasEnumIsShow ? " show" : "")" aria-hidden="@(OffCanvasEnumIsShow ? false : true)" aria-modal="@(OffCanvasEnumIsShow ? true : false)" style="visibility: @(OffCanvasEnumIsShow ? "visible" : "hidden");" tabindex="-1" aria-labelledby="offcanvasExampleEnumLabel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasExampleEnumLabel">Перечисление: @(CurentOffCanvasEnum.Name)</h5>
             <button @onclick="ShowEnumCanvas" type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
