@@ -123,7 +123,7 @@ else
 }
 @if (CurrentOffCanvasDocument is not null)
 {
-    <div data-bs-scroll="false" class="offcanvas offcanvas-end@(OffCanvasDocumentIsShow?" show":"")" aria-hidden="@(OffCanvasDocumentIsShow ? false : true)" aria-modal="@(OffCanvasDocumentIsShow ? true : false)" style="visibility: @(OffCanvasDocumentIsShow ? "visible" : "hidden");" tabindex="-1" aria-labelledby="offcanvasExampDocumentleLabel">
+    <div data-bs-scroll="false" class="offcanvas offcanvas-end@(OffCanvasDocumentIsShow ? " show" : "")" aria-hidden="@(OffCanvasDocumentIsShow ? false : true)" aria-modal="@(OffCanvasDocumentIsShow ? true : false)" style="visibility: @(OffCanvasDocumentIsShow ? "visible" : "hidden");" tabindex="-1" aria-labelledby="offcanvasExampDocumentleLabel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasExampDocumentleLabel">Документ: @(CurrentOffCanvasDocument.Name)</h5>
             <button @onclick="ShowDocumentOffCanvas" type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
