@@ -14,9 +14,12 @@ namespace SharedLib
     /// </summary>
     public static class GlobalUtils
     {
+        /// <summary>
+        /// Перемешать спсиок элементов
+        /// </summary>
         public static void Shuffle<T>(this IList<T> list)
         {
-            Random rng = new Random();
+            Random rng = new();
             int n = list.Count;
             while (n > 1)
             {
@@ -88,28 +91,7 @@ namespace SharedLib
         {
             return actual.Except(current).ToArray();
         }
-
-        /// <summary>
-        /// Получить изменившиеся значения словаря
-        /// </summary>
-        /// <typeparam name="I">Тип данных для ключа словаря</typeparam>
-        /// <typeparam name="T">Тип данных для данных значения словаря</typeparam>
-        /// <param name="actual">Ведущий/исходный словарь данных (его набор ключей истинный)</param>
-        /// <param name="current">Ведомый словарь данных для сравнения (проверка выполняется только если в данном словаре есть искомый ключ из ведущего слоавря)</param>
-        /// <returns>Словарь с различными данными (но с одним ключём)</returns>
-        public static Dictionary<I, T> ChangedDictItems<I, T>(IDictionary actual, IDictionary current)
-        {
-            Dictionary<I, T> d = new Dictionary<I, T>();
-            foreach (DictionaryEntry c in current)
-            {
-                dynamic a = actual[c.Key];
-                if (!(a == null) && !a.Equals(c.Value))
-                {
-                    d.Add((I)c.Key, (T)a);
-                }
-            }
-            return d;
-        }
+                
         #endregion
 
         #region

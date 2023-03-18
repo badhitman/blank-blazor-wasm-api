@@ -15,6 +15,7 @@ namespace SharedLib.Models
         /// Идентификатор
         /// </summary>
         [Required]
+        [Key]
         public int Id { get; set; }
     }
 }

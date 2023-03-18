@@ -28,9 +28,6 @@ public class MinimumLevelAuthorizationHandler : AuthorizationHandler<MinimumLeve
     /// <summary>
     /// Принимает решение о разрешении авторизации на основе конкретного требования.
     /// </summary>
-    /// <param name="context"></param>
-    /// <param name="requirement"></param>
-    /// <returns></returns>
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, MinimumLevelRequirement requirement)
     {
         if (context.User.HasClaim(c => c.Type == ClaimTypes.Role))

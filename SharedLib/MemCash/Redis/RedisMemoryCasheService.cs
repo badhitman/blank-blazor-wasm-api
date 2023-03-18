@@ -41,14 +41,14 @@ namespace SharedLib.MemCash
         }
 
         /// <inheritdoc/>
-        public List<RedisKey>? FindKeys(string pattern)
+        public IEnumerable<RedisKey>? FindKeys(string pattern)
         {
             if (string.IsNullOrWhiteSpace(pattern))
                 return null;
 
             try
             {
-                return _redis.FindKeys(pattern).ToList();
+                return _redis.FindKeys(pattern);
             }
             catch (Exception ex)
             {
@@ -59,7 +59,7 @@ namespace SharedLib.MemCash
         }
 
         /// <inheritdoc/>
-        public List<RedisKey>? FindKeys(MemCashePrefixModel pref) => FindKeys(pref.ToString());
+        public IEnumerable<RedisKey>? FindKeys(MemCashePrefixModel pref) => FindKeys(pref.ToString());
 
         /// <inheritdoc/>
         public async Task<bool> KeyExistsAsync(MemCasheComplexKeyModel mem_key)

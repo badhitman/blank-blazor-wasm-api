@@ -84,7 +84,7 @@ namespace DbTablesLib
         /// <inheritdoc/>
         public async Task<UserModelDB?> FirstOrDefaultByEmailAsync(string email)
         {
-            return await _db_context.Users.FirstOrDefaultAsync(x => x.Metadata.Email == email);
+            return await _db_context.Users.Include(x => x.Metadata).Include(x => x.Profile).FirstOrDefaultAsync(x => x.Metadata.Email == email);
         }
 
         /// <inheritdoc/>

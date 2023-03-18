@@ -13,7 +13,10 @@ namespace DbLayerLib
     /// </summary>
     public  partial class LayerContext : DbContext
     {
-        protected DatabaseConfigModel _config { get; set; }
+        /// <summary>
+        /// Конфигурация подключения контекста базы данных
+        /// </summary>
+        protected DatabaseConfigModel _config { get; set; } = default!;
         /// <summary>
         /// Конструктор
         /// </summary>
@@ -24,6 +27,7 @@ namespace DbLayerLib
             Database.EnsureCreated();
         }
 
+        /// <inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder

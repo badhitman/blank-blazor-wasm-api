@@ -31,7 +31,7 @@ builder.Services.AddScoped(sp => marker);
 
 #region Config
 
-HttpClient http = new HttpClient()
+HttpClient http = new()
 {
     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
 };

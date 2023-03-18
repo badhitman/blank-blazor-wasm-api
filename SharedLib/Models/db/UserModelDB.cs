@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SharedLib.Models
@@ -25,6 +26,7 @@ namespace SharedLib.Models
         /// <summary>
         /// Хешь пароля пользователя
         /// </summary>
+        [JsonIgnore]
         public UserPasswordModelDb Password { get; set; }
 
         /// <summary>

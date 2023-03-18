@@ -2,9 +2,9 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using SharedLib.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
+using SharedLib.Models;
 
 namespace SharedLib;
 
@@ -42,19 +42,18 @@ public class MinimumLevelPolicyProvider : IAuthorizationPolicyProvider
     /// Получить резервную политику
     /// </summary>
     /// <returns>Представляет набор требований авторизации и схемы или схем, по которым они оцениваются, и все они должны быть успешными для успешной авторизации.</returns>
-    public Task<AuthorizationPolicy> GetFallbackPolicyAsync() => FallbackPolicyProvider.GetFallbackPolicyAsync();
+    public Task<AuthorizationPolicy?> GetFallbackPolicyAsync() => FallbackPolicyProvider.GetFallbackPolicyAsync();
 
     /// <summary>
     /// Получить политику
     /// </summary>
     /// <param name="policyName">Имя политики</param>
     /// <returns>Представляет набор требований авторизации и схемы или схем, по которым они оцениваются, и все они должны быть успешными для успешной авторизации.</returns>
-    public Task<AuthorizationPolicy> GetPolicyAsync(string policyName)
+    public Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
     {
-        if (policyName.StartsWith(POLICY_PREFIX, StringComparison.OrdinalIgnoreCase) &&
-            AccessLevelsUsersEnum.TryParse(policyName.Substring(POLICY_PREFIX.Length), out AccessLevelsUsersEnum level))
+        if (policyName.StartsWith(POLICY_PREFIX, StringComparison.OrdinalIgnoreCase) && Enum.TryParse(policyName.Substring(POLICY_PREFIX.Length), out AccessLevelsUsersEnum level))
         {
-            AuthorizationPolicyBuilder? policy = new AuthorizationPolicyBuilder();
+            AuthorizationPolicyBuilder policy = new();
             policy.AddRequirements(new MinimumLevelRequirement(level));
             return Task.FromResult(policy.Build());
         }

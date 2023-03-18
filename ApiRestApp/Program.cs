@@ -38,7 +38,7 @@ builder.Configuration.AddJsonFile("serverconfig.json");
 #endif
 
 
-ServerConfigModel? conf = new ServerConfigModel();
+ServerConfigModel? conf = new();
 builder.Configuration.Bind(conf);
 builder.Services.Configure<ServerConfigModel>(builder.Configuration);
 
