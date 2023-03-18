@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using SharedLib.Models;
 using StackExchange.Redis;
+using SharedLib.Models;
 
 namespace SharedLib.MemCash
 {
@@ -17,11 +17,11 @@ namespace SharedLib.MemCash
         /// <summary>
         /// Адрес сервера Redis
         /// </summary>
-        public string RedisServerAddress => _config?.EndPoint ?? "localhost:6379";
-        ConnectionMultiplexer connectionMultiplexer = null;
-        private Lazy<ConnectionMultiplexer> lazyConnection => new Lazy<ConnectionMultiplexer>(() =>
+        public static string RedisServerAddress => _config?.EndPoint ?? "localhost:6379";
+        ConnectionMultiplexer? connectionMultiplexer = null;
+        private Lazy<ConnectionMultiplexer> LazyConnection => new(() =>
         {
-            ConfigurationOptions co = new ConfigurationOptions()
+            ConfigurationOptions co = new()
             {
                 SyncTimeout = _config?.SyncTimeout ?? 500000,
                 EndPoints = { { RedisServerAddress } },
@@ -52,7 +52,7 @@ namespace SharedLib.MemCash
         {
             get
             {
-                return lazyConnection.Value;
+                return LazyConnection.Value;
             }
         }
 
@@ -190,23 +190,46 @@ namespace SharedLib.MemCash
         }
 
         ///////////////////////////////////
+
+        /// <summary>
+        /// Прочитать из мемкеша данные в виде строки
+        /// </summary>
         public async Task<string?> GetStringValueAsync(string key) => await GetStringValueAsync(new RedisKey(key));
+        /// <summary>
+        /// Прочитать из мемкеша данные в виде строки
+        /// </summary>
         public string? GetStringValue(string key) => GetStringValue(new RedisKey(key));
-        //
+        /// <summary>
+        /// Прочитать из мемкеша данные в виде строки
+        /// </summary>
         public async Task<string?> GetStringValueAsync(MemCasheComplexKeyModel key) => await GetStringValueAsync(GetRedisKey(key.Pref, key.Id?.ToString() ?? string.Empty));
+        /// <summary>
+        /// Прочитать из мемкеша данные в виде строки
+        /// </summary>
         public string? GetStringValue(MemCasheComplexKeyModel key) => GetStringValue(GetRedisKey(key.Pref, key.Id?.ToString() ?? string.Empty));
-        //
+        /// <summary>
+        /// Прочитать из мемкеша данные в виде строки
+        /// </summary>
         public async Task<string?> GetStringValueAsync(MemCashePrefixModel pref, string id = "") => await GetStringValueAsync(new MemCasheComplexKeyModel(id, pref));
+        /// <summary>
+        /// Прочитать из мемкеша данные в виде строки
+        /// </summary>
         public string? GetStringValue(MemCashePrefixModel pref, string id = "") => GetStringValue(new MemCasheComplexKeyModel(id, pref));
         #endregion
 
         #region set/update
+        /// <summary>
+        /// Записать строковое значение в Redis. Если ключ уже содержит значение, оно перезаписывается независимо от его типа.
+        /// </summary>
         public async Task<bool> UpdateValueAsync(RedisKey key, string value, TimeSpan? expiry = null)
         {
             ConnectionMultiplexer rc = Connection;
             IDatabase db = rc.GetDatabase();
             return await db.StringSetAsync(key, value, expiry);
         }
+        /// <summary>
+        /// Записать строковое значение в Redis. Если ключ уже содержит значение, оно перезаписывается независимо от его типа.
+        /// </summary>
         public bool UpdateValue(RedisKey key, string value, TimeSpan? expiry = null)
         {
             ConnectionMultiplexer rc = Connection;
@@ -215,23 +238,47 @@ namespace SharedLib.MemCash
         }
 
         ///////////////////////////////////
+        /// <summary>
+        /// Записать строковое значение в Redis. Если ключ уже содержит значение, оно перезаписывается независимо от его типа.
+        /// </summary>
         public async Task<bool> UpdateValueAsync(string key, string value, TimeSpan? expiry = null) => await UpdateValueAsync(new RedisKey(key), value, expiry);
+        /// <summary>
+        /// Записать строковое значение в Redis. Если ключ уже содержит значение, оно перезаписывается независимо от его типа.
+        /// </summary>
         public bool UpdateValue(string key, string value, TimeSpan? expiry = null) => UpdateValue(new RedisKey(key), value, expiry);
         //
+        /// <summary>
+        /// Записать строковое значение в Redis. Если ключ уже содержит значение, оно перезаписывается независимо от его типа.
+        /// </summary>
         public async Task<bool> UpdateValueAsync(MemCasheComplexKeyModel key, string value, TimeSpan? expiry = null) => await UpdateValueAsync(GetRedisKey(key.Pref, key.Id?.ToString() ?? string.Empty), value, expiry);
+        /// <summary>
+        /// Записать строковое значение в Redis. Если ключ уже содержит значение, оно перезаписывается независимо от его типа.
+        /// </summary>
         public bool UpdateValue(MemCasheComplexKeyModel key, string value, TimeSpan? expiry = null) => UpdateValue(GetRedisKey(key.Pref, key.Id?.ToString() ?? string.Empty), value, expiry);
         //
+        /// <summary>
+        /// Записать строковое значение в Redis. Если ключ уже содержит значение, оно перезаписывается независимо от его типа.
+        /// </summary>
         public async Task<bool> UpdateValueAsync(MemCashePrefixModel pref, string id, string value, TimeSpan? expiry = null) => await UpdateValueAsync(GetRedisKey(pref, id), value, expiry);
+        /// <summary>
+        /// Записать строковое значение в Redis. Если ключ уже содержит значение, оно перезаписывается независимо от его типа.
+        /// </summary>
         public bool UpdateValue(MemCashePrefixModel pref, string id, string value, TimeSpan? expiry = null) => UpdateValue(GetRedisKey(pref, id), value, expiry);
         #endregion
 
         #region remove
+        /// <summary>
+        /// Удаляет указанный ключ.
+        /// </summary>
         public async Task<bool> RemoveKeyAsync(RedisKey key)
         {
             ConnectionMultiplexer rc = Connection;
             IDatabase db = rc.GetDatabase();
             return await db.KeyDeleteAsync(key);
         }
+        /// <summary>
+        /// Удаляет указанный ключ.
+        /// </summary>
         public bool RemoveKey(RedisKey key)
         {
             ConnectionMultiplexer rc = Connection;
@@ -240,13 +287,31 @@ namespace SharedLib.MemCash
         }
 
         ///////////////////////////////////
+        /// <summary>
+        /// Удаляет указанный ключ.
+        /// </summary>
         public async Task<bool> RemoveKeyAsync(string key) => await RemoveKeyAsync(new RedisKey(key));
+        /// <summary>
+        /// Удаляет указанный ключ.
+        /// </summary>
         public bool RemoveKey(string key) => RemoveKey(new RedisKey(key));
         //
+        /// <summary>
+        /// Удаляет указанный ключ.
+        /// </summary>
         public async Task<bool> RemoveKeyAsync(MemCasheComplexKeyModel key) => await RemoveKeyAsync(GetRedisKey(key.Pref, key.Id));
+        /// <summary>
+        /// Удаляет указанный ключ.
+        /// </summary>
         public bool RemoveKey(MemCasheComplexKeyModel key) => RemoveKey(GetRedisKey(key.Pref, key.Id));
         //
+        /// <summary>
+        /// Удаляет указанный ключ.
+        /// </summary>
         public async Task<bool> RemoveKeyAsync(MemCashePrefixModel pref, string id) => await RemoveKeyAsync(GetRedisKey(pref, id));
+        /// <summary>
+        /// Удаляет указанный ключ.
+        /// </summary>
         public bool RemoveKey(MemCashePrefixModel pref, string id) => RemoveKey(GetRedisKey(pref, id));
         #endregion
     }

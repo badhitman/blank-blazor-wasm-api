@@ -17,14 +17,14 @@ namespace SharedLib.MemCash
         /// </summary>
         /// <param name="pattern">шаблон/строка для поиска ключей</param>
         /// <returns>Найденные полные имена ключей доступа к данным мемкеша</returns>
-        public List<RedisKey> FindKeys(string pattern);
+        public IEnumerable<RedisKey>? FindKeys(string pattern);
 
         /// <summary>
         /// Найти ключи доступа к данным по шаблону/объекту
         /// </summary>
         /// <param name="pref">шаблон/обхект для поиска ключей</param>
         /// <returns>Найденные полные имена ключей доступа к данным мемкеша</returns>
-        public List<RedisKey> FindKeys(MemCashePrefixModel pref);
+        public IEnumerable<RedisKey>? FindKeys(MemCashePrefixModel pref);
 
         /// <summary>
         /// Проверка существования ключа

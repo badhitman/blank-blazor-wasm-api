@@ -45,8 +45,9 @@ namespace SharedLib
         /// </summary>
         /// <param name="user">Пользователь, для которого производится поиск</param>
         /// <param name="pagination">Настройки пагинатора</param>
+        /// <param name="include_links">Включая ссылки</param>
         /// <returns>Набор проектов для пользователя</returns>
-        public Task<ProjectsForUserPaginationResponseModel> GetProjectsForUserAsync((int user_id, AccessLevelsUsersEnum user_level) user, PaginationRequestModel pagination, bool inclede_links = true);
+        public Task<ProjectsForUserPaginationResponseModel> GetProjectsForUserAsync((int user_id, AccessLevelsUsersEnum user_level) user, PaginationRequestModel pagination, bool include_links = true);
 
         /// <summary>
         /// Получить проект

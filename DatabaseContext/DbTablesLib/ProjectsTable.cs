@@ -66,7 +66,7 @@ namespace DbTablesLib
         }
 
         /// <inheritdoc/>
-        public async Task<ProjectsForUserPaginationResponseModel> GetProjectsForUserAsync((int user_id, AccessLevelsUsersEnum user_level) user, PaginationRequestModel pagination, bool inclede_links = true)
+        public async Task<ProjectsForUserPaginationResponseModel> GetProjectsForUserAsync((int user_id, AccessLevelsUsersEnum user_level) user, PaginationRequestModel pagination, bool include_links = true)
         {
             ProjectsForUserPaginationResponseModel res;
             if (pagination is null)
@@ -88,7 +88,7 @@ namespace DbTablesLib
             IQueryable<UserToProjectLinkModelDb> query = _db_context.DesignProjectsToUsersLinks.Where(x => x.UserId == user.user_id)
                 .Where(x => user.user_level >= AccessLevelsUsersEnum.Admin || (!x.IsDeleted && !x.Project.IsDeleted));
 
-            if (inclede_links)
+            if (include_links)
             {
                 query = query.Include(x => x.Project);
             }

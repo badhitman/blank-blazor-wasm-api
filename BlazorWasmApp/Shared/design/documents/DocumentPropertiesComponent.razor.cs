@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using SharedLib;
 using SharedLib.Models;
 using System.Text.RegularExpressions;
 
@@ -22,7 +21,7 @@ namespace BlazorWasmApp.Shared.design.documents
 
         PropertyCreateRealTypeModel new_property_body_item_element { get; set; } = new PropertyCreateRealTypeModel();
 
-        private ModalWindowComponent Modal { get; set; }
+        private ModalWindowComponent? Modal { get; set; }
         private string ModalBodyText { get; set; } = string.Empty;
 
         IEnumerable<RealTypeModel> Grids = Enumerable.Empty<RealTypeModel>();

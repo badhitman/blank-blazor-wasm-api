@@ -45,7 +45,7 @@ namespace ServerLib
             string user_session_key = null;
             string[] user_session_key_segments;
 
-            List<RedisKey>? sessions = _mem_cashe.FindKeys(new MemCashePrefixModel(GlobalStaticConstants.SESSION_MEMCASHE_NAMESPASE, $"{login}_*"));
+            List<RedisKey>? sessions = _mem_cashe.FindKeys(new MemCashePrefixModel(GlobalStaticConstants.SESSION_MEMCASHE_NAMESPASE, $"{login}_*")).ToList();
             foreach (RedisKey key_session in sessions)
             {
                 user_session_key = key_session.ToString();

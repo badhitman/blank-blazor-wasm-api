@@ -1,15 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Refit;
-using SharedLib.Models;
 using SharedLib.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharedLib.Models;
+using Refit;
 
 namespace SharedLib
 {
+    /// <summary>
+    /// Инициализация Refit служб
+    /// </summary>
     public static class InitRefit
     {
         /// <summary>

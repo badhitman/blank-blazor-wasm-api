@@ -13,7 +13,14 @@ namespace DbLayerLib
     /// </summary>
     public  partial class LayerContext : DbContext
     {
-        protected DatabaseConfigModel _config { get; set; }
+        /// <summary>
+        /// Конфигурация подключения контекста базы данных
+        /// </summary>
+        protected DatabaseConfigModel _config { get; set; } = default!;
+        /// <summary>
+        /// Database.EnsureDeleted();
+        /// только в случае наличия команды условной компиляции: DEMO
+        /// </summary>
         protected static bool IsEnsureDeleted { get; set; } = false;
         /// <summary>
         /// Конструктор
@@ -32,6 +39,7 @@ namespace DbLayerLib
             Database.EnsureCreated();
         }
 
+        /// <inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
