@@ -12,6 +12,6 @@ namespace SharedLib.Models
         /// <summary>
         /// Владелец текущего объекта
         /// </summary>
-        public EntryModel CurrentOwnerObject { get; set; }
+        public EntryModel? CurrentOwnerObject { get; set; }
     }
 }

@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace SharedLib.Models
 {
@@ -29,7 +29,7 @@ namespace SharedLib.Models
         /// <summary>
         /// Пользователь (владелец пароля)
         /// </summary>
-        public UserModelDB User { get; set; }
+        public UserModelDB? User { get; set; }
 
         /// <summary>
         /// Уровень доступа/прав пользователя
@@ -45,6 +45,6 @@ namespace SharedLib.Models
         /// Email пользователя
         /// </summary>
         [Required]
-        public string Email { get; set; }
+        public string? Email { get; set; }
     }
 }

@@ -17,12 +17,16 @@ namespace SharedLib.Models
         /// <summary>
         /// IP адрес пользователя в момент ей старта
         /// </summary>
-        public string IPAddressClient { get; set; }
+        public string? IPAddressClient { get; set; }
 
         /// <summary>
         /// Токен сессии пользователя
         /// </summary>
-        public string GuidTokenSession { get; set; }
+        public string? GuidTokenSession { get; set; }
+
+        /// <summary>
+        /// Уровень доступа
+        /// </summary>
         public AccessLevelsUsersEnum Level { get; set; }
     }
 }

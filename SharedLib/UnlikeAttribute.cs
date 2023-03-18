@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace SharedLib
 {
@@ -34,12 +35,12 @@ namespace SharedLib
         /// <param name="value">Значение для проверки</param>
         /// <param name="validationContext">Контекст проверки значения</param>
         /// <returns>Представляет контейнер для результатов запроса проверки.</returns>
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             if (value != null)
             {
-                var otherProperty = validationContext.ObjectInstance.GetType().GetProperty(DependentProperty);
-                var otherPropertyValue = otherProperty.GetValue(validationContext.ObjectInstance, null);
+                PropertyInfo? otherProperty = validationContext.ObjectInstance.GetType().GetProperty(DependentProperty);
+                object? otherPropertyValue = otherProperty?.GetValue(validationContext.ObjectInstance, null);
                 if (value.Equals(otherPropertyValue))
                 {
                     return new ValidationResult(ErrorMessage);

@@ -67,14 +67,14 @@ namespace SharedLib
         /// </summary>
         /// <param name="filter">Запрос/фильтр пользователей для поиска</param>
         /// <returns>Данные пользователей, найденные по запросу filter</returns>
-        public Task<UserLiteModel[]> FindUsersDataAsync(FindUsersProfilesRequestModel filter);
+        public Task<UserLiteModel[]?> FindUsersDataAsync(FindUsersProfilesRequestModel filter);
 
         /// <summary>
         /// Получить/прочитать данные пользователя по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор пользователя</param>
         /// <returns>Данные пользователя</returns>
-        public Task<UserLiteModel> GetUserDataAsync(int id);
+        public Task<UserLiteModel?> GetUserDataAsync(int id);
 
         /// <summary>
         /// Проверить (асинхронно) пароль пользователя
@@ -96,6 +96,6 @@ namespace SharedLib
         /// </summary>
         /// <param name="login">Логин пользователя, который нужно прочитать из БД</param>
         /// <returns>Даные пользователя</returns>
-        public Task<UserLiteModel> GetUserDataAsync(string login);
+        public Task<UserLiteModel?> GetUserDataAsync(string login);
     }
 }

@@ -37,15 +37,19 @@ namespace ServerLib
         /// <inheritdoc/>
         public async Task<List<UserSessionModel>> GetUserSessionsAsync(string login)
         {
-            List<UserSessionModel> res = new List<UserSessionModel>();
+            List<UserSessionModel> res = new();
 
-            string user_session_data = null;
+            string? user_session_data = null;
             string[] data_segments;
 
-            string user_session_key = null;
+            string? user_session_key = null;
             string[] user_session_key_segments;
 
-            List<RedisKey>? sessions = _mem_cashe.FindKeys(new MemCashePrefixModel(GlobalStaticConstants.SESSION_MEMCASHE_NAMESPASE, $"{login}_*")).ToList();
+            List<RedisKey>? sessions = _mem_cashe.FindKeys(new MemCashePrefixModel(GlobalStaticConstants.SESSION_MEMCASHE_NAMESPASE, $"{login}_*"))?.ToList();
+
+            if (sessions is null)
+                return res;
+
             foreach (RedisKey key_session in sessions)
             {
                 user_session_key = key_session.ToString();
@@ -53,7 +57,11 @@ namespace ServerLib
                 if (user_session_key_segments.Length != 3)
                     continue;
 
-                user_session_data = await _mem_cashe.GetStringValueAsync(key_session);
+                user_session_data = await _mem_cashe.GetStringValueAsync(user_session_key);
+
+                if (user_session_data is null)
+                    continue;
+
                 data_segments = user_session_data.Split("|");
                 if (data_segments.Length != 2)
                     continue;
@@ -83,7 +91,7 @@ namespace ServerLib
             }
             GuidToken = token.ToString();
 
-            string token_marker = await _mem_cashe.GetStringValueAsync(new MemCasheComplexKeyModel(GuidToken, UsersAuthenticateService.PrefRedisSessions));
+            string? token_marker = await _mem_cashe.GetStringValueAsync(new MemCasheComplexKeyModel(GuidToken, UsersAuthenticateService.PrefRedisSessions));
 
             if (string.IsNullOrEmpty(token_marker))
             {
@@ -122,6 +130,9 @@ namespace ServerLib
         /// <inheritdoc/>
         public Guid ReadTokenFromRequest()
         {
+            if (_http_context.HttpContext is null)
+                return Guid.Empty;
+
             if (_http_context.HttpContext.Request.Headers.TryGetValue(_config.Value.CookiesConfig.SessionTokenName, out StringValues tok))
             {
                 string raw_token = tok.FirstOrDefault() ?? string.Empty;
@@ -146,8 +157,11 @@ namespace ServerLib
 
             sessions.ForEach(async x =>
             {
-                await _mem_cashe.RemoveKeyAsync(UsersAuthenticateService.PrefRedisSessions, x.GuidTokenSession);
-                await _mem_cashe.RemoveKeyAsync(new MemCashePrefixModel(GlobalStaticConstants.SESSION_MEMCASHE_NAMESPASE, $"{login}_{x.Level}"), x.GuidTokenSession);
+                if (!string.IsNullOrWhiteSpace(x.GuidTokenSession))
+                {
+                    await _mem_cashe.RemoveKeyAsync(UsersAuthenticateService.PrefRedisSessions, x.GuidTokenSession);
+                    await _mem_cashe.RemoveKeyAsync(new MemCashePrefixModel(GlobalStaticConstants.SESSION_MEMCASHE_NAMESPASE, $"{login}_{x.Level}"), x.GuidTokenSession);
+                }
             });
         }
     }

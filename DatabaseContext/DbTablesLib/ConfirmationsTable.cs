@@ -2,13 +2,13 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using DbcLib;
-using SharedLib.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SharedLib.Models;
 using Newtonsoft.Json;
 using SharedLib;
+using DbcLib;
 
 namespace DbTablesLib
 {
@@ -53,7 +53,7 @@ namespace DbTablesLib
                 query = query
                     .Include(x => x.User).ThenInclude(x => x.Profile)
                     .Include(x => x.User).ThenInclude(x => x.Metadata)
-                    .Include(x => x.User).ThenInclude(x=>x.Password);
+                    .Include(x => x.User).ThenInclude(x => x.Password);
 
             return await query.FirstOrDefaultAsync();
         }

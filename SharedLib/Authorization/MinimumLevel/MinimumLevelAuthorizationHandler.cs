@@ -2,10 +2,10 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using System.Security.Claims;
-using SharedLib.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
+using SharedLib.Models;
 
 namespace SharedLib;
 
@@ -32,7 +32,14 @@ public class MinimumLevelAuthorizationHandler : AuthorizationHandler<MinimumLeve
     {
         if (context.User.HasClaim(c => c.Type == ClaimTypes.Role))
         {
-            AccessLevelsUsersEnum userRole = (AccessLevelsUsersEnum)Enum.Parse(typeof(AccessLevelsUsersEnum), context.User.FindFirst(c => c.Type == ClaimTypes.Role).Value);
+            Claim? role = context.User.FindFirst(c => c.Type == ClaimTypes.Role);
+            if (role is null)
+            {
+                context.Fail();
+                return Task.CompletedTask;
+            }
+
+            AccessLevelsUsersEnum userRole = (AccessLevelsUsersEnum)Enum.Parse(typeof(AccessLevelsUsersEnum), role.Value);
             if (userRole >= requirement.Level)
             {
                 context.Succeed(requirement);

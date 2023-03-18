@@ -22,12 +22,12 @@ namespace SharedLib.Models
         /// <summary>
         /// Логин пользователя для входа
         /// </summary>
-        public string Login { get; set; } = string.Empty;
+        public string? Login { get; set; }
 
         /// <summary>
         /// О пользователе
         /// </summary>
-        public string About { get; set; } = string.Empty;
+        public string? About { get; set; }
 
         /// <summary>
         /// Внешний ключ пользователя
@@ -36,6 +36,6 @@ namespace SharedLib.Models
         /// <summary>
         /// Пользователь (владелец пароля)
         /// </summary>
-        public UserModelDB User { get; set; }
+        public UserModelDB? User { get; set; }
     }
 }

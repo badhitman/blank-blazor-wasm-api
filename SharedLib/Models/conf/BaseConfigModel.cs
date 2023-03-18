@@ -27,7 +27,7 @@ namespace SharedLib.Models
         /// <summary>
         /// Конфигурация reCaptcha
         /// </summary>
-        public ReCaptchaConfigClientModel ReCaptchaConfig { get; set; }
+        public ReCaptchaConfigClientModel? ReCaptchaConfig { get; set; }
 
         /// <summary>
         /// Минимальный размер страницы в Pagination

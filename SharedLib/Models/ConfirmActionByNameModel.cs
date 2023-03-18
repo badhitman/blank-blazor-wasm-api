@@ -21,13 +21,13 @@ namespace SharedLib.Models
         /// Наименование объекта
         /// </summary>
         [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// Подвтерждение наименования объекта для удаления
         /// </summary>
         [Required]
         [Compare(nameof(Name))]
-        public string ConfirmName { get; set; }
+        public string? ConfirmName { get; set; }
     }
 }

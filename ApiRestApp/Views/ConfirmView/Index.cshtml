@@ -19,9 +19,9 @@
         string asp_controller_name = nameof(ConfirmViewController);
         asp_controller_name = asp_controller_name.Substring(0, asp_controller_name.Length - 10);
 
-        string head = string.Empty;
+        string head = "<ошибка опредеения типа действия>";
 
-        switch (Model.Confirmation.ConfirmationType)
+        switch (Model.Confirmation?.ConfirmationType)
         {
             case ConfirmationsTypesEnum.RegistrationUser:
                 head = "Подтверждение регистрации";
@@ -35,7 +35,7 @@
             <div class="mb-3 row">
                 <label for="confirm_id" class="col-sm-2 col-form-label">Токен:</label>
                 <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" id="confirm_id" name="confirm_id" value="@Model.Confirmation.GuidConfirmation">
+                    <input type="text" readonly class="form-control-plaintext" id="confirm_id" name="confirm_id" value="@Model.Confirmation?.GuidConfirmation">
                 </div>
             </div>
             <p></p>

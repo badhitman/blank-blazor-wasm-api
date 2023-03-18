@@ -32,6 +32,9 @@ namespace SharedLib.Models
         [Required]
         public string PublicName { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Приведение к типу: UserModelDB
+        /// </summary>
         public static explicit operator UserModelDB(UserRegistrationModel v)
         {
             return new UserModelDB()

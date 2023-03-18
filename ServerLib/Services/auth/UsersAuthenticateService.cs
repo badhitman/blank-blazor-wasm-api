@@ -2,38 +2,37 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using SharedLib;
-using SharedLib.MemCash;
-using SharedLib.Models;
-using Microsoft.AspNetCore.Http;
+using reCaptcha.Models.VerifyingUsersResponse;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Http;
+using SharedLib.MemCash;
+using SharedLib.Models;
 using Newtonsoft.Json;
-using reCaptcha.Models.VerifyingUsersResponse;
 using reCaptcha.stat;
 using System.Net;
+using SharedLib;
 
 namespace ServerLib
 {
     /// <inheritdoc/>
     public class UsersAuthenticateService : IUsersAuthenticateService
     {
-        readonly IHttpContextAccessor _http_context;
+        readonly IUsersConfirmationsService _confirmations_repo;
         readonly ILogger<UsersAuthenticateService> _logger;
+        readonly IHttpContextAccessor _http_context;
         readonly IOptions<ServerConfigModel> _config;
         readonly ISessionService _session_service;
         readonly IManualMemoryCashe _mem_cashe;
-
         readonly IUsersTable _users_dt;
-        readonly IUsersConfirmationsService _confirmations_repo;
 
         IPAddress? RemoteIpAddress => _http_context?.HttpContext?.Request.HttpContext.Connection.RemoteIpAddress;
 
         /// <summary>
         /// Префикс хранилища сессии в Мемкеше
         /// </summary>
-        public static readonly MemCashePrefixModel PrefRedisSessions = new MemCashePrefixModel(GlobalStaticConstants.SESSION_MEMCASHE_NAMESPASE, string.Empty);
+        public static readonly MemCashePrefixModel PrefRedisSessions = new(GlobalStaticConstants.SESSION_MEMCASHE_NAMESPASE, string.Empty);
 
         /// <summary>
         /// Конструктор
@@ -52,7 +51,7 @@ namespace ServerLib
         /// <inheritdoc/>
         public SessionReadResponseModel ReadMainSession()
         {
-            SessionReadResponseModel? res = new SessionReadResponseModel() { IsSuccess = !string.IsNullOrEmpty(_session_service.SessionMarker.Login) };
+            SessionReadResponseModel? res = new() { IsSuccess = !string.IsNullOrEmpty(_session_service.SessionMarker.Login) };
 
             if (res.IsSuccess)
             {
@@ -86,11 +85,14 @@ namespace ServerLib
         {
             if (token == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("token == null /{42F625C1-80D4-422F-BA1B-03D759A3DFFB}");
             }
 
             string? session_json_raw = await _mem_cashe.GetStringValueAsync(new MemCasheComplexKeyModel(token, PrefRedisSessions));
-
+            if (session_json_raw == null)
+            {
+                throw new Exception("session_json_raw == null /{7CBBBFD8-3397-4E9B-BE27-D77E7C18E127}");
+            }
             _logger.LogDebug(session_json_raw);
 
             return (SessionMarkerModel)session_json_raw;
@@ -100,7 +102,7 @@ namespace ServerLib
         public async Task<AuthUserResponseModel> UserLoginAsync(UserAuthorizationModel user, ModelStateDictionary model_state)
         {
             await LogOutAsync();
-            AuthUserResponseModel res = new AuthUserResponseModel() { Message = string.Empty };
+            AuthUserResponseModel res = new() { Message = string.Empty };
 
             if (_config.Value.ReCaptchaConfig.Mode > ReCaptchaModesEnum.None)
             {
@@ -110,8 +112,8 @@ namespace ServerLib
                     res.Message = "Пройдите проверку reCaptcha";
                     return res;
                 }
-                (ReCaptcha2ResponseModel reCaptcha, string Message) reCaptcha2Response = await CheckReCaptcha(user.ResponseReCAPTCHA);
-                res.IsSuccess = reCaptcha2Response.reCaptcha.success;
+                (ReCaptcha2ResponseModel? reCaptcha, string Message) reCaptcha2Response = await CheckReCaptcha(user.ResponseReCAPTCHA);
+                res.IsSuccess = reCaptcha2Response.reCaptcha?.success == true;
                 if (!res.IsSuccess)
                 {
                     res.Message = $"Ошибка проверки reCaptcha! {reCaptcha2Response.Message}";
@@ -128,7 +130,7 @@ namespace ServerLib
             if (!model_state.IsValid)
             {
                 res.IsSuccess = false;
-                res.Message = string.Join("; ", model_state.Select(x => $"{x.Key}:[{string.Join(". ", x.Value.Errors.Select(y => $"{y.ErrorMessage}"))}]"));
+                res.Message = string.Join("; ", model_state.Where(x => x.Value is not null).Select(x => $"{x.Key}:[{string.Join(". ", x.Value!.Errors.Select(y => $"{y.ErrorMessage}"))}]"));
                 return res;
             }
 
@@ -152,7 +154,7 @@ namespace ServerLib
         /// <inheritdoc/>
         public async Task<ResponseBaseModel> RestoreUser(string user_login)
         {
-            ResponseBaseModel? res = new ResponseBaseModel()
+            ResponseBaseModel? res = new()
             {
                 IsSuccess = !string.IsNullOrWhiteSpace(user_login)
             };
@@ -168,7 +170,7 @@ namespace ServerLib
                 res.Message = $"Ошибка. Пользователь по логину '{user_login}' не найден в БД.";
                 return res;
             }
-            res.Message = $"Ваш запрос принят. На Email '{user_db.Metadata.Email}' отправлено сообщение для сброса пароля.";
+            res.Message = $"Ваш запрос принят. На Email '{user_db!.Metadata.Email}' отправлено сообщение для сброса пароля.";
 
             ResponseBaseModel confirm_reset_password;
 
@@ -177,7 +179,7 @@ namespace ServerLib
             if (!confirm_reset_password.IsSuccess)
             {
                 res.Message = $"Ошибка. Произошёл сбой отправки Email.\n{confirm_reset_password.Message}".Trim();
-                _logger.LogError($"{res.Message} - user_db_by_login: {JsonConvert.SerializeObject(user_db,new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore })}");
+                _logger.LogError($"{res.Message} - user_db_by_login: {JsonConvert.SerializeObject(user_db, new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore })}");
                 res.IsSuccess = false;
             }
 
@@ -190,9 +192,9 @@ namespace ServerLib
             user.Login = user.Login?.Trim() ?? string.Empty;
             user.Email = user.Email?.Trim() ?? string.Empty;
 
-            ResponseBaseModel? res = new ResponseBaseModel()
+            ResponseBaseModel? res = new()
             {
-                IsSuccess = !string.IsNullOrWhiteSpace(user?.Login) || !string.IsNullOrWhiteSpace(user?.Email)
+                IsSuccess = !string.IsNullOrWhiteSpace(user.Login) || !string.IsNullOrWhiteSpace(user.Email)
             };
 
             if (_config.Value.ReCaptchaConfig.Mode > ReCaptchaModesEnum.None)
@@ -203,8 +205,8 @@ namespace ServerLib
                     res.Message = "Пройдите проверку reCaptcha";
                     return res;
                 }
-                (ReCaptcha2ResponseModel reCaptcha, string Message) reCaptcha2Response = await CheckReCaptcha(user.ResponseReCAPTCHA);
-                res.IsSuccess = reCaptcha2Response.reCaptcha.success;
+                (ReCaptcha2ResponseModel? reCaptcha, string Message) reCaptcha2Response = await CheckReCaptcha(user.ResponseReCAPTCHA);
+                res.IsSuccess = reCaptcha2Response.reCaptcha?.success == true;
                 if (!res.IsSuccess)
                 {
                     res.Message = $"Ошибка проверки reCaptcha! {reCaptcha2Response.Message}";
@@ -262,7 +264,7 @@ namespace ServerLib
         public async Task<AuthUserResponseModel> UserRegisterationAsync(UserRegistrationModel new_user, ModelStateDictionary model_state)
         {
             await LogOutAsync();
-            AuthUserResponseModel res = new AuthUserResponseModel() { Message = string.Empty };
+            AuthUserResponseModel res = new() { Message = string.Empty };
 
             if (_config.Value.ReCaptchaConfig.Mode > ReCaptchaModesEnum.None)
             {
@@ -273,8 +275,8 @@ namespace ServerLib
                     return res;
                 }
 
-                (ReCaptcha2ResponseModel reCaptcha, string Message) reCaptcha2Response = await CheckReCaptcha(new_user.ResponseReCAPTCHA);
-                res.IsSuccess = reCaptcha2Response.reCaptcha.success;
+                (ReCaptcha2ResponseModel? reCaptcha, string Message) reCaptcha2Response = await CheckReCaptcha(new_user.ResponseReCAPTCHA);
+                res.IsSuccess = reCaptcha2Response.reCaptcha?.success == true;
                 if (!res.IsSuccess)
                 {
                     res.Message = $"Ошибка проверки reCaptcha! {reCaptcha2Response.Message}";
@@ -291,7 +293,7 @@ namespace ServerLib
             if (!model_state.IsValid)
             {
                 res.IsSuccess = false;
-                res.Message = string.Join("; ", model_state.Select(x => $"{x.Key}:[{string.Join(". ", x.Value.Errors.Select(y => $"{y.ErrorMessage}"))}]"));
+                res.Message = string.Join("; ", model_state.Where(x => x.Value is not null).Select(x => $"{x.Key}:[{string.Join(". ", x.Value!.Errors.Select(y => $"{y.ErrorMessage}"))}]"));
                 return res;
             }
 
@@ -322,14 +324,14 @@ namespace ServerLib
             return res;
         }
 
-        private async Task<(ReCaptcha2ResponseModel reCaptcha, string Message)> CheckReCaptcha(string ResponseReCAPTCHA)
+        private async Task<(ReCaptcha2ResponseModel? reCaptcha, string Message)> CheckReCaptcha(string ResponseReCAPTCHA)
         {
-            (ReCaptcha2ResponseModel reCaptcha, string Message) res = (new ReCaptcha2ResponseModel(), string.Empty);
+            (ReCaptcha2ResponseModel? reCaptcha, string Message) res = (new ReCaptcha2ResponseModel(), string.Empty);
 
             switch (_config.Value.ReCaptchaConfig.Mode)
             {
                 case ReCaptchaModesEnum.Version2:
-                    res.reCaptcha = await ReCaptchaVerifier.reCaptcha2SiteVerifyAsync(_config.Value.ReCaptchaConfig.ReCaptchaV2Config.PrivateKey, ResponseReCAPTCHA, RemoteIpAddress.ToString());
+                    res.reCaptcha = await ReCaptchaVerifier.reCaptcha2SiteVerifyAsync(_config.Value.ReCaptchaConfig.ReCaptchaV2Config.PrivateKey, ResponseReCAPTCHA, RemoteIpAddress?.ToString());
                     if (res.reCaptcha is null)
                         res.Message = "Сбой работы reCaptcha: res.reCaptcha is null. Попробуйте ещё раз. Если ошибка будет повторяться - сообщите нам об этом.";
                     else if (!res.reCaptcha.success)
@@ -338,7 +340,7 @@ namespace ServerLib
                     }
                     break;
                 case ReCaptchaModesEnum.Version2Invisible:
-                    res.reCaptcha = await ReCaptchaVerifier.reCaptcha2SiteVerifyAsync(_config.Value.ReCaptchaConfig.ReCaptchaV2InvisibleConfig.PrivateKey, ResponseReCAPTCHA, RemoteIpAddress.ToString());
+                    res.reCaptcha = await ReCaptchaVerifier.reCaptcha2SiteVerifyAsync(_config.Value.ReCaptchaConfig.ReCaptchaV2InvisibleConfig.PrivateKey, ResponseReCAPTCHA, RemoteIpAddress?.ToString());
 
                     if (res.reCaptcha?.success != true)
                     {
@@ -360,7 +362,7 @@ namespace ServerLib
             _session_service.SessionMarker = new SessionMarkerModel(id, login, access_level, _session_service.GuidToken, seconds_session > _config.Value.CookiesConfig.SessionCookieExpiresSeconds);
 
             await _mem_cashe.UpdateValueAsync(PrefRedisSessions, _session_service.GuidToken, _session_service.SessionMarker.ToString(), TimeSpan.FromSeconds(seconds_session));
-            await _mem_cashe.UpdateValueAsync(new MemCashePrefixModel(GlobalStaticConstants.SESSION_MEMCASHE_NAMESPASE, $"{login}_{access_level}"), _session_service.GuidToken, $"{DateTime.Now}|{_http_context.HttpContext.Connection.RemoteIpAddress}", TimeSpan.FromSeconds(seconds_session + 60));
+            await _mem_cashe.UpdateValueAsync(new MemCashePrefixModel(GlobalStaticConstants.SESSION_MEMCASHE_NAMESPASE, $"{login}_{access_level}"), _session_service.GuidToken, $"{DateTime.Now}|{_http_context.HttpContext?.Connection.RemoteIpAddress}", TimeSpan.FromSeconds(seconds_session + 60));
         }
     }
 }

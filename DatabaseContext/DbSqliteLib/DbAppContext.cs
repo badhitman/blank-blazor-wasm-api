@@ -2,9 +2,9 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using SharedLib.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using SharedLib.Models;
 using DbLayerLib;
 
 namespace DbcLib
@@ -14,6 +14,7 @@ namespace DbcLib
     /// </summary>
     public class DbAppContext : LayerContext
     {
+        /// <inheritdoc/>
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
 #if DEBUG
@@ -26,6 +27,9 @@ namespace DbcLib
                 .UseSqlite(_config.Connect.ConnectionString);
         }
 
+        /// <summary>
+        /// Контекст доступа к SQLite БД
+        /// </summary>
         public DbAppContext(IOptions<ServerConfigModel> set_config) : base(set_config)
         {
             string? spec_path = AppDomain.CurrentDomain.BaseDirectory;

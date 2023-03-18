@@ -17,6 +17,6 @@ namespace SharedLib.Models
         /// <summary>
         /// Опциия изменения параметра пользователя
         /// </summary>
-        public string OptionAttribute { get; set; }
+        public string? OptionAttribute { get; set; }
     }
 }
