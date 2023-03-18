@@ -2,13 +2,12 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using SharedLib;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Logging;
 using SharedLib.MemCash;
 using SharedLib.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
+using SharedLib;
 
 namespace ServerLib
 {
@@ -34,7 +33,7 @@ namespace ServerLib
         /// <inheritdoc/>
         public async Task<FindUsersProfilesResponseModel> FindUsersProfilesAsync(FindUsersProfilesRequestModel request)
         {
-            FindUsersProfilesResponseModel res = new FindUsersProfilesResponseModel();
+            FindUsersProfilesResponseModel res = new();
 
             if (request is null)
             {
@@ -54,7 +53,7 @@ namespace ServerLib
         /// <inheritdoc/>
         public async Task<GetUserProfileResponseModel> GetUserProfileAsync(int id)
         {
-            GetUserProfileResponseModel res = new GetUserProfileResponseModel() { IsSuccess = id > 0 };
+            GetUserProfileResponseModel res = new() { IsSuccess = id > 0 };
             if (!res.IsSuccess)
             {
                 res.Message = "Требуется корректный Id.";
@@ -73,7 +72,7 @@ namespace ServerLib
         /// <inheritdoc/>
         public async Task<GetUserProfileResponseModel> GetUserProfileAsync(string login)
         {
-            GetUserProfileResponseModel res = new GetUserProfileResponseModel() { IsSuccess = !string.IsNullOrEmpty(login) };
+            GetUserProfileResponseModel res = new() { IsSuccess = !string.IsNullOrEmpty(login) };
             if (!res.IsSuccess)
             {
                 res.Message = "Требуется корректный 'login'.";
@@ -89,7 +88,7 @@ namespace ServerLib
                 return res;
             }
 
-            res.Sessions = await _session_service.GetUserSessionsAsync(res.User.Login);
+            res.Sessions = await _session_service.GetUserSessionsAsync(res.User!.Login);
             res.Message = "Ok. Пользователь получен.";
             return res;
         }
@@ -97,7 +96,7 @@ namespace ServerLib
         /// <inheritdoc/>
         public async Task<UpdateUserProfileResponseModel> UpdateUserProfileAsync(UserLiteModel user)
         {
-            UpdateUserProfileResponseModel res = new UpdateUserProfileResponseModel()
+            UpdateUserProfileResponseModel res = new()
             {
                 IsSuccess = user is not null,
                 User = user
@@ -109,7 +108,7 @@ namespace ServerLib
                 return res;
             }
 
-            res.IsSuccess = user.Id > 0;
+            res.IsSuccess = user!.Id > 0;
             if (!res.IsSuccess)
             {
                 res.Message = "Ошибка обработки запроса. User id <= 0";
@@ -125,7 +124,7 @@ namespace ServerLib
                 return res;
             }
 
-            res.IsSuccess = user_db.Metadata.AccessLevelUser == user.AccessLevelUser 
+            res.IsSuccess = user_db!.Metadata.AccessLevelUser == user.AccessLevelUser
                 || (_session_service.SessionMarker.AccessLevelUser >= AccessLevelsUsersEnum.Admin && _session_service.SessionMarker.AccessLevelUser > user_db.Metadata.AccessLevelUser && _session_service.SessionMarker.AccessLevelUser > user.AccessLevelUser);
             if (!res.IsSuccess)
             {
@@ -169,7 +168,16 @@ namespace ServerLib
         /// <inheritdoc/>
         public async Task<ResponseBaseModel> ChangeUserPasswordAsync(ChangeUserProfileOptionsModel user_options)
         {
-            PasswordsPairModel debug_instance;
+            if (string.IsNullOrWhiteSpace(user_options.OptionAttribute))
+            {
+                return new ResponseBaseModel()
+                {
+                    IsSuccess = false,
+                    Message = "string.IsNullOrWhiteSpace(user_options.OptionAttribute) /{04883E25-2F19-48FA-AA34-CA312045644A}"
+                };
+            }
+
+            PasswordsPairModel? debug_instance;
             try
             {
                 debug_instance = JsonConvert.DeserializeObject<PasswordsPairModel>(user_options.OptionAttribute);
@@ -183,10 +191,19 @@ namespace ServerLib
                 };
             }
 
-            ValidationContext? vc = new ValidationContext(debug_instance, serviceProvider: null, items: null);
+            if (debug_instance is null)
+            {
+                return new ResponseBaseModel()
+                {
+                    IsSuccess = false,
+                    Message = "debug_instance is null /{F9AC480C-E221-4FC4-9FE1-31A22D629518}"
+                };
+            }
+
+            ValidationContext? vc = new(debug_instance, serviceProvider: null, items: null);
             ICollection<ValidationResult> results = new List<ValidationResult>();
 
-            ResponseBaseModel res = new ResponseBaseModel() { IsSuccess = user_options.UserId > 0 };
+            ResponseBaseModel res = new() { IsSuccess = user_options.UserId > 0 };
             if (!res.IsSuccess)
             {
                 res.Message = $"Ошибка. Идентификатор пользователя не корректный";
@@ -230,15 +247,31 @@ namespace ServerLib
         /// <inheritdoc/>
         public async Task<ResponseBaseModel> KillUserSessionAsync(ChangeUserProfileOptionsModel user_options)
         {
-            ResponseBaseModel res = new ResponseBaseModel();
+            ResponseBaseModel res = new();
+
+            if (string.IsNullOrWhiteSpace(user_options.OptionAttribute))
+            {
+                res.IsSuccess = false;
+                res.Message = "string.IsNullOrWhiteSpace(user_options.OptionAttribute) /{6BAB96FE-0F85-4E67-B958-6EF810D72193}";
+                return res;
+            }
+
             GetUserProfileResponseModel? user = await GetUserProfileAsync(user_options.UserId);
-            res.IsSuccess = user?.IsSuccess == true;
+
+            if (user.User is null)
+            {
+                res.IsSuccess = false;
+                res.Message = "user is null /{04C7E356-CB5E-4E7D-89D8-0F12DF3F0734}";
+                return res;
+            }
+
+            res.IsSuccess = user.IsSuccess == true;
             if (!res.IsSuccess)
             {
                 res.Message = user.Message;
                 return res;
             }
-            res.IsSuccess = user.Sessions.Any(x => x.GuidTokenSession == user_options.OptionAttribute);
+            res.IsSuccess = user.Sessions?.Any(x => x.GuidTokenSession == user_options.OptionAttribute) == true;
             if (!res.IsSuccess)
             {
                 res.Message = $"Сессия не найдена: '{user_options.OptionAttribute}'";

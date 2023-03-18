@@ -88,17 +88,18 @@ namespace DbTablesLib
         }
 
         /// <inheritdoc/>
-        public async Task<UserLiteModel[]> FindUsersDataAsync(FindUsersProfilesRequestModel filter)
+        public async Task<UserLiteModel[]?> FindUsersDataAsync(FindUsersProfilesRequestModel filter)
         {
             if (filter is null)
             {
-                _logger.LogError("Запрос не можеть быть NULL.");
+                string msg = "Запрос не можеть быть NULL. /{CAADCFED-24D6-4993-993D-D744A687B660}";
+                _logger.LogError(msg);
                 return null;
             }
 
             IQueryable<UserModelDB>? query = _db_context.Users.AsQueryable();
 
-            if (!string.IsNullOrEmpty(filter?.FindLogin?.Text))
+            if (!string.IsNullOrEmpty(filter.FindLogin?.Text))
             {
                 switch (filter.FindLogin.Mode)
                 {
@@ -184,7 +185,7 @@ namespace DbTablesLib
         /// <inheritdoc/>
         public async Task PasswordUpdateByUserIdAsync(int user_id, string password_hash)
         {
-            UserModelDB upd_user = await FirstOrDefaultAsync(user_id, inc_password: true, inc_metadata: false, inc_profile: false); //new UserModelDB() { Id = user_id, Password = new UserPasswordModelDb() { Hash = password_hash } };
+            UserModelDB? upd_user = await FirstOrDefaultAsync(user_id, inc_password: true, inc_metadata: false, inc_profile: false);
 
             if (upd_user is null)
                 return;

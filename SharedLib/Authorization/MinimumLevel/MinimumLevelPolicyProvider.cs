@@ -55,7 +55,7 @@ public class MinimumLevelPolicyProvider : IAuthorizationPolicyProvider
         {
             AuthorizationPolicyBuilder policy = new();
             policy.AddRequirements(new MinimumLevelRequirement(level));
-            return Task.FromResult(policy.Build());
+            return Task.FromResult<AuthorizationPolicy?>(policy.Build());
         }
 
         return FallbackPolicyProvider.GetPolicyAsync(policyName);

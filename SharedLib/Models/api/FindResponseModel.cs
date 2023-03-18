@@ -12,6 +12,6 @@ namespace SharedLib.Models
         /// <summary>
         /// Пагинация
         /// </summary>
-        public PaginationResponseModel Pagination { get; set; }
+        public PaginationResponseModel? Pagination { get; set; }
     }
 }

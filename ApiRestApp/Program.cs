@@ -148,7 +148,7 @@ try
 
     app.UseHttpsRedirection();
     app.UseStaticFiles();
-    app.UseWhen(context => context.Request.Path.Value.StartsWith("/mvc/"), appBuilder =>
+    app.UseWhen(context => context.Request.Path.Value?.StartsWith("/mvc/") == true, appBuilder =>
     {
         app.UseRouting();
         app.MapControllerRoute(name: "default", pattern: "/mvc/{controller=Home}/{action=Index}/{id?}");

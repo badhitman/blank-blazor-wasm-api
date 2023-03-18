@@ -12,11 +12,11 @@ namespace SharedLib.Models
         /// <summary>
         /// Профиль пользователя
         /// </summary>
-        public UserLiteModel User { get; set; }
+        public UserLiteModel? User { get; set; }
 
         /// <summary>
         /// Сессии пользователя
         /// </summary>
-        public IEnumerable<UserSessionModel> Sessions { get; set; }
+        public IEnumerable<UserSessionModel>? Sessions { get; set; }
     }
 }

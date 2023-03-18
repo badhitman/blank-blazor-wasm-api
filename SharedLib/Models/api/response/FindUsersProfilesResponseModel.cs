@@ -12,6 +12,6 @@ namespace SharedLib.Models
         /// <summary>
         /// Профили пользователей
         /// </summary>
-        public UserLiteModel[] Users { get; set; }
+        public UserLiteModel[]? Users { get; set; }
     }
 }

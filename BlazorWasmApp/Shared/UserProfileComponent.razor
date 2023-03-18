@@ -1,18 +1,18 @@
-﻿@using SharedLib.Services
-@using Newtonsoft.Json
-@using Refit
-@using SharedLib.Models
-@using SharedLib
-@using BlazorWasmApp.Shared.datatable
+﻿@using BlazorWasmApp.Shared.datatable
 @using BlazorWasmApp.Shared.tabs
+@using SharedLib.Services
+@using SharedLib.Models
+@using Newtonsoft.Json
+@using SharedLib
+@using Refit
 
-@inject NavigationManager MyNavigationManager
-@inject IClientSession SessionLocalStorage
-@inject SessionMarkerLiteModel SessionMarker
-@inject CustomAuthStateProvider authState
 @inject IUsersProfilesRestService usersProfilesRefitService
 @inject IUsersAuthRestService usersAuthRefitService
 @inject ILogger<UserProfileComponent> _logger
+@inject NavigationManager MyNavigationManager
+@inject SessionMarkerLiteModel SessionMarker
+@inject IClientSession SessionLocalStorage
+@inject CustomAuthStateProvider authState
 @inject ClientConfigModel conf
 
 @inherits BlazorBusyComponentBaseModel
@@ -134,12 +134,12 @@
                             <ol class="list-group list-group-numbered">
                                 @foreach (UserSessionModel s in UserSessions)
                                 {
-                                    bool is_current_session = SessionMarker.Token == s.GuidTokenSession.ToString();
+                                    bool is_current_session = SessionMarker.Token == s.GuidTokenSession?.ToString();
                                     <li class="list-group-item d-flex justify-content-between align-items-start">
                                         <div class="ms-2 me-auto">
                                             <div class="fw-bold">@s.DateTimeStart || @s.IPAddressClient</div>
                                             <span @onclick="@(e => KillSession(e, s.GuidTokenSession))" class="badge bg-@(is_current_session ? "primary" : "danger") rounded-pill @(is_current_session ? string.Empty : "buton-kill-session")">@(is_current_session ? "текущая" : "завершить")</span>
-                                            <small>@s.GuidTokenSession.ToString().Replace("-","")</small>
+                                            <small>@s.GuidTokenSession?.ToString().Replace("-","")</small>
                                         </div>
                                     </li>
                                 }
@@ -179,15 +179,15 @@
     [Parameter] public int? IdProfile { get; set; }
 
     private IEnumerable<UserSessionModel> UserSessions = Array.Empty<UserSessionModel>();
-    private ModalWindowComponent Modal { get; set; }
-    private string ModalBodyText { get; set; } = string.Empty;
+    private ModalWindowComponent? Modal { get; set; }
+    private string? ModalBodyText { get; set; } = string.Empty;
 
     private bool SessionTabSelected = false;
-    private TabComponent SessionsTab { get; set; }
+    private TabComponent? SessionsTab { get; set; }
 
 
-    private UserLiteModel? user_profile_result = null;
-    private PasswordsPairModel change_password = new PasswordsPairModel();
+    private UserLiteModel user_profile_result = new();
+    private PasswordsPairModel change_password = new();
 
     bool IsAdminLevelAccess => SessionMarker.AccessLevelUser >= AccessLevelsUsersEnum.Admin && CanEditAccessLevel;
     bool IsRootLevelAccess => SessionMarker.AccessLevelUser == AccessLevelsUsersEnum.ROOT && CanEditAccessLevel;
@@ -197,27 +197,27 @@
     bool CanEditAbout => IdProfile.GetValueOrDefault(0) == 0 || SessionMarker.AccessLevelUser >= AccessLevelsUsersEnum.Admin;
 
     AccessLevelsUsersEnum? old_value_access_level = null;
-    bool CanSaveNewAccessLavel => CanEditAccessLevel && old_value_access_level != null && old_value_access_level != user_profile_result.AccessLevelUser && user_profile_result.AccessLevelUser != AccessLevelsUsersEnum.ROOT;
+    bool CanSaveNewAccessLavel => CanEditAccessLevel && old_value_access_level != null && old_value_access_level != user_profile_result?.AccessLevelUser && user_profile_result?.AccessLevelUser != AccessLevelsUsersEnum.ROOT;
 
-    string old_public_name = null;
-    bool CanSaveNewPublicName => CanEditPublicName && !string.IsNullOrWhiteSpace(user_profile_result.Name) && old_public_name != user_profile_result.Name;
+    string? old_public_name = null;
+    bool CanSaveNewPublicName => CanEditPublicName && !string.IsNullOrWhiteSpace(user_profile_result?.Name) && old_public_name != user_profile_result.Name;
 
-    string old_about = null;
-    bool CanSaveNewAbout => CanEditAbout && !string.IsNullOrWhiteSpace(user_profile_result.About) && old_about != user_profile_result.About;
+    string? old_about = null;
+    bool CanSaveNewAbout => CanEditAbout && !string.IsNullOrWhiteSpace(user_profile_result?.About) && old_about != user_profile_result.About;
 
     bool CanSaveUserProfile => CanSaveNewAccessLavel || CanSaveNewPublicName || CanSaveNewAbout;
 
-    string user_email_host;
+    string? user_email_host;
 
     bool re_activate_is_sended = false;
     string re_activate_info = string.Empty;
 
-    private async Task KillSession(MouseEventArgs e, string token)
+    private async Task KillSession(MouseEventArgs e, string? token)
     {
         if (SessionMarker.Token == token)
         {
             ModalBodyText = "Что бы закрыть текущую сессию - выполните выход";
-            Modal.Open("Внимание!");
+            Modal?.Open("Внимание!");
             return;
         }
         _logger.LogDebug($"kill session -> {token}");
@@ -235,7 +235,7 @@
                 ModalBodyText = $"Ошибка API: {nameof(usersProfilesRefitService.ChangeUserProfileAsync)}({nameof(UserProfileAreasEnum.KillSession)})";
             }
             _logger.LogError(ModalBodyText);
-            Modal.Open("Ошибка!");
+            Modal?.Open("Ошибка!");
         }
         else
         {
@@ -248,7 +248,7 @@
 
     private async Task OnNameChanged(ChangeEventArgs e)
     {
-        user_profile_result.Name = e?.Value?.ToString();
+        user_profile_result.Name = e.Value?.ToString();
 
         //await PasswordChanged.InvokeAsync(password);
     }

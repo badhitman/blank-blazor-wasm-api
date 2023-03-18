@@ -2,8 +2,6 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using System.Data;
-
 namespace SharedLib.Models
 {
     /// <summary>
@@ -14,11 +12,11 @@ namespace SharedLib.Models
         /// <summary>
         /// Значение
         /// </summary>
-        public object DataCellValue { get; set; }
+        public object? DataCellValue { get; set; }
 
         /// <summary>
         /// Служебное поле без особого смысла
         /// </summary>
-        public string Tag { get; set; }
+        public string? Tag { get; set; }
     }
 }

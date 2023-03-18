@@ -44,7 +44,7 @@ namespace SharedLib.Models
         /// Имя объекта
         /// </summary>
         [Required(AllowEmptyStrings = false, ErrorMessage = "Поле наименования обязательно для заполнения")]
-        public string Name { get; set; } = string.Empty;
+        public string? Name { get; set; }
     }
 
     /// <summary>

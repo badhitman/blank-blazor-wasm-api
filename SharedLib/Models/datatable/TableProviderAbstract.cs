@@ -12,7 +12,7 @@ namespace SharedLib.Models
         /// <summary>
         /// Имя контроллера (шаблон ссылки)
         /// </summary>
-        public string ControllerName { get; set; }
+        public string? ControllerName { get; set; }
 
         /// <summary>
         /// Номер п/п (по порядку) строк таблицы
@@ -22,7 +22,7 @@ namespace SharedLib.Models
         /// <summary>
         /// Данные таблици
         /// </summary>
-        protected TableDataModel TableData { get; set; }
+        protected TableDataModel? TableData { get; set; }
 
         /// <summary>
         /// В таблице есть строки
@@ -38,13 +38,13 @@ namespace SharedLib.Models
         /// Колонки (головная часть)
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<TableDataColumnModel> Columns() => TableData.Head.Columns;
+        public IEnumerable<TableDataColumnModel>? Columns() => TableData?.Head.Columns;
 
         /// <summary>
         /// Строки таблици
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<TableDataRowModel> Rows() => TableData.Body.Rows;
+        public IEnumerable<TableDataRowModel>? Rows() => TableData?.Body.Rows;
 
         /// <summary>
         /// Сортировка (от большего к меньшему или от меньшего к большему)
@@ -54,7 +54,7 @@ namespace SharedLib.Models
         /// <summary>
         /// Имя поля по которому должна происходить сортировка
         /// </summary>
-        public string SortBy { get; set; }
+        public string? SortBy { get; set; }
 
         /// <summary>
         /// Определить сортировку колонки

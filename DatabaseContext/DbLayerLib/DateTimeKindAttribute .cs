@@ -2,6 +2,9 @@
 
 namespace DbLayerLib
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class DateTimeKindAttribute : Attribute
     {

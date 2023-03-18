@@ -2,23 +2,24 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using SharedLib.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using SharedLib.Models;
 
 namespace DbLayerLib
 {
     /// <summary>
     /// Промежуточный/общий слой контекста базы данных
     /// </summary>
-    public  partial class LayerContext : DbContext
+    public partial class LayerContext : DbContext
     {
         /// <summary>
         /// Конфигурация подключения контекста базы данных
         /// </summary>
         protected DatabaseConfigModel _config { get; set; } = default!;
+
         /// <summary>
-        /// Конструктор
+        /// Промежуточный/общий слой контекста базы данных
         /// </summary>
         /// <param name="set_config"></param>
         public LayerContext(IOptions<ServerConfigModel> set_config)

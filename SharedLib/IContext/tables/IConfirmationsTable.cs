@@ -24,7 +24,7 @@ namespace SharedLib
         /// <param name="confirm_id">Идентификатор пользователя-владельца подтверждения действия</param>
         /// <param name="include_user_data">Дополнительно загрузхить связанные данные</param>
         /// <returns>Объект подтверждения действия пользователя</returns>
-        public Task<ConfirmationUserActionModelDb> FirstOrDefaultActualConfirmationAsync(string confirm_id, bool include_user_data = true);
+        public Task<ConfirmationUserActionModelDb?> FirstOrDefaultActualConfirmationAsync(string confirm_id, bool include_user_data = true);
 
         /// <summary>
         /// Обновить объект подтверждения действия пользователя
