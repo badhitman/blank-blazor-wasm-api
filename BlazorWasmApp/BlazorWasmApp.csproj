@@ -23,7 +23,6 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 	  <RunAOTCompilation>True</RunAOTCompilation>
-	  <DefineConstants>$(DefineConstants)TRACE;DEMO</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
