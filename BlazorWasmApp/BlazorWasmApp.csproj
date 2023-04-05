@@ -17,12 +17,12 @@
 	</PropertyGroup>
 	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <RunAOTCompilation>False</RunAOTCompilation>
+	  <RunAOTCompilation>True</RunAOTCompilation>
 	  <DefineConstants>$(DefineConstants)TRACE;DEMO</DefineConstants>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <RunAOTCompilation>False</RunAOTCompilation>
+	  <RunAOTCompilation>True</RunAOTCompilation>
 	  <DefineConstants>$(DefineConstants)TRACE;DEMO</DefineConstants>
 	</PropertyGroup>
 
@@ -234,12 +234,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.4" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.4" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="7.0.4" />
-		<PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Core" Version="2.2.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\SharedLib\SharedLib.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -1969,5 +1964,9 @@
 
 	<ItemGroup>
 	  <Folder Include="wwwroot\lib\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\BlazorLib\BlazorLib.csproj" />
 	</ItemGroup>
 </Project>
